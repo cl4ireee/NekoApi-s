@@ -105,6 +105,11 @@
           "name": "Font",
           "desc": "Search for fonts",
           "path": "/search/font?q="
+        }, 
+        {
+          "name": "Pinterest",
+          "desc": "Search for pinterest",
+          "path": "/search/pinterest?q="
         }
       ]
     }
