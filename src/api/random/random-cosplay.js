@@ -14,7 +14,7 @@ module.exports = function(app) {
         }
     }
 
-    app.get('/asupan/cosplay', async (req, res) => {
+    app.get('/random/cosplay', async (req, res) => {
         try {
             const imageData = await fetchCosplayData(); // Mengambil data dari API
 
