@@ -9,33 +9,34 @@ module.exports = function(app) {
             return response.data; // Mengembalikan data dari respons
         } catch (error) {
             console.error("Error fetching content from Bilibili API:", error.message);
-            throw error; // Melempar error agar bisa ditangkap di catch block
+            throw new Error('Failed to fetch content from Bilibili API'); // Error yang lebih jelas
         }
     }
 
     app.get('/download/bilibili', async (req, res) => {
+        const { url } = req.query; // Mengambil parameter query 'url'
+        if (!url) {
+            return res.status(400).json({ status: false, error: 'URL is required' });
+        }
+
         try {
-            const { url } = req.query; // Mengambil parameter query 'url'
-            if (!url) {
-                return res.status(400).json({ status: false, error: 'URL is required' });
-            }
             const apiResponse = await fetchBilibiliData(url); // Mengambil respons dari API
             
-            // Memeriksa apakah respons memiliki status true
-            if (apiResponse && apiResponse.status) {
+            // Memeriksa apakah respons memiliki status true dan data yang diperlukan
+            if (apiResponse && apiResponse.status && apiResponse.data) {
                 res.status(200).json({
                     status: true,
-                    title: apiResponse.data.title, // Menggunakan judul dari respons API
-                    thumbnail: apiResponse.data.thumbnail, // Menggunakan thumbnail dari respons API
-                    duration: apiResponse.data.duration, // Menggunakan durasi dari respons API
-                    downloadLinks: apiResponse.data.downloadLinks // Menggunakan link download dari respons API
+                    title: apiResponse.data.title || 'No title available', // Fallback jika tidak ada title
+                    thumbnail: apiResponse.data.thumbnail || '', // Fallback jika tidak ada thumbnail
+                    duration: apiResponse.data.duration || 0, // Fallback jika tidak ada durasi
+                    downloadLinks: apiResponse.data.downloadLinks || [] // Fallback jika tidak ada download links
                 });
             } else {
-                res.status(500).json({ status: false, error: 'Failed to fetch data' });
+                res.status(500).json({ status: false, error: 'Failed to fetch data from Bilibili API' });
             }
         } catch (error) {
-            console.error("Error in /download/bilibili:", error); // Log error
-            res.status(500).json({ status: false, error: 'Terjadi kesalahan di server. Silakan coba lagi nanti.' });
+            console.error("Error in /download/bilibili:", error.message); // Log error yang lebih jelas
+            res.status(500).json({ status: false, error: error.message || 'Terjadi kesalahan di server. Silakan coba lagi nanti.' });
         }
     });
 };
