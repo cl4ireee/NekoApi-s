@@ -5,7 +5,7 @@
   "header": {
     "status": "Online!",
     "imageSrc": [
-      "https://files.catbox.moe/4n0acx.mp4"
+      "https://files.catbox.moe/ob0whu.mp4"
     ],
     "imageSize": {
       "mobile": "80%",
@@ -18,8 +18,8 @@
   },
   "links": [
     {
-      "name": "Source Code",
-      "url": "https://github.com/rynxzyy/Rynn-UI"
+      "name": "",
+      "url": ""
     },
     {
       "name": "Contact Me",
