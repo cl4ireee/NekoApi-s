@@ -65,6 +65,11 @@
           "name": "Anime",
           "desc": "Random Anime Images",
           "path": "/random/anime"
+        }, 
+        {
+          "name": "Cosplay",
+          "desc": "Random Cosplay Images",
+          "path": "/random/cosplay"
         }
       ]
     },
