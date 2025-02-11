@@ -7,7 +7,7 @@ module.exports = function(app) {
             const response = await axios.get(`https://archive-ui.tanakadomp.biz.id/search/pinterest?q=${encodeURIComponent(query)}`);
             return response.data;
         } catch (error) {
-            console.error("Error fetching content from Pinterest API:", error);
+            console.error("Error fetching content from Pinterest API:", error.message);
             throw error;
         }
     }
