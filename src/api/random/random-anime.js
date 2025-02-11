@@ -1,38 +1,30 @@
 const axios = require('axios');
 
 module.exports = function(app) {
-    async function fetchAnimeImages() {
-        try {
-            const { data } = await axios.get('https://archive-ui.tanakadomp.biz.id/asupan/anime');
-            console.log("API Response:", data); // Tambahkan logging di sini
-            if (!data.result || !Array.isArray(data.result)) {
-                throw new Error('Invalid response structure from Anime API');
-            }
-            return data.result; // Mengembalikan hasil dari API
-        } catch (error) {
-            console.error("Error fetching content from Anime API:", error.message); // Pesan kesalahan
-            throw error;
-        }
-    }
-
     app.get('/random/anime', async (req, res) => {
         try {
-            const results = await fetchAnimeImages();
-            if (results.length === 0) {
-                return res.status(404).send('No images found');
-            }
-            const randomImage = results[Math.floor(Math.random() * results.length)]; // Mengambil gambar acak
-            const imageUrl = randomImage.image; 
-            const imageResponse = await axios.get(imageUrl, { responseType: 'arraybuffer' });
+            const response = await axios.get('https://archive-ui.tanakadomp.biz.id/asupan/anime');
+            const { status, result } = response.data;
 
-            res.writeHead(200, {
-                'Content-Type': 'image/png', // Atau 'image/jpeg' tergantung pada format gambar
-                'Content-Length': imageResponse.data.length,
-            });
-            res.end(imageResponse.data);
+            if (status) {
+                // Mengambil gambar acak dari hasil
+                const randomImage = result[Math.floor(Math.random() * result.length)];
+                const imageUrl = randomImage; // Pastikan ini adalah URL gambar
+
+                // Mengambil gambar dari URL
+                const imageResponse = await axios.get(imageUrl, { responseType: 'arraybuffer' });
+
+                // Mengatur header dan mengirimkan gambar
+                res.writeHead(200, {
+                    'Content-Type': 'image/png', // Atau 'image/jpeg' tergantung pada format gambar
+                    'Content-Length': imageResponse.data.length,
+                });
+                res.end(imageResponse.data);
+            } else {
+                res.status(400).json({ status: false, error: 'Failed to fetch anime images' });
+            }
         } catch (error) {
-            console.error("Error in /random/anime endpoint:", error.message); // Logging kesalahan
-            res.status(500).send(`Error: ${error.message}`);
+            res.status(500).json({ status: false, error: `Terjadi kesalahan: ${error.message}` });
         }
     });
 };
