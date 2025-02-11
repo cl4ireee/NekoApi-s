@@ -60,6 +60,11 @@
           "name": "Blue Archive",
           "desc": "Blue Archive Random Images",
           "path": "/random/ba"
+        }, 
+        {
+          "name": "Anime",
+          "desc": "Random Anime Images",
+          "path": "/random/anime"
         }
       ]
     },
