@@ -75,6 +75,11 @@
           "name": "TikTok",
           "desc": "Download TikTok Videos",
           "path": "/download/tiktok?url="
+        }, 
+        {
+          "name": "Instagram",
+          "desc": "Download TikTok Videos",
+          "path": "/download/instagram?url="
         }
       ]
     }, 
