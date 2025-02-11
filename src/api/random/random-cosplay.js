@@ -1,32 +1,29 @@
 const axios = require('axios');
 
 module.exports = function(app) {
-    app.get('/random/cosplay', async (req, res) => {
+    async function fetchCosplayData() {
         try {
-            // Mengambil data dari API cosplay
-            const response = await axios.get('https://archive-ui.tanakadomp.biz.id/asupan/cosplay');
-            const data = response.data;
-
-            // Memeriksa apakah data yang diterima valid
-            if (!data.result || !Array.isArray(data.result) || data.result.length === 0) {
-                return res.status(404).json({ status: false, error: 'Tidak ada gambar yang ditemukan.' });
-            }
-
-            // Mengambil gambar acak dari hasil
-            const randomImage = data.result[Math.floor(Math.random() * data.result.length)].image;
-
-            // Mengambil gambar dari URL dan mengembalikannya sebagai respons
-            const imageResponse = await axios.get(randomImage, { responseType: 'arraybuffer' });
-            const imageBuffer = Buffer.from(imageResponse.data, 'binary');
-
-            res.writeHead(200, {
-                'Content-Type': 'image/png', // Atau 'image/jpeg' tergantung pada format gambar
-                'Content-Length': imageBuffer.length,
+            // Menggunakan API Cosplay dengan metode GET
+            const response = await axios.get('https://archive-ui.tanakadomp.biz.id/asupan/cosplay', {
+                responseType: 'arraybuffer' // Mengambil respons sebagai array buffer
             });
-            res.end(imageBuffer);
+            return response.data; // Mengembalikan data gambar
         } catch (error) {
-            console.error("Error fetching cosplay image:", error.message);
-            res.status(500).json({ status: false, error: `Terjadi kesalahan: ${error.message}` });
+            console.error("Error fetching content from Cosplay API:", error.message);
+            throw error;
+        }
+    }
+
+    app.get('/asupan/cosplay', async (req, res) => {
+        try {
+            const imageData = await fetchCosplayData(); // Mengambil data dari API
+
+            // Mengatur header untuk mengembalikan gambar
+            res.set('Content-Type', 'image/png');
+            res.set('Content-Length', imageData.length);
+            res.send(imageData); // Mengirimkan data gambar sebagai respons
+        } catch (error) {
+            res.status(500).json({ status: false, error: error.message });
         }
     });
 };
