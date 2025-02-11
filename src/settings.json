@@ -92,9 +92,9 @@
           "path": "/download/instagram?url="
         }, 
         {
-          "name": "Bilibili",
+          "name": "Spotify",
           "desc": "Download Bilibili Videos",
-          "path": "/download/bilibili?url="
+          "path": "/download/spotify?url="
         }
       ]
     }, 
