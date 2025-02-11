@@ -3,11 +3,13 @@ const axios = require('axios');
 module.exports = function(app) {
     async function fetchBilibiliData(url) {
         try {
-            const response = await axios.get(`https://api.suraweb.online/download/bilibili?url=${encodeURIComponent(url)}`);
+            const apiUrl = `https://api.suraweb.online/download/bilibili?url=${encodeURIComponent(url)}`;
+            console.log("Fetching data from URL:", apiUrl); // Log URL yang sedang diakses
+            const response = await axios.get(apiUrl);
             return response.data; // Mengembalikan data dari respons
         } catch (error) {
             console.error("Error fetching content from Bilibili API:", error.message);
-            throw error;
+            throw error; // Melempar error agar bisa ditangkap di catch block
         }
     }
 
@@ -33,7 +35,7 @@ module.exports = function(app) {
             }
         } catch (error) {
             console.error("Error in /download/bilibili:", error); // Log error
-            res.status(500).json({ status: false, error: error.message });
+            res.status(500).json({ status: false, error: 'Terjadi kesalahan di server. Silakan coba lagi nanti.' });
         }
     });
 };
