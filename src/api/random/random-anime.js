@@ -3,7 +3,7 @@ const axios = require('axios');
 module.exports = function(app) {
     async function fetchAnimeImages() {
         try {
-            const { data } = await axios.get('https://archive-ui.tanakadomp.biz.id/asupan/anime');
+            const { data } = await axios.get('https://archive-ui.tanakadomp.biz.id/asupan/anime', { timeout: 10000 }); // Timeout 10 detik
             if (!data.result || !Array.isArray(data.result)) {
                 throw new Error('Invalid response structure from Anime API');
             }
