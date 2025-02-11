@@ -90,6 +90,11 @@
           "name": "Instagram",
           "desc": "Download TikTok Videos",
           "path": "/download/instagram?url="
+        }, 
+        {
+          "name": "Bilibili",
+          "desc": "Download Bilibili Videos",
+          "path": "/download/bilibili?url="
         }
       ]
     }, 
