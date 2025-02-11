@@ -50,6 +50,11 @@
           "name": "DeepSeek",
           "desc": "Talk with DeepSeek",
           "path": "/ai/deepseek?text="
+        }, 
+        {
+          "name": "Llama3.3",
+          "desc": "Talk with DeepSeek",
+          "path": "/ai/Llama?text="
         }
       ]
     },
