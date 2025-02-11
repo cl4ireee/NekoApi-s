@@ -45,6 +45,11 @@
           "name": "Mistral Nemo",
           "desc": "Talk with Mistral Nemo",
           "path": "/ai/mistral-nemo?text="
+        }, 
+        {
+          "name": "DeepSeek",
+          "desc": "Talk with DeepSeek",
+          "path": "/ai/deepseek?text="
         }
       ]
     },
