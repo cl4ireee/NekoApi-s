@@ -115,6 +115,11 @@
           "name": "Pinterest",
           "desc": "Search for pinterest",
           "path": "/search/pinterest?q="
+        }, 
+        {
+          "name": "Spotify",
+          "desc": "Search for pinterest",
+          "path": "/search/spotify?q="
         }
       ]
     }
