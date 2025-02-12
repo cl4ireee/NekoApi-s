@@ -117,7 +117,7 @@
           "path": "/download/spotify?url="
         }, 
         {
-  "name": "YouTube Video Downloader",
+  "name": "YouTube",
   "desc": "Download videos from YouTube",
   "path": "/download/ytdl?url=&resolution=",
   "innerDesc": "Specify the YouTube video URL and desired resolution (720, 1080, etc.)"
