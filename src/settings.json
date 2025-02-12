@@ -109,7 +109,7 @@
         {
           "name": "Nekopi Update",
           "desc": "Search for a specific Komiku",
-          "path": "/komik/nekopoiupdt"
+          "path": "/anime/nekopoiupdt"
         }
       ]
     },
