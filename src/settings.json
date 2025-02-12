@@ -85,6 +85,11 @@
           "name": "Komik Latest",
           "desc": "Download Spotify Music",
           "path": "/anime/latest"
+        }, 
+        {
+          "name": "Komiku Detail",
+          "desc": "Download Spotify Music",
+          "path": "/komik/komikudetail?url="
         }
       ]
     },
