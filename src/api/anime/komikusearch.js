@@ -4,7 +4,7 @@ const axios = require("axios");
 const cheerio = require("cheerio");
 
 module.exports = function(app) {
-    app.get('/komiku/search', async (req, res) => {
+    app.get('/komiku/komikusearch', async (req, res) => {
         const { query } = req.query;
 
         if (!query) {
