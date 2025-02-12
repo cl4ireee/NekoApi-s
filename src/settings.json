@@ -53,18 +53,8 @@
         }, 
         {
           "name": "lilychan",
-          "desc": "Talk with DeepSeek",
+          "desc": "Talk with Lilychan",
           "path": "/ai/lilychan?text="
-        }, 
-        {
-          "name": "alicia",
-          "desc": "Talk with DeepSeek",
-          "path": "/ai/alicia?text="
-        }, 
-        {
-          "name": "Meta-llama",
-          "desc": "Talk with Meta-llama",
-          "path": "/ai/meta-llama?text="
         }
       ]
     },
@@ -73,7 +63,7 @@
       "items": [
         {
           "name": "Blue Archive",
-          "desc": "Blue Archive Random Images",
+          "desc": "Random Blue Archive Images",
           "path": "/random/ba"
         }, 
         {
@@ -84,7 +74,7 @@
         {
           "name": "Cosplay",
           "desc": "Random Cosplay Images",
-          "path": "/random/cosplay"
+          "path": "/randosplay"
         }
       ]
     },
@@ -105,11 +95,6 @@
           "name": "Komiku Search",
           "desc": "Search for a specific Komiku",
           "path": "/komik/komikusearch?q="
-        }, 
-        {
-          "name": "Nekopi Update",
-          "desc": "Search for a specific Komiku",
-          "path": "/anime/nekopoiupdt"
         }
       ]
     },
@@ -123,19 +108,19 @@
         }, 
         {
           "name": "Instagram",
-          "desc": "Download TikTok Videos",
+          "desc": "Download Instagram",
           "path": "/download/instagram?url="
         }, 
         {
           "name": "Spotify",
-          "desc": "Download Bilibili Videos",
+          "desc": "Download Spotify",
           "path": "/download/spotify?url="
         }, 
         {
-  "name": "YouTube",
-  "desc": "Download videos from YouTube",
-  "path": "/download/ytdl?url=&resolution=",
-  "innerDesc": "Specify the YouTube video URL and desired resolution (720, 1080, etc.)"
+          "name": "YouTube",
+          "desc": "Download videos from YouTube",
+          "path": "/download/ytdl?url=&resolution=",
+          "innerDesc": "Specify the YouTube video URL and desired resolution (720, 1080, etc.)"
         }
       ]
     }, 
@@ -144,7 +129,7 @@
       "items": [
         {
           "name": "YouTube",
-          "desc": "Video search",
+          "desc": "Search for Youtube",
           "path": "/search/youtube?q="
         }, 
         {
@@ -154,23 +139,28 @@
         }, 
         {
           "name": "Font",
-          "desc": "Search for fonts",
+          "desc": "Search for Fonts",
           "path": "/search/font?q="
         }, 
         {
           "name": "Pinterest",
-          "desc": "Search for pinterest",
+          "desc": "Search for Pinterest",
           "path": "/search/pinterest?q="
         }, 
         {
           "name": "Spotify",
-          "desc": "Search for pinterest",
+          "desc": "Search for Spotift",
           "path": "/search/spotify?q="
         }, 
         {
           "name": "GoogleImg",
-          "desc": "Search for pinterest",
+          "desc": "Search for Googleimg",
           "path": "/search/googleimg?q="
+        }, 
+        {
+          "name": "Bing",
+          "desc": "Search for Bing",
+          "path": "/search/bing?q="
         }
       ]
     }
