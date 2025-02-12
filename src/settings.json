@@ -125,7 +125,7 @@
       ]
     }, 
     {
-      "name": "Search Tools",
+      "name": "Search & Tools",
       "items": [
         {
           "name": "YouTube",
@@ -171,6 +171,11 @@
           "name": "F-Droid",
           "desc": "Search for F-Droid",
           "path": "/search/fdroidsearch?q="
+        }, 
+        {
+          "name": "F-Droid Detail",
+          "desc": "Detail for F-Droid",
+          "path": "/search/fdroiddetail?q="
         }
       ]
     }
