@@ -166,6 +166,11 @@
           "name": "Lirik",
           "desc": "Search for Lirik",
           "path": "/search/lirik?q="
+        }, 
+        {
+          "name": "F-Droid",
+          "desc": "Search for F-Droid",
+          "path": "/search/fdroidsearch?q="
         }
       ]
     }
