@@ -60,6 +60,11 @@
           "name": "alicia",
           "desc": "Talk with DeepSeek",
           "path": "/ai/alicia?text="
+        }, 
+        {
+          "name": "Meta-llama",
+          "desc": "Talk with Meta-llama",
+          "path": "/ai/meta-llama?text="
         }
       ]
     },
