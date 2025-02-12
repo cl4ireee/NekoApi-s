@@ -10,19 +10,22 @@ module.exports = function(app) {
         }
 
         try {
-            const response = await axios.get(`https://komiku.id/?s=${encodeURIComponent(q)}`);
+            const url = `https://komiku.id/?s=${encodeURIComponent(q)}`;
+            console.log(`Fetching data from: ${url}`); // Log URL yang diambil
+
+            const response = await axios.get(url);
             const $ = cheerio.load(response.data);
             let results = [];
 
-            // Mengambil elemen yang sesuai dengan hasil pencarian
             $(".ls4w .ls4").each((index, element) => {
                 const url = "https://komiku.id" + $(element).find("a").attr("href");
                 const title = $(element).find(".ls4j h3 a").text().trim();
                 const thumbnail = $(element).find(".lazy").attr("data-src")?.split("?")[0].trim() || "";
-                const synopsis = $(element).find(".ls4j p").text().trim(); // Mengambil sinopsis jika ada
 
-                results.push({ title, url, thumbnail, synopsis });
+                results.push({ title, url, thumbnail });
             });
+
+            console.log(`Results found: ${results.length}`); // Log jumlah hasil yang ditemukan
 
             // Jika tidak ada hasil, kembalikan array kosong
             if (results.length === 0) {
