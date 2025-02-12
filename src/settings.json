@@ -79,6 +79,16 @@
       ]
     },
     {
+      "name": "Anime",
+      "items": [
+        {
+          "name": "Komik Latest",
+          "desc": "Download Spotify Music",
+          "path": "/anime/latest"
+        }
+      ]
+    },
+    {
       "name": "Download",
       "items": [
         {
