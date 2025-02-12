@@ -55,12 +55,6 @@
           "name": "lilychan",
           "desc": "Talk with Lilychan",
           "path": "/ai/lilychan?text="
-        }, 
-        {
-            "name": "Veed",
-            "desc": "Generate images using AI",
-            "path": "/ai/veed?prompt=&resolution=",
-            "innerDesc": "Use this endpoint to generate images based on your prompt."
         }
       ]
     },
@@ -182,6 +176,11 @@
           "name": "F-Droid Detail",
           "desc": "Detail for F-Droid",
           "path": "/search/fdroiddetail?q="
+        }, 
+        {
+            "name": "Gelbooru",
+            "desc": "Search for images on Gelbooru",
+            "path": "/search/gelbooru?q="
         }
       ]
     }
