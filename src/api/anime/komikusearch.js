@@ -1,5 +1,3 @@
-// komikusearch.js
-
 const axios = require("axios");
 const cheerio = require("cheerio");
 
@@ -16,13 +14,23 @@ module.exports = function(app) {
             const $ = cheerio.load(response.data);
             let results = [];
 
+            // Mengambil elemen yang sesuai dengan hasil pencarian
             $(".ls4w .ls4").each((index, element) => {
                 const url = "https://komiku.id" + $(element).find("a").attr("href");
                 const title = $(element).find(".ls4j h3 a").text().trim();
                 const thumbnail = $(element).find(".lazy").attr("data-src")?.split("?")[0].trim() || "";
+                const synopsis = $(element).find(".ls4j p").text().trim(); // Mengambil sinopsis jika ada
 
-                results.push({ title, url, thumbnail });
+                results.push({ title, url, thumbnail, synopsis });
             });
+
+            // Jika tidak ada hasil, kembalikan array kosong
+            if (results.length === 0) {
+                return res.status(200).json({
+                    status: true,
+                    results: []
+                });
+            }
 
             res.status(200).json({
                 status: true,
