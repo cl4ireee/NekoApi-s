@@ -46,7 +46,8 @@ module.exports = function(app) {
         const response = await axios.post(BASE_URL + URL_LIST, data, {
             headers: {
                 "content-type": `multipart/form-data; boundary=${boundary}`
-            }
+            }, 
+            timeout: 10000
         });
 
         return response.data;
