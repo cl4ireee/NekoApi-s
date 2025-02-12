@@ -161,6 +161,11 @@
           "name": "Xnxx",
           "desc": "Search for Bing",
           "path": "/search/xnxxsearch?q="
+        }, 
+        {
+          "name": "Lirik",
+          "desc": "Search for Lirik",
+          "path": "/search/lirik?q="
         }
       ]
     }
