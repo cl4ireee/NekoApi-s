@@ -1,38 +1,46 @@
-const axios = require("axios");
+const axios = require('axios');
 
 module.exports = function(app) {
-    // Endpoint untuk pencarian dengan menggunakan API SuraWeb
-    app.get('/search/bing', async (req, res) => {
-        const query = req.query.q;
-
-        if (!query) {
-            return res.status(400).json({ status: false, error: 'Query parameter "q" is required' });
-        }
-
+    // Fungsi untuk mengambil data dari API SuraWeb
+    async function fetchContent(query) {
         try {
-            // Mengambil data dari API SuraWeb dengan query yang diberikan
+            // Menggunakan API SuraWeb dengan metode GET
             const response = await axios.get(`https://api.suraweb.online/search/bing?q=${encodeURIComponent(query)}`);
-            const data = response.data;
+            return response.data;
+        } catch (error) {
+            console.error("Error fetching content from SuraWeb API:", error.message);
+            throw error;
+        }
+    }
 
-            if (data.status === true && data.result && data.result.length > 0) {
-                const results = data.result.map(item => ({
+    // Endpoint pencarian berdasarkan query 'q'
+    app.get('/search/bing', async (req, res) => {
+        try {
+            const { q } = req.query; // Mengambil parameter query 'q'
+            if (!q) {
+                return res.status(400).json({ status: false, error: 'Query parameter is required' });
+            }
+
+            // Mengambil data dari API SuraWeb
+            const apiResponse = await fetchContent(q);
+            const { status, result } = apiResponse; // Mengambil status dan result dari respons API
+
+            // Memeriksa apakah ada hasil
+            if (!result || result.length === 0) {
+                return res.status(404).json({ status: false, error: 'Tidak ada hasil yang ditemukan.' });
+            }
+
+            // Mengembalikan respons yang terstruktur
+            res.status(200).json({
+                status,
+                results: result.map(item => ({
                     title: item.title,
                     description: item.description,
                     link: item.link
-                }));
-
-                // Mengembalikan hasil pencarian ke pengguna
-                res.status(200).json({
-                    status: true,
-                    creator: data.creator,
-                    result: results
-                });
-            } else {
-                res.status(404).json({ status: false, error: 'No results found' });
-            }
+                }))
+            });
         } catch (error) {
-            console.error('Error fetching data from SuraWeb:', error.message);
-            res.status(500).json({ status: false, error: `Terjadi kesalahan: ${error.message}` });
+            res.status(500).json({ status: false, error: error.message });
         }
     });
-}
+};
