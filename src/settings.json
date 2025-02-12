@@ -55,6 +55,11 @@
           "name": "lilychan",
           "desc": "Talk with DeepSeek",
           "path": "/ai/lilychan?text="
+        }, 
+        {
+          "name": "alicia",
+          "desc": "Talk with DeepSeek",
+          "path": "/ai/alicia?text="
         }
       ]
     },
