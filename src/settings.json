@@ -105,6 +105,11 @@
           "name": "Komiku Search",
           "desc": "Search for a specific Komiku",
           "path": "/komik/komikusearch?q="
+        }, 
+        {
+          "name": "Nekopi Update",
+          "desc": "Search for a specific Komiku",
+          "path": "/komik/nekopoiupdt"
         }
       ]
     },
