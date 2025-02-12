@@ -120,7 +120,7 @@
           "name": "Videy",
           "desc": "Download Videy",
           "path": "/download/videy?url="
-        }
+        }, 
         {
           "name": "YouTube",
           "desc": "Download videos from YouTube",
