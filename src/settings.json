@@ -55,6 +55,12 @@
           "name": "lilychan",
           "desc": "Talk with Lilychan",
           "path": "/ai/lilychan?text="
+        }, 
+        {
+            "name": "Veed",
+            "desc": "Generate images using AI",
+            "path": "/ai/veed?prompt=&resolution=",
+            "innerDesc": "Use this endpoint to generate images based on your prompt."
         }
       ]
     },
