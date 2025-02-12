@@ -1,18 +1,18 @@
-// search.js
+// komikusearch.js
 
 const axios = require("axios");
 const cheerio = require("cheerio");
 
 module.exports = function(app) {
     app.get('/komiku/komikusearch', async (req, res) => {
-        const { query } = req.query;
+        const { q } = req.query; // Mengambil query dari parameter
 
-        if (!query) {
+        if (!q) {
             return res.status(400).json({ status: false, error: 'Query is required' });
         }
 
         try {
-            const response = await axios.get(`https://komiku.id/?s=${encodeURIComponent(query)}`);
+            const response = await axios.get(`https://komiku.id/?s=${encodeURIComponent(q)}`);
             const $ = cheerio.load(response.data);
             let results = [];
 
