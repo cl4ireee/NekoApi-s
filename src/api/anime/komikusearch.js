@@ -4,7 +4,7 @@ const axios = require("axios");
 const cheerio = require("cheerio");
 
 module.exports = function(app) {
-    app.get('/komiku/komikusearch', async (req, res) => {
+    app.get('/komik/komikusearch', async (req, res) => {
         const { q } = req.query; // Mengambil query dari parameter
 
         if (!q) {
