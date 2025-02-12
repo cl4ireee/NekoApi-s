@@ -1,7 +1,7 @@
 const axios = require("axios");
 
 module.exports = function(app) {
-    app.get('/api/nekopoiupdt', async (req, res) => {
+    app.get('/anime/nekopoiupdt', async (req, res) => {
         try {
             const response = await axios.get("https://archive-ui.tanakadomp.biz.id/asupan/nekopoi");
             const data = response.data;
