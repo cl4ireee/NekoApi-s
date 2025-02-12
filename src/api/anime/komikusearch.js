@@ -33,7 +33,7 @@ module.exports = function(app) {
     const komiku = new Komiku();
 
     // Endpoint untuk mencari komik
-    app.get('/search/komiksearch', async (req, res) => {
+    app.get('/search/komikusearch', async (req, res) => {
         try {
             const { q } = req.query; // Mengambil parameter query 'q'
             if (!q) {
