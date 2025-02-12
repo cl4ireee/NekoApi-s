@@ -82,14 +82,19 @@
       "name": "Anime",
       "items": [
         {
-          "name": "Komik Latest",
-          "desc": "Download Spotify Music",
+          "name": "Komiku Latest",
+          "desc": "Get the latest Komiku updates",
           "path": "/anime/latest"
         }, 
         {
           "name": "Komiku Detail",
-          "desc": "Download Spotify Music",
+          "desc": "Get details of a specific Komiku",
           "path": "/komik/komikudetail?url="
+        }, 
+        {
+          "name": "Komiku Search",
+          "desc": "Search for a specific Komiku",
+          "path": "/komik/komikusearch?q="
         }
       ]
     },
