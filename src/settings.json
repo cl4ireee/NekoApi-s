@@ -122,6 +122,11 @@
           "path": "/download/videy?url="
         }, 
         {
+          "name": "Terabox",
+          "desc": "Download Terabox",
+          "path": "/download/terabox?url="
+        }, 
+        {
           "name": "YouTube",
           "desc": "Download videos from YouTube",
           "path": "/download/ytdl?url=&resolution=",
