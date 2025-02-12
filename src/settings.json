@@ -124,8 +124,18 @@
         }
       ]
     }, 
+        {
+      "name": "News",
+      "items": [
+        {
+          "name": "Mlbb News",
+          "desc": "Get the latest mlbb news",
+          "path": "news/mobile-legends"
+        }
+      ]
+    },
     {
-      "name": "Search & Tools",
+      "name": "Search Tools",
       "items": [
         {
           "name": "YouTube",
