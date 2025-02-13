@@ -14,12 +14,11 @@ module.exports = function(app) {
             'User -Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
         };
 
-        const data = new URLSearchParams();
-        data.append('text', text);
-        data.append('lc', languageCode || 'id');
+        // Membuat body request secara manual
+        const body = `text=${encodeURIComponent(text)}&lc=${encodeURIComponent(languageCode || 'id')}`;
 
         try {
-            const response = await axios.post(url, data.toString(), { headers });
+            const response = await axios.post(url, body, { headers });
             console.log('API Response:', response.data); // Log respons dari API
 
             res.status(200).json({
