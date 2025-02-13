@@ -197,6 +197,11 @@
           "name": "Android1",
           "desc": "Search for Android apps",
           "path": "/search/android1?q="
+        },
+        {
+          "name": "Apkcombo",
+          "desc": "Search for Android Apkcombo",
+          "path": "/search/apkcombo?q="
         }, 
         {
           "name": "Font",
