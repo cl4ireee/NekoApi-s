@@ -1,5 +1,4 @@
 const axios = require('axios');
-const { URLSearchParams } = require('url');
 
 module.exports = function(app) {
     app.get('/ai/simsimi', async (req, res) => {
@@ -21,11 +20,11 @@ module.exports = function(app) {
 
         try {
             const response = await axios.post(url, data.toString(), { headers });
-            const result = response.data;
+            console.log('API Response:', response.data); // Log respons dari API
 
             res.status(200).json({
                 status: true,
-                result: result.message // Mengembalikan pesan dari SimSimi
+                result: response.data.message // Mengembalikan pesan dari SimSimi
             });
         } catch (error) {
             console.error('Error asking SimSimi:', error.message);
