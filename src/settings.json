@@ -208,16 +208,6 @@
             "path": "/search/gelbooru?q="
         }
       ]
-    }, 
-    {
-      "name": "Tools",
-      "items": [
-        {
-          "name": "Country", 
-          "desc": "Get the latest mlbb news",
-          "path": "tools/country-info?q="
-        }
-      ]
     }
   ]
 }
