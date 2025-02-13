@@ -146,6 +146,11 @@
           "name": "Mlbb News",
           "desc": "Get the latest mlbb news",
           "path": "/news/mobile-legends"
+        }, 
+        {
+          "name": "Free Fire News",
+          "desc": "Get the latest free fire news",
+          "path": "/news/free-fire"
         }
       ]
     },
