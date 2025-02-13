@@ -206,6 +206,14 @@
             "name": "Gelbooru",
             "desc": "Search for images on Gelbooru",
             "path": "/search/gelbooru?q="
+        }, 
+        {
+      "name": "Tools",
+      "items": [
+        {
+          "name": "Clone Web",
+          "desc": "Get the latest mlbb news",
+          "path": "tools/cloneweb?url="
         }
       ]
     }
