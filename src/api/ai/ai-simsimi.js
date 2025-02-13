@@ -1,35 +1,36 @@
 const axios = require('axios');
-const FormData = require('form-data');
+const cheerio = require('cheerio');
 
 module.exports = function(app) {
-    async function simSimi(text, languageCode = 'id') {
-        const form = new FormData();
-        form.append('text', text);
-        form.append('lc', languageCode);
-
+    async function scrapeSimSimi(text) {
         try {
-            const { data } = await axios.post('https://api.simsimi.vn/v1/simtalk', form, {
-                headers: {
-                    ...form.getHeaders(),
-                }
-            });
-            return data;
+            // Mengambil halaman dari SimSimi
+            const response = await axios.get(`https://www.simsimi.com/talk?text=${encodeURIComponent(text)}`);
+            const html = response.data;
+
+            // Menggunakan cheerio untuk mem-parsing HTML
+            const $ = cheerio.load(html);
+            const result = $('.chatbox .bot').text(); // Sesuaikan selector ini dengan struktur HTML yang tepat
+
+            return result;
         } catch (error) {
-            console.error('Error fetching from SimSimi:', error);
-            throw new Error('Failed to fetch response from SimSimi');
+            console.error("Error scraping SimSimi:", error.message);
+            throw error;
         }
     }
 
     app.get('/ai/simsimi', async (req, res) => {
         try {
-            const { text, languageCode } = req.query;
+            const { text } = req.query; // Mengambil parameter query 'text'
             if (!text) {
                 return res.status(400).json({ status: false, error: 'Text is required' });
             }
-            const result = await simSimi(text, languageCode || 'id');
+            const result = await scrapeSimSimi(text);
+
+            // Mengembalikan respons yang terstruktur
             res.status(200).json({
                 status: true,
-                result: result.message // Pastikan ini sesuai dengan struktur respons API
+                result // Mengembalikan hasil dari scraping
             });
         } catch (error) {
             res.status(500).json({ status: false, error: error.message });
