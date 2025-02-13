@@ -2,7 +2,13 @@ const axios = require('axios');
 const { URLSearchParams } = require('url');
 
 module.exports = function(app) {
-    async function simSimi(text, languageCode = 'id') {
+    app.get('/ai/simsimi', async (req, res) => {
+        const { text, languageCode } = req.query; // Mengambil parameter query 'text' dan 'languageCode'
+
+        if (!text) {
+            return res.status(400).json({ status: false, error: 'Text is required' });
+        }
+
         const url = 'https://api.simsimi.vn/v1/simtalk';
         const headers = {
             'Content-Type': 'application/x-www-form-urlencoded',
@@ -11,30 +17,19 @@ module.exports = function(app) {
 
         const data = new URLSearchParams();
         data.append('text', text);
-        data.append('lc', languageCode);
+        data.append('lc', languageCode || 'id');
 
         try {
             const response = await axios.post(url, data.toString(), { headers });
-            return response.data.message; // Mengembalikan pesan dari respons
-        } catch (error) {
-            console.error('Error asking SimSimi:', error.message);
-            throw new Error('Gagal mendapatkan respons dari SimSimi');
-        }
-    }
+            const result = response.data;
 
-    app.get('/ai/simsimi', async (req, res) => {
-        try {
-            const { text, languageCode } = req.query; // Mengambil parameter query 'text' dan 'languageCode'
-            if (!text) {
-                return res.status(400).json({ status: false, error: 'Text is required' });
-            }
-            const result = await simSimi(text, languageCode || 'id');
             res.status(200).json({
                 status: true,
-                result // Mengembalikan hasil dari SimSimi
+                result: result.message // Mengembalikan pesan dari SimSimi
             });
         } catch (error) {
-            res.status(500).json({ status: false, error: error.message });
+            console.error('Error asking SimSimi:', error.message);
+            res.status(500).json({ status: false, error: 'Failed to get response from SimSimi' });
         }
     });
 };
