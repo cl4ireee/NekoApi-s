@@ -8,7 +8,10 @@ module.exports = function(app) {
 
         try {
             const response = await axios.post('https://api.trace.moe/search', form, {
-                headers: form.getHeaders(),
+                headers: {
+                    ...form.getHeaders(),
+                    'Content-Type': 'application/x-www-form-urlencoded' // Pastikan header ini ada
+                },
                 params: {
                     anilistInfo: true,
                     cutBorders: false
