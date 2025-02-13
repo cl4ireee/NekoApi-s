@@ -28,14 +28,14 @@ module.exports = function(app) {
     }
 
     app.get('/tools/tracemoe', async (req, res) => {
-        const { imageUrl, limit, minSimilarity } = req.query;
+        const { url, limit, minSimilarity } = req.query;
 
-        if (!imageUrl) {
+        if (!url) {
             return res.status(400).json({ status: false, error: 'Image URL is required' });
         }
 
         try {
-            const results = await traceMoe(imageUrl, limit || 5, minSimilarity || 0.7);
+            const results = await traceMoe(url, limit || 5, minSimilarity || 0.7);
             res.status(200).json({
                 status: true,
                 results
