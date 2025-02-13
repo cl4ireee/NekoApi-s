@@ -27,7 +27,7 @@ module.exports = function(app) {
         }
     }
 
-    app.get('/ai/tracemoe', async (req, res) => {
+    app.get('/tools/tracemoe', async (req, res) => {
         const { imageUrl, limit, minSimilarity } = req.query;
 
         if (!imageUrl) {
