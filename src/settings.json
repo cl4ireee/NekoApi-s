@@ -206,7 +206,9 @@
             "name": "Gelbooru",
             "desc": "Search for images on Gelbooru",
             "path": "/search/gelbooru?q="
-        }, 
+        }
+      ]
+    }, 
         {
       "name": "Tools",
       "items": [
