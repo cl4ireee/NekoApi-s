@@ -12,14 +12,17 @@ module.exports = function(app) {
             let articles = [];
 
             $('.row.tab-box').each((index, element) => {
-                let category = $(element).find('.cat-name').text().trim();
-                let title = $(element).find('h2 a').text().trim();
+                let category = $(element).find('.cat-name').text().trim() || 'Tidak ada kategori';
+                let title = $(element).find('h2 a').text().trim() || 'Tidak ada judul';
                 let link = $(element).find('h2 a').attr('href');
-                let description = $(element).find('h3 p').text().trim();
-                let author = $(element).find('.author').text().trim();
-                let authorLink = $(element).find('.author').attr('href');
-                let publishTime = $(element).find('span[data-publish-time]').text().trim();
-                let image = $(element).find('img').attr('data-src');
+                if (link && !link.startsWith('http')) {
+                    link = new URL(link, url).href; // Menggabungkan dengan domain utama
+                }
+                let description = $(element).find('h3 p').text().trim() || 'Tidak ada deskripsi';
+                let author = $(element).find('.author').text().trim() || 'Tidak ada penulis';
+                let authorLink = $(element).find('.author').attr('href') || '#';
+                let publishTime = $(element).find('span[data-publish-time]').text().trim() || 'Tidak ada waktu publikasi';
+                let image = $(element).find('img').attr('data-src') || '';
 
                 articles.push({
                     category,
@@ -39,7 +42,7 @@ module.exports = function(app) {
                 result: articles
             });
         } catch (error) {
-            console.error('Error fetching data:', error);
+            console.error('Error fetching data:', error.message);
             res.status(500).json({ status: false, error: 'Error fetching data' });
         }
     });
