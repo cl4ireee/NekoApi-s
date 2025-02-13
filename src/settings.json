@@ -145,7 +145,7 @@
         {
           "name": "Mlbb News",
           "desc": "Get the latest mlbb news",
-          "path": "news/mobile-legends"
+          "path": "/news/mobile-legends"
         }
       ]
     },
