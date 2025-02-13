@@ -9,7 +9,7 @@ module.exports = function(app) {
             });
             return response.data; // Mengembalikan data gambar
         } catch (error) {
-            console.error("Error fetching content from Cosplay API:", error.message);
+            console.error("Error fetching content from Cosplay API:", error.response ? error.response.data : error.message);
             throw error;
         }
     }
