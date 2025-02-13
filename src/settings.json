@@ -213,9 +213,9 @@
       "name": "Tools",
       "items": [
         {
-          "name": "Clone Web",
+          "name": "Country", 
           "desc": "Get the latest mlbb news",
-          "path": "tools/cloneweb?url="
+          "path": "tools/country-info?q="
         }
       ]
     }
