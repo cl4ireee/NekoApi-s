@@ -95,6 +95,11 @@
           "name": "Komiku Search",
           "desc": "Search for a specific Komiku",
           "path": "/komik/komikusearch?q="
+        }, 
+        {
+          "name": "Nekopoi",
+          "desc": "Get data from Nekopoi",
+          "path": "/anime/nekopoi"
         }
       ]
     },
