@@ -121,6 +121,11 @@
           "name": "Nekopoi",
           "desc": "Get data from Nekopoi",
           "path": "/anime/nekopoi"
+        }, 
+        {
+          "name": "Livechart",
+          "desc": "Get data from Nekopoi",
+          "path": "/anime/livechart?q="
         }
       ]
     },
