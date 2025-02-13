@@ -181,7 +181,7 @@
         {
           "name": "Tracemoe",
           "desc": "Blue Archive Random Images",
-          "path": "/tools/tracemoe"
+          "path": "/tools/tracemoe?url="
         }
       ]
     },
