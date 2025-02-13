@@ -55,6 +55,11 @@
           "name": "lilychan",
           "desc": "Talk with Lilychan",
           "path": "/ai/lilychan?text="
+        }, 
+        {
+          "name": "Flux-schnell",
+          "desc": "Talk with Lilychan",
+          "path": "/ai/flux-schnell?text="
         }
       ]
     },
