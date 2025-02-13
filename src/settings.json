@@ -176,6 +176,16 @@
       ]
     },
     {
+      "name": "Tools",
+      "items": [
+        {
+          "name": "Tracemoe",
+          "desc": "Blue Archive Random Images",
+          "path": "/tools/tracemoe"
+        }
+      ]
+    },
+    {
       "name": "Search Tools",
       "items": [
         {
