@@ -6,14 +6,14 @@ app.use(express.json());
 
 // Endpoint untuk mengambil informasi negara
 app.get('/tools/country-info', async (req, res) => {
-    const { name } = req.query;
+    const { q } = req.query; // Menggunakan 'q' sebagai parameter kueri
 
-    if (!name) {
+    if (!q) {
         return res.status(400).json({ status: false, message: 'Please provide a country name!' });
     }
 
     try {
-        const response = await fetch(`https://api.siputzx.my.id/api/tools/countryInfo?name=${name}`);
+        const response = await fetch(`https://api.siputzx.my.id/api/tools/countryInfo?name=${q}`);
         const data = await response.json();
 
         if (!data.status) {
