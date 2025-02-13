@@ -60,6 +60,11 @@
           "name": "Flux-schnell",
           "desc": "Talk with Lilychan",
           "path": "/ai/flux-schnell?text="
+        }, 
+        {
+          "name": "Simsimi",
+          "desc": "Talk with Simsimi",
+          "path": "/ai/simsimi?text="
         }
       ]
     },
