@@ -1,8 +1,6 @@
 const express = require('express');
 const axios = require('axios');
 
-const app = express();
-
 // Endpoint untuk mengakses API eksternal
 app.get('/api/flux-schnell', async (req, res) => {
     const { text } = req.query; // Mengambil parameter 'text' dari query
@@ -24,6 +22,3 @@ app.get('/api/flux-schnell', async (req, res) => {
         res.status(500).json({ status: false, error: 'Error fetching data from external API' });
     }
 });
-
-// Ekspor app untuk digunakan di file lain
-module.exports = app;
