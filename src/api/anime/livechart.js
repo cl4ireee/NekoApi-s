@@ -25,11 +25,12 @@ module.exports = function(app) {
             res.status(200).json({
                 status,
                 results: result.map(item => ({
-                    title: item.title, // Menggunakan title dari hasil
-                    release: item.release || "N/A", // Menambahkan release jika ada
-                    rating: item.rating || "N/A", // Menambahkan rating jika ada
-                    imageUrl: item.imageUrl || "", // Menambahkan imageUrl jika ada
-                    link: item.link || "" // Menambahkan link jika ada
+                    title: item.title,
+                    release: item.release,
+                    rating: item.rating,
+                    type: item.type,
+                    imageUrl: item.imageUrl,
+                    link: item.link
                 }))
             });
         } catch (error) {
