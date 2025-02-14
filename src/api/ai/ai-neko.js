@@ -1,7 +1,7 @@
 const axios = require("axios");
 
 module.exports = function (app) {
-    const LLAMA_API_URL = "https://api.siputzx.my.id/api/ai/llama33"; // Pastikan URL ini benar
+    const LLAMA_API_URL = "https://api.siputzx.my.id/api/ai/llama33";
 
     let chatHistory = [
         { role: "system", content: "Kamu adalah Neko, AI yang pintar dan ramah. Kamu dibuat dan dikembangkan oleh Claire." }
@@ -26,7 +26,7 @@ module.exports = function (app) {
 
             return { status: true, result: reply };
         } catch (error) {
-            console.error("Error fetching content from NekoApi:", error.message);
+            console.error("Error fetching content from Llama API:", error.message);
             return { status: false, creator: "Claire", error: "Terjadi kesalahan pada server AI." };
         }
     }
