@@ -158,6 +158,11 @@
           "path": "/download/terabox?url="
         }, 
         {
+        "name": "Twitter",
+        "desc": "Download Tweet Metadata and Media",
+        "path": "/download/twitter?url="
+        }, 
+        {
           "name": "YouTube",
           "desc": "Download videos from YouTube",
           "path": "/download/ytdl?url=&resolution=",
