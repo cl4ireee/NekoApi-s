@@ -110,7 +110,7 @@
         {
           "name": "Blue Archive Detail",
           "desc": "Fetch random cosplay images.",
-          "path": "/random/badetail?url"
+          "path": "/random/badetail?q="
         }
       ]
     },
