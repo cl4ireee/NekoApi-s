@@ -24,7 +24,7 @@ module.exports = function(app) {
 
             // Mengembalikan daftar karakter
             res.status(200).json({
-                status: true,
+                status: true,  // Menambahkan status true di sini
                 total_character: characters.length,
                 list_character: characters
             });
@@ -38,89 +38,90 @@ module.exports = function(app) {
     });
 
     // Endpoint untuk mendapatkan detail karakter berdasarkan nama
-app.get('/random/badetail', async (req, res) => {
-    const { q } = req.query; // Mengambil parameter q dari query string
+    app.get('/random/badetail', async (req, res) => {
+        const { q } = req.query; // Mengambil parameter q dari query string
 
-    // Validasi parameter q
-    if (!q) {
-        return res.status(400).json({
-            status: false,
-            error: 'Character name is required'
-        });
-    }
-
-    try {
-        // Mengambil daftar karakter
-        const response = await axios.get('https://bluearchive.wiki/wiki/Characters');
-        const $ = cheerio.load(response.data);
-        const chara = $(".sortable tbody tr td a")
-            .toArray()
-            .find(el => $(el).text().trim().toLowerCase() === q.toLowerCase());
-
-        if (!chara) {
-            return res.status(404).json({
+        // Validasi parameter q
+        if (!q) {
+            return res.status(400).json({
                 status: false,
-                error: 'Character not found'
+                error: 'Character name is required'
             });
         }
 
-        // Mendapatkan URL karakter dan mengambil data detailnya
-        const characterUrl = "https://bluearchive.wiki" + $(chara).attr("href");
-        const charDetailsResponse = await axios.get(characterUrl);
-        const $chara = cheerio.load(charDetailsResponse.data);
-        let result = {
-            status: true,  // Menambahkan status true di sini
-            metadata: {},
-            voices: []
-        };
+        try {
+            // Mengambil daftar karakter
+            const response = await axios.get('https://bluearchive.wiki/wiki/Characters');
+            const $ = cheerio.load(response.data);
+            const chara = $(".sortable tbody tr td a")
+                .toArray()
+                .find(el => $(el).text().trim().toLowerCase() === q.toLowerCase());
 
-        // Mengambil metadata karakter
-        $chara(".character tbody tr").each((index, element) => {
-            let key = $(element).find("th").text().trim().split(" ").join("_").toLowerCase();
-            let value = $(element).find("td").text().trim();
-            if (key && value) {
-                result.metadata[key] = value;
-            }
-        });
-
-        // Mengambil kartu karakter (gambar, rank, dll.)
-        result.metadata.cards = $chara(".charactercard").map((index, element) => ({
-            name: $chara(element).find(".name").text().trim(),
-            role: $chara(element).find("div").last().attr("title"),
-            ranks: $chara(element).find(".rank").text().trim(),
-            image: "https:" + $chara(element).find(".portrait span > a > img").attr("src").split("/100px")[0],
-            url: "https://bluearchive.wiki" + $chara(element).find(".portrait span > a").attr("href")
-        })).get();
-
-        // Mengambil suara karakter
-        const voiceResponse = await axios.get(characterUrl + '/audio');
-        const $voice = cheerio.load(voiceResponse.data);
-        $voice(".wikitable tbody tr").each((index, element) => {
-            let title = $voice(element).find("td").text().trim().split("\n")[0];
-            let text = $voice(element).find("td p").eq(1).text().trim();
-            let filename = $voice(element).find("td span span audio").attr("data-mwtitle");
-            let duration = $voice(element).find("td span span audio").attr("data-durationhint") + " seconds";
-            let audio = "https:" + $voice(element).find("td span span audio source").attr("src");
-
-            if (title) {
-                result.voices.push({
-                    title,
-                    filename,
-                    duration,
-                    text,
-                    audio
+            if (!chara) {
+                return res.status(404).json({
+                    status: false,
+                    error: 'Character not found'
                 });
             }
-        });
 
-        // Mengembalikan detail karakter dengan status true
-        res.status(200).json(result);
+            // Mendapatkan URL karakter dan mengambil data detailnya
+            const characterUrl = "https://bluearchive.wiki" + $(chara).attr("href");
+            const charDetailsResponse = await axios.get(characterUrl);
+            const $chara = cheerio.load(charDetailsResponse.data);
+            let result = {
+                status: true,  // Menambahkan status true di sini
+                metadata: {},
+                voices: []
+            };
 
-    } catch (error) {
-        console.error("Error while fetching character details:", error.message);
-        res.status(500).json({
-            status: false,
-            error: 'Failed to fetch character details'
-        });
-    }
-});
+            // Mengambil metadata karakter
+            $chara(".character tbody tr").each((index, element) => {
+                let key = $(element).find("th").text().trim().split(" ").join("_").toLowerCase();
+                let value = $(element).find("td").text().trim();
+                if (key && value) {
+                    result.metadata[key] = value;
+                }
+            });
+
+            // Mengambil kartu karakter (gambar, rank, dll.)
+            result.metadata.cards = $chara(".charactercard").map((index, element) => ({
+                name: $chara(element).find(".name").text().trim(),
+                role: $chara(element).find("div").last().attr("title"),
+                ranks: $chara(element).find(".rank").text().trim(),
+                image: "https:" + $chara(element).find(".portrait span > a > img").attr("src").split("/100px")[0],
+                url: "https://bluearchive.wiki" + $chara(element).find(".portrait span > a").attr("href")
+            })).get();
+
+            // Mengambil suara karakter
+            const voiceResponse = await axios.get(characterUrl + '/audio');
+            const $voice = cheerio.load(voiceResponse.data);
+            $voice(".wikitable tbody tr").each((index, element) => {
+                let title = $voice(element).find("td").text().trim().split("\n")[0];
+                let text = $voice(element).find("td p").eq(1).text().trim();
+                let filename = $voice(element).find("td span span audio").attr("data-mwtitle");
+                let duration = $voice(element).find("td span span audio").attr("data-durationhint") + " seconds";
+                let audio = "https:" + $voice(element).find("td span span audio source").attr("src");
+
+                if (title) {
+                    result.voices.push({
+                        title,
+                        filename,
+                        duration,
+                        text,
+                        audio
+                    });
+                }
+            });
+
+            // Mengembalikan detail karakter dengan status true
+            res.status(200).json(result);
+
+        } catch (error) {
+            console.error("Error while fetching character details:", error.message);
+            res.status(500).json({
+                status: false,
+                error: 'Failed to fetch character details'
+            });
+        }
+    });
+};
