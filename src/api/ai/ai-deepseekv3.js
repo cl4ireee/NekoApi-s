@@ -27,11 +27,18 @@ module.exports = function(app) {
     }
 
     try {
-      const { result } = await fetchContentDeepSeekV3(text);
-      res.status(200).json({
-        status: true,
-        result
-      });
+      // Mengambil respons dari model DeepSeek-V3
+      const modelResponse = await fetchContentDeepSeekV3(text);
+
+      // Pastikan model response ada dan mengembalikan hasil
+      if (modelResponse && modelResponse.result) {
+        res.status(200).json({
+          status: true,
+          result: modelResponse.result  // Hanya memberikan hasil dari model
+        });
+      } else {
+        res.status(500).json({ status: false, error: 'No result from model' });
+      }
     } catch (error) {
       res.status(500).json({ status: false, error: error.message });
     }
