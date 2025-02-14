@@ -156,6 +156,11 @@
           "name": "TikTok",
           "desc": "Download TikTok videos.",
           "path": "/download/tiktok?url="
+        },
+        {
+          "name": "Douyin",
+          "desc": "Download TikTok videos.",
+          "path": "/download/douyin?url="
         }, 
         {
           "name": "Instagram",
