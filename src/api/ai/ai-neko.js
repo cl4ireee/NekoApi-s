@@ -3,7 +3,7 @@ const axios = require('axios');
 module.exports = function(app) {
     // Menyimpan chat history
     let chatHistory = [
-        { role: "system", content: "Kamu adalah Neko, AI yang pintar dan ramah. Kamu dibuat dan dikembangkan oleh Claire." }
+        { role: "system", content: "Kamu adalah Neko, AI yang pintar dan ramah. Kamu dibuat dan dikembangkan oleh Claire. Kamu bisa membantu dengan menjawab berbagai pertanyaan." }
     ];
 
     // Fungsi untuk mengambil konten dari API
@@ -14,9 +14,9 @@ module.exports = function(app) {
             // Menambahkan pesan user ke dalam chat history
             chatHistory.push({ role: "user", content });
 
-            // Menambahkan chatHistory ke dalam permintaan API
+            // Menambahkan chatHistory ke dalam permintaan API untuk menjaga konteks
             const response = await axios.get(API_URL, {
-                params: { prompt: "Be a helpful assistant", text: content }
+                params: { prompt: "Be a helpful assistant, especially for Neko. Respond as if you are Neko, developed by Claire.", text: content }
             });
 
             const reply = response.data.data;
