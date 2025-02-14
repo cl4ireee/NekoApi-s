@@ -1,7 +1,7 @@
 {
   "name": "Neko Api's",
   "version": "1.0.0",
-  "description": "A simple and user-friendly API documentation that provides access to various AI models, image generation tools, random image retrieval, anime updates, download capabilities, news, and search tools. Perfect for developers looking to integrate diverse functionalities into their applications.",
+  "description": "A simple and user-friendly API that provides various functionalities for developers to integrate into their applications.",
   "header": {
     "status": "Online!",
     "imageSrc": [
