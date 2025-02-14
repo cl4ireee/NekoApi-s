@@ -103,13 +103,13 @@
           "path": "/random/cosplay"
         }, 
         {
-          "name": "Blue Archive Wiki",
-          "desc": "Fetch random cosplay images.",
+          "name": "Blue Archive List",
+          "desc": "Get a list of Blue Archive characters.",
           "path": "/random/bluearchive"
-        }, 
+        },
         {
           "name": "Blue Archive Detail",
-          "desc": "Fetch random cosplay images.",
+          "desc": "Get detailed info about a Blue Archive character.",
           "path": "/random/badetail?q="
         }
       ]
