@@ -163,6 +163,11 @@
         "path": "/download/twitter?url="
         }, 
         {
+        "name": "Threads",
+        "desc": "Download Threads Post Metadata and Media",
+        "path": "/download/threads?url="
+        }, 
+        {
           "name": "YouTube",
           "desc": "Download videos from YouTube",
           "path": "/download/ytdl?url=&resolution=",
