@@ -37,7 +37,7 @@ module.exports = function (app) {
         }
     }
 
-    app.post("/ai/neko", async (req, res) => {
+    app.get("/ai/neko", async (req, res) => {
         try {
             const { text } = req.body; // Pakai body agar lebih aman
             if (!text) {
