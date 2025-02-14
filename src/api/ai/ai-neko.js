@@ -27,7 +27,7 @@ module.exports = function (app) {
             return { status: true, result: reply };
         } catch (error) {
             console.error("Error fetching content from Llama API:", error.message);
-            return { status: false, creator: "Claire", error: "Terjadi kesalahan pada server AI." };
+            return { status: false, error: "Terjadi kesalahan pada server AI." }; // Menghapus creator
         }
     }
 
@@ -35,14 +35,14 @@ module.exports = function (app) {
         try {
             const { text } = req.query; // Ambil dari query parameter
             if (!text) {
-                return res.status(400).json({ status: false, creator: "Claire", error: "Text diperlukan" });
+                return res.status(400).json({ status: false, error: "Text diperlukan" });
             }
 
             const apiResponse = await fetchContent(text);
             res.status(200).json(apiResponse);
         } catch (error) {
             console.error("Error in /ai/neko route:", error.message);
-            res.status(500).json({ status: false, creator: "Claire", error: "Terjadi kesalahan pada server." });
+            res.status(500).json({ status: false, error: "Terjadi kesalahan pada server." });
         }
     });
 };
