@@ -1,7 +1,7 @@
 const axios = require("axios");
 
 module.exports = function (app) {
-    const LLAMA_API_URL = "https://api.siputzx.my.id/api/ai/llama33";
+    const GPT4O_API_URL = "https://vapis.my.id/api/gpt4o?q=";
 
     let chatHistory = [
         { role: "system", content: "Kamu adalah Neko, AI yang pintar dan ramah. Kamu dibuat dan dikembangkan oleh Claire." }
@@ -15,18 +15,19 @@ module.exports = function (app) {
 
             chatHistory.push({ role: "user", content: text });
 
-            const response = await axios.post(LLAMA_API_URL, {
-                prompt: chatHistory.map(entry => `${entry.role}: ${entry.content}`).join('\n'),
-                text: text
-            }, { timeout: 10000 }); // Timeout 10 detik
+            // 🔹 Kirim request ke API GPT-4o (GET request sesuai API yang diberikan)
+            const response = await axios.get(GPT4O_API_URL + encodeURIComponent(text), { timeout: 10000 });
 
-            const reply = response.data.data; // Mengambil data dari respons
+            console.log("API Response:", response.data); // Log respons API
+
+            const reply = response.data.result || response.data; // Pastikan format data yang diambil benar
 
             chatHistory.push({ role: "assistant", content: reply });
 
             return { status: true, result: reply }; // Mengembalikan hasil
         } catch (error) {
-            console.error("Error fetching content from Llama API:", error.message);
+            console.error("Error fetching content from GPT-4o API:", error.message);
+            console.error("Response data:", error.response ? error.response.data : "No response data"); // Log data respons kesalahan
             return { status: false, error: "Terjadi kesalahan pada server AI." };
         }
     }
