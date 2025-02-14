@@ -101,6 +101,16 @@
           "name": "Cosplay",
           "desc": "Fetch random cosplay images.",
           "path": "/random/cosplay"
+        }, 
+        {
+          "name": "Blue Archive Wiki",
+          "desc": "Fetch random cosplay images.",
+          "path": "/random/bluearchive"
+        }, 
+        {
+          "name": "Blue Archive Detail",
+          "desc": "Fetch random cosplay images.",
+          "path": "/random/badetail"
         }
       ]
     },
