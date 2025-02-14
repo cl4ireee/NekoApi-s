@@ -1,50 +1,40 @@
+const express = require("express");
 const axios = require("axios");
+const bodyParser = require("body-parser");
 
-module.exports = function (app) {
-    const GPT4O_API_URL = "https://vapis.my.id/api/gpt4o?q=";
+const app = express();
+app.use(bodyParser.json());
 
-    let chatHistory = [
-        { role: "system", content: "Kamu adalah Neko, AI yang pintar dan ramah. Kamu dibuat dan dikembangkan oleh Claire." }
-    ];
+const OPENAI_API_KEY = "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"; // Ganti dengan API key yang didapat
 
-    async function fetchContent(text) {
-        try {
-            if (chatHistory.length > 20) {
-                chatHistory.splice(1, chatHistory.length - 10); // Menyimpan 10 pesan terakhir
-            }
-
-            chatHistory.push({ role: "user", content: text });
-
-            // 🔹 Kirim request ke API GPT-4o (GET request sesuai API yang diberikan)
-            const response = await axios.get(GPT4O_API_URL + encodeURIComponent(text), { timeout: 10000 });
-
-            console.log("API Response:", response.data); // Log respons API
-
-            // Pastikan mengambil jawaban AI yang benar dari response
-            const reply = response.data.result?.trim() || "Maaf, saya tidak bisa menjawab saat ini.";
-
-            chatHistory.push({ role: "assistant", content: reply });
-
-            return { status: true, result: reply }; // Mengembalikan hasil
-        } catch (error) {
-            console.error("Error fetching content from GPT-4o API:", error.message);
-            console.error("Response data:", error.response ? error.response.data : "No response data"); // Log data respons kesalahan
-            return { status: false, error: "Terjadi kesalahan pada server AI." };
+app.post("/ai/neko", async (req, res) => {
+    try {
+        const { text } = req.body;
+        if (!text) {
+            return res.status(400).json({ status: false, error: "Text diperlukan" });
         }
+
+        // Kirim request ke OpenAI GPT-4o
+        const response = await axios.post(
+            "https://api.openai.com/v1/chat/completions",
+            {
+                model: "gpt-4o",
+                messages: [{ role: "system", content: "Kamu adalah Neko, AI yang pintar dan ramah. Kamu dibuat dan dikembangkan oleh Claire." }, { role: "user", content: text }],
+                temperature: 0.7
+            },
+            {
+                headers: {
+                    "Authorization": `Bearer ${OPENAI_API_KEY}`,
+                    "Content-Type": "application/json"
+                }
+            }
+        );
+
+        const reply = response.data.choices[0].message.content;
+        res.json({ status: true, result: reply });
+
+    } catch (error) {
+        console.error("Error:", error.response ? error.response.data : error.message);
+        res.status(500).json({ status: false, error: "Terjadi kesalahan pada server AI." });
     }
-
-    app.get("/ai/neko", async (req, res) => {
-        try {
-            const { text } = req.query; // Ambil dari query parameter
-            if (!text) {
-                return res.status(400).json({ status: false, error: "Text diperlukan" });
-            }
-
-            const apiResponse = await fetchContent(text);
-            res.status(200).json(apiResponse); // Mengembalikan respons API
-        } catch (error) {
-            console.error("Error in /ai/neko route:", error.message);
-            res.status(500).json({ status: false, error: "Terjadi kesalahan pada server." });
-        }
-    });
-};
+});
