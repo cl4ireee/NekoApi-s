@@ -282,7 +282,12 @@
           "name": "F-Droid Detail",
           "desc": "Get details for a specific F-Droid app.",
           "path": "/search/fdroiddetail?q="
-        }, 
+        },
+        {
+          "name": "Meme Sound",
+          "desc": "Get details for a specific F-Droid app.",
+          "path": "/search/meme-sound?q="
+        },
         {
           "name": "Gelbooru",
           "desc": "Search for images on Gelbooru.",
