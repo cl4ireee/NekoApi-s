@@ -1,19 +1,26 @@
 const axios = require('axios');
 
 // Fungsi untuk berinteraksi dengan DeepSeek-V3
-async function fetchContentDeepSeekV3(content) {
+async function fetchDeepSeekV3(content) {
   try {
     const response = await axios.post('https://api.blackbox.ai/api/chat', {
-      messages: [{ content, role: 'user' }],
-      model: 'deepseek-ai/DeepSeek-V3',
-      max_tokens: 1024
+      model: 'deepseek-ai/DeepSeek-V3',  // Menyertakan model secara eksplisit
+      messages: [{ content, role: 'user' }]  // Menggunakan struktur yang benar (messages dengan role 'user')
     }, {
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 
+        'Content-Type': 'application/json'  // Pastikan header Content-Type benar
+      }
     });
-    return response.data;
+    
+    // Periksa apakah ada data dalam response
+    if (response.data && response.data.result) {
+      return response.data.result;
+    } else {
+      throw new Error('No result found in API response');
+    }
   } catch (error) {
-    console.error("Error fetching content from DeepSeek-V3:", error);
-    throw error;
+    console.error("Error fetching from DeepSeek-V3:", error.message);
+    throw error;  // Menghentikan eksekusi jika terjadi error
   }
 }
 
@@ -21,26 +28,23 @@ async function fetchContentDeepSeekV3(content) {
 module.exports = function(app) {
   app.get('/ai/deepseek-v3', async (req, res) => {
     const { text } = req.query;
-
+    
     if (!text || text.trim() === '') {
       return res.status(400).json({ status: false, error: 'Text is required' });
     }
 
     try {
-      // Mengambil respons dari model DeepSeek-V3
-      const modelResponse = await fetchContentDeepSeekV3(text);
-
-      // Pastikan model response ada dan mengembalikan hasil
-      if (modelResponse && modelResponse.result) {
-        res.status(200).json({
-          status: true,
-          result: modelResponse.result  // Hanya memberikan hasil dari model
-        });
-      } else {
-        res.status(500).json({ status: false, error: 'No result from model' });
-      }
+      const result = await fetchDeepSeekV3(text);
+      res.status(200).json({
+        status: true,
+        result
+      });
     } catch (error) {
-      res.status(500).json({ status: false, error: error.message });
+      console.error("Error:", error);
+      res.status(500).json({ 
+        status: false, 
+        error: 'Internal server error: ' + error.message 
+      });
     }
   });
 };
