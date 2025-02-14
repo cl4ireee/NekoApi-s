@@ -38,16 +38,15 @@ module.exports = function (app) {
     }
 
     app.get("/ai/neko", async (req, res) => {
-        try {
-            const { text } = req.body; // Pakai body agar lebih aman
-            if (!text) {
-                return res.status(400).json({ status: false, error: "Text is required" });
-            }
-
-            const apiResponse = await fetchContent(text);
-            res.status(200).json(apiResponse);
-        } catch (error) {
-            res.status(500).json({ status: false, error: error.message });
+    try {
+        const { text } = req.query; // Perbaikan: Ambil dari query parameter
+        if (!text) {
+            return res.status(400).json({ status: false, error: "Text is required" });
         }
-    });
-};
+
+        const apiResponse = await fetchContent(text);
+        res.status(200).json(apiResponse);
+    } catch (error) {
+        res.status(500).json({ status: false, error: error.message });
+    }
+});
