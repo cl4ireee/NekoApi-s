@@ -1,61 +1,52 @@
-const axios = require("axios");
+const axios = require('axios');
+const NodeCache = require('node-cache');
 
-module.exports = function (app) {
-    const OPENAI_API_URL = "https://api.openai.com/v1/chat/completions";
-    const OPENAI_API_KEY = "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"; // Ganti dengan API key OpenAI-mu
+// Inisialisasi cache dengan waktu TTL 5 menit
+const cache = new NodeCache({ stdTTL: 60 * 5 });
 
-    let chatHistory = [
-        { role: "system", content: "Kamu adalah Neko, AI yang pintar dan ramah. Kamu dibuat dan dikembangkan oleh Claire." }
-    ];
-
-    async function fetchContent(text) {
+module.exports = function(app) {
+    // Fungsi untuk mengambil konten dari API
+    async function fetchContent(content) {
         try {
-            // Batasi history agar tidak terlalu panjang
-            if (chatHistory.length > 20) {
-                chatHistory.splice(1, chatHistory.length - 10);
+            const API_URL = "https://api.siputzx.my.id/api/ai/llama33";
+
+            // Cek apakah jawaban sudah ada di cache
+            const cachedResponse = cache.get(content);
+            if (cachedResponse) {
+                return { Neko: cachedResponse };
             }
 
-            chatHistory.push({ role: "user", content: text });
+            // Jika tidak ada di cache, request ke API AI
+            const response = await axios.get(API_URL, {
+                params: { prompt: "Be a helpful assistant", text: content }
+            });
 
-            // Kirim request ke OpenAI (GPT-4o)
-            const response = await axios.post(
-                OPENAI_API_URL,
-                {
-                    model: "gpt-4o",
-                    messages: chatHistory,
-                    temperature: 0.7
-                },
-                {
-                    headers: {
-                        "Authorization": `Bearer ${OPENAI_API_KEY}`,
-                        "Content-Type": "application/json"
-                    },
-                    timeout: 10000 // Timeout 10 detik
-                }
-            );
+            const reply = response.data.data;
 
-            const reply = response.data.choices[0].message.content;
+            // Simpan ke cache sebelum dikirim
+            cache.set(content, reply);
 
-            chatHistory.push({ role: "assistant", content: reply });
+            return { Neko: reply };
 
-            return { status: true, result: reply };
         } catch (error) {
-            console.error("Error fetching content from OpenAI:", error.message);
-            return { status: false, error: "Terjadi kesalahan pada server AI." };
+            console.error("Error fetching content from API:", error);
+            throw error;
         }
     }
 
-    app.get("/ai/neko", async (req, res) => {
+    // Endpoint untuk menangani request ke /ai/neko
+    app.get('/ai/neko', async (req, res) => {
         try {
             const { text } = req.query;
             if (!text) {
-                return res.status(400).json({ status: false, error: "Text diperlukan" });
+                return res.status(400).json({ status: false, error: 'Text is required' });
             }
+            const apiResponse = await fetchContent(text); // Ambil respons dari API
 
-            const apiResponse = await fetchContent(text);
-            res.status(200).json(apiResponse);
+            res.status(200).json(apiResponse); // Kembalikan hasil dari API
+
         } catch (error) {
-            res.status(500).json({ status: false, error: "Terjadi kesalahan pada server." });
+            res.status(500).json({ status: false, error: error.message });
         }
     });
 };
