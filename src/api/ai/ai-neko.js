@@ -1,4 +1,3 @@
-
 const axios = require("axios");
 
 module.exports = function (app) {
@@ -13,7 +12,7 @@ module.exports = function (app) {
         try {
             // 🔹 Batasi history agar tidak terlalu panjang
             if (chatHistory.length > 20) {
-                chatHistory.splice(1, chatHistory.length - 10);
+                chatHistory.splice(1, chatHistory.length - 10); // Menyimpan 10 pesan terakhir
             }
 
             // 🔹 Tambahkan pesan pengguna ke history
@@ -21,7 +20,7 @@ module.exports = function (app) {
 
             // 🔹 Kirim request ke API Llama (POST, dengan timeout)
             const response = await axios.post(LLAMA_API_URL, {
-                prompt: chatHistory[0].content,
+                prompt: chatHistory.map(entry => `${entry.role}: ${entry.content}`).join('\n'), // Kirim seluruh history chat
                 text: text
             }, { timeout: 10000 }); // Timeout 10 detik
 
@@ -38,15 +37,17 @@ module.exports = function (app) {
     }
 
     app.get("/ai/neko", async (req, res) => {
-    try {
-        const { text } = req.query; // Perbaikan: Ambil dari query parameter
-        if (!text) {
-            return res.status(400).json({ status: false, error: "Text is required" });
-        }
+        try {
+            const { text } = req.query; // Ambil dari query parameter
+            if (!text) {
+                return res.status(400).json({ status: false, error: "Text diperlukan" });
+            }
 
-        const apiResponse = await fetchContent(text);
-        res.status(200).json(apiResponse);
-    } catch (error) {
-        res.status(500).json({ status: false, error: error.message });
-    }
-});
+            const apiResponse = await fetchContent(text);
+            res.status(200).json(apiResponse);
+        } catch (error) {
+            console.error("Error in /ai/neko route:", error.message); // Log error untuk debugging
+            res.status(500).json({ status: false, error: "Terjadi kesalahan pada server." });
+        }
+    });
+};
