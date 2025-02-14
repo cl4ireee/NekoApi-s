@@ -20,7 +20,8 @@ module.exports = function (app) {
 
             console.log("API Response:", response.data); // Log respons API
 
-            const reply = response.data.result || response.data; // Pastikan format data yang diambil benar
+            // Pastikan mengambil jawaban AI yang benar dari response
+            const reply = response.data.result?.trim() || "Maaf, saya tidak bisa menjawab saat ini.";
 
             chatHistory.push({ role: "assistant", content: reply });
 
