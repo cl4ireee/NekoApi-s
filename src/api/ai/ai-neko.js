@@ -1,18 +1,30 @@
 const axios = require('axios');
 
 module.exports = function(app) {
+    // Menyimpan chat history
+    let chatHistory = [
+        { role: "system", content: "Kamu adalah Neko, AI yang pintar dan ramah. Kamu dibuat dan dikembangkan oleh Claire." }
+    ];
+
     // Fungsi untuk mengambil konten dari API
     async function fetchContent(content) {
         try {
             const API_URL = "https://api.siputzx.my.id/api/ai/llama33";
 
-            // Request ke API AI
+            // Menambahkan pesan user ke dalam chat history
+            chatHistory.push({ role: "user", content });
+
+            // Menambahkan chatHistory ke dalam permintaan API
             const response = await axios.get(API_URL, {
                 params: { prompt: "Be a helpful assistant", text: content }
             });
 
             const reply = response.data.data;
 
+            // Menambahkan respon AI ke dalam chat history
+            chatHistory.push({ role: "assistant", content: reply });
+
+            // Mengembalikan hasil dari API
             return { Neko: reply };
 
         } catch (error) {
@@ -28,9 +40,12 @@ module.exports = function(app) {
             if (!text) {
                 return res.status(400).json({ status: false, error: 'Text is required' });
             }
-            const apiResponse = await fetchContent(text); // Ambil respons dari API
 
-            res.status(200).json(apiResponse); // Kembalikan hasil dari API
+            // Mengambil respons dari API
+            const apiResponse = await fetchContent(text);
+
+            // Kembalikan hasil dari API
+            res.status(200).json(apiResponse);
 
         } catch (error) {
             res.status(500).json({ status: false, error: error.message });
