@@ -212,6 +212,11 @@
           "name": "Tracemoe",
           "desc": "Retrieve random Blue Archive images.",
           "path": "/tools/tracemoe?url="
+        }, 
+        {
+          "name": "Ig Stalk",
+          "desc": "Retrieve random Blue Archive images.",
+          "path": "/stalk/igstalk?q="
         }
       ]
     },
