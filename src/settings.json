@@ -216,7 +216,7 @@
         {
           "name": "Tracemoe",
           "desc": "Retrieve random Blue Archive images.",
-          "path": "/tools/tracemoe?url="
+          "path": "/tools/country-info?q="
         }, 
         {
           "name": "Ig Stalk",
