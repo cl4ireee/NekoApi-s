@@ -214,7 +214,7 @@
       "name": "Tools",
       "items": [
         {
-          "name": "Tracemoe",
+          "name": "Country Info",
           "desc": "Retrieve random Blue Archive images.",
           "path": "/tools/country-info?q="
         }, 
