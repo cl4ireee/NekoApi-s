@@ -74,7 +74,10 @@
         {
           "name": "DeepSeekV3",
           "desc": "Interact with Simsimi.",
-          "path": "/ai/deepseek-v3?text="
+          "uploadButton": {
+          "label": "Upload Text",
+          "action": "/ai/deepseek-v3?text=",
+          "description": "Click to upload your text for interaction with Simsimi."
         }
       ]
     },
