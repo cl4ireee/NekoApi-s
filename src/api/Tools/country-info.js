@@ -13,7 +13,7 @@ async function fetchCountryInfo(countryName) {
 
 // Endpoint untuk mengambil informasi negara
 module.exports = function(app) {
-  app.get('/api/country-info', async (req, res) => {
+  app.get('/tools/country-info', async (req, res) => {
     const { q } = req.query;
     
     if (!q || q.trim() === '') {
