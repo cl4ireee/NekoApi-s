@@ -28,22 +28,6 @@ const memeSound = async (nameSound) => {
     return results;
 }
 
-// Simulasi aplikasi Express
-const app = {
-    get: (path, callback) => {
-        // Simulasi permintaan untuk demonstrasi
-        const req = { query: { q: 'example' } }; // Ganti dengan query yang diinginkan
-        const res = {
-            status: (statusCode) => ({
-                json: (data) => console.log(`Response: ${JSON.stringify(data)}`),
-            }),
-        };
-
-        // Memanggil callback dengan req dan res
-        callback(req, res);
-    }
-};
-
 // Endpoint untuk mencari suara meme
 app.get('/search/meme-sound', async (req, res) => {
     const { q } = req.query; // Mengambil parameter query 'q'
@@ -61,5 +45,3 @@ app.get('/search/meme-sound', async (req, res) => {
         res.status(500).json({ status: false, error: 'Terjadi kesalahan saat memproses permintaan.' });
     }
 });
-
-// Menggunakan fungsi untuk simulasi
