@@ -3,16 +3,18 @@ const cheerio = require('cheerio');
 
 module.exports = function(app) {
   // Endpoint for manga search
-  app.get('/search/mangafox', async (req, res) => {
-    const { query, limit } = req.query; // Get query and limit from URL parameters
-    if (!query) {
-      return res.status(400).json({ status: false, error: 'Query is required' });
+  app.get('/manga/mangafox', async (req, res) => {
+    const { q, limit } = req.query; // Get 'q' query parameter for manga search and 'limit' for number of results
+    
+    // Ensure 'q' is provided
+    if (!q) {
+      return res.status(400).json({ status: false, error: 'Parameter query diperlukan' });
     }
 
     const mangaLimit = parseInt(limit) || 5;
 
     try {
-      const searchUrl = `http://m.fanfox.net/search?k=${encodeURIComponent(query)}`;
+      const searchUrl = `http://m.fanfox.net/search?k=${encodeURIComponent(q)}`;
       const { data } = await axios.get(searchUrl);
       const $ = cheerio.load(data);
       const mangaUrls = [];
