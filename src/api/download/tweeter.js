@@ -24,7 +24,7 @@ module.exports = function(app) {
         };
     }
 
-    app.get('/tweet', async (req, res) => {
+    app.get('/download/tweet', async (req, res) => {
         try {
             const { url } = req.query; // Mengambil parameter query 'url'
             if (!url) {
