@@ -20,14 +20,14 @@ module.exports = function (app) {
                 text: text
             }, { timeout: 10000 }); // Timeout 10 detik
 
-            const reply = response.data.data;
+            const reply = response.data.data; // Mengambil data dari respons
 
             chatHistory.push({ role: "assistant", content: reply });
 
-            return { status: true, result: reply };
+            return { status: true, result: reply }; // Mengembalikan hasil
         } catch (error) {
             console.error("Error fetching content from Llama API:", error.message);
-            return { status: false, error: "Terjadi kesalahan pada server AI." }; // Menghapus creator
+            return { status: false, error: "Terjadi kesalahan pada server AI." };
         }
     }
 
@@ -39,7 +39,7 @@ module.exports = function (app) {
             }
 
             const apiResponse = await fetchContent(text);
-            res.status(200).json(apiResponse);
+            res.status(200).json(apiResponse); // Mengembalikan respons API
         } catch (error) {
             console.error("Error in /ai/neko route:", error.message);
             res.status(500).json({ status: false, error: "Terjadi kesalahan pada server." });
