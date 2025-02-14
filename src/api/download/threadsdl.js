@@ -1,9 +1,6 @@
-import express from 'express';
+
 import axios from 'axios';
 import * as cheerio from 'cheerio';
-
-const app = express();
-
 /**
  * Format URL untuk pos Threads.
  * @param {string} url - URL pos Threads.
