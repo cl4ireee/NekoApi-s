@@ -1,7 +1,7 @@
 {
   "name": "Neko Api's",
   "version": "1.0.0",
-  "description": "Simple and Easy-to-Use API Documentation",
+  "description": "A simple and user-friendly API documentation that provides access to various AI models, image generation tools, random image retrieval, anime updates, download capabilities, news, and search tools. Perfect for developers looking to integrate diverse functionalities into their applications.",
   "header": {
     "status": "Online!",
     "imageSrc": [
@@ -32,43 +32,43 @@
       "items": [
         {
           "name": "LuminAI",
-          "desc": "Talk with luminai",
+          "desc": "Engage in conversation with LuminAI.",
           "path": "/ai/luminai?text="
         },
         {
           "name": "HydroMind",
-          "desc": "Talk with hydromind",
+          "desc": "Interact with HydroMind.",
           "path": "/ai/hydromind?text=&model=",
           "innerDesc": "See the list of supported AI models here: https://mind.hydrooo.web.id"
         }, 
         {
           "name": "Mistral Nemo",
-          "desc": "Talk with Mistral Nemo",
+          "desc": "Chat with Mistral Nemo.",
           "path": "/ai/mistral-nemo?text="
         }, 
         {
           "name": "DeepSeek",
-          "desc": "Talk with DeepSeek",
+          "desc": "Communicate with DeepSeek.",
           "path": "/ai/deepseek?text="
         }, 
         {
-          "name": "lilychan",
-          "desc": "Talk with Lilychan",
+          "name": "Lilychan",
+          "desc": "Talk to Lilychan.",
           "path": "/ai/lilychan?text="
         }, 
         {
           "name": "Flux-schnell",
-          "desc": "Talk with Lilychan",
+          "desc": "Engage with Flux-schnell.",
           "path": "/ai/flux-schnell?text="
         }, 
         {
           "name": "NekoAi",
-          "desc": "Talk with Lilychan",
+          "desc": "Chat with NekoAi.",
           "path": "/ai/neko?text="
         }, 
         {
           "name": "Simsimi",
-          "desc": "Talk with Simsimi",
+          "desc": "Interact with Simsimi.",
           "path": "/ai/simsimi?text="
         }
       ]
@@ -77,10 +77,10 @@
       "name": "Maker",
       "items": [
         {
-        "name": "Ephoto",
-        "desc": "Generate images with various effects",
-        "path": "/maker/ephoto?text=&type=",
-        "innerDesc": "See the list of supported types here: glitchtext, writetext, advancedglow, typographytext, pixelglitch, neonglitch, flagtext, flag3dtext, deletingtext, blackpinkstyle, glowingtext, underwatertext, logomaker, cartoonstyle, papercutstyle, watercolortext, effectclouds, blackpinklogo, gradienttext, summerbeach, luxurygold, multicoloredneon, sandsummer, galaxywallpaper, 1917style, makingneon, royaltext, freecreate, galaxystyle, lighteffects."
+          "name": "Ephoto",
+          "desc": "Generate images with various effects.",
+          "path": "/maker/ephoto?text=&type=",
+          "innerDesc": "Supported types include: glitchtext, writetext, advancedglow, typographytext, pixelglitch, neonglitch, flagtext, flag3dtext, deletingtext, blackpinkstyle, glowingtext, underwatertext, logomaker, cartoonstyle, papercutstyle, watercolortext, effectclouds, blackpinklogo, gradienttext, summerbeach, luxurygold, multicoloredneon, sandsummer, galaxywallpaper, 1917style, makingneon, royaltext, freecreate, galaxystyle, lighteffects."
         }
       ]
     },
@@ -89,17 +89,17 @@
       "items": [
         {
           "name": "Blue Archive",
-          "desc": "Random Blue Archive Images",
+          "desc": "Retrieve random Blue Archive images.",
           "path": "/random/ba"
         }, 
         {
           "name": "Anime",
-          "desc": "Random Anime Images",
+          "desc": "Get random anime images.",
           "path": "/random/anime"
         }, 
         {
           "name": "Cosplay",
-          "desc": "Random Cosplay Images",
+          "desc": "Fetch random cosplay images.",
           "path": "/random/cosplay"
         }
       ]
@@ -109,27 +109,27 @@
       "items": [
         {
           "name": "Komiku Latest",
-          "desc": "Get the latest Komiku updates",
+          "desc": "Get the latest updates from Komiku.",
           "path": "/anime/latest"
         }, 
         {
           "name": "Komiku Detail",
-          "desc": "Get details of a specific Komiku",
+          "desc": "Retrieve details of a specific Komiku.",
           "path": "/komik/komikudetail?url="
         }, 
         {
           "name": "Komiku Search",
-          "desc": "Search for a specific Komiku",
+          "desc": "Search for a specific Komiku.",
           "path": "/komik/komikusearch?q="
         }, 
         {
           "name": "Nekopoi",
-          "desc": "Get data from Nekopoi",
+          "desc": "Access data from Nekopoi.",
           "path": "/anime/nekopoi"
         }, 
         {
           "name": "Livechart",
-          "desc": "Get data from Nekopoi",
+          "desc": "Get data from Livechart.",
           "path": "/anime/livechart?q="
         }
       ]
@@ -139,58 +139,58 @@
       "items": [
         {
           "name": "TikTok",
-          "desc": "Download TikTok Videos",
+          "desc": "Download TikTok videos.",
           "path": "/download/tiktok?url="
         }, 
         {
           "name": "Instagram",
-          "desc": "Download Instagram",
+          "desc": "Download content from Instagram.",
           "path": "/download/instagram?url="
         }, 
         {
           "name": "Spotify",
-          "desc": "Download Spotify",
+          "desc": "Download Spotify tracks.",
           "path": "/download/spotify?url="
         }, 
         {
           "name": "Videy",
-          "desc": "Download Videy",
+          "desc": "Download videos from Videy.",
           "path": "/download/videy?url="
         }, 
         {
           "name": "Terabox",
-          "desc": "Download Terabox",
+          "desc": "Download files from Terabox.",
           "path": "/download/terabox?url="
         }, 
         {
-        "name": "Twitter",
-        "desc": "Download Tweet Metadata and Media",
-        "path": "/download/twitter?url="
+          "name": "Twitter",
+          "desc": "Download tweet metadata and media.",
+          "path": "/download/twitter?url="
         }, 
         {
-        "name": "Threads",
-        "desc": "Download Threads Post Metadata and Media",
-        "path": "/download/threads?url="
+          "name": "Threads",
+          "desc": "Download Threads post metadata and media.",
+          "path": "/download/threads?url="
         }, 
         {
           "name": "YouTube",
-          "desc": "Download videos from YouTube",
+          "desc": "Download videos from YouTube.",
           "path": "/download/ytdl?url=&resolution=",
-          "innerDesc": "Specify the YouTube video URL and desired resolution (720, 1080, etc.)"
+          "innerDesc": "Specify the YouTube video URL and desired resolution (720, 1080, etc.)."
         }
       ]
     }, 
-        {
+    {
       "name": "News",
       "items": [
         {
           "name": "Mlbb News",
-          "desc": "Get the latest mlbb news",
+          "desc": "Get the latest news about Mobile Legends: Bang Bang.",
           "path": "/news/mobile-legends"
         }, 
         {
           "name": "Free Fire News",
-          "desc": "Get the latest free fire news",
+          "desc": "Stay updated with the latest Free Fire news.",
           "path": "/news/free-fire"
         }
       ]
@@ -200,7 +200,7 @@
       "items": [
         {
           "name": "Tracemoe",
-          "desc": "Blue Archive Random Images",
+          "desc": "Retrieve random Blue Archive images.",
           "path": "/tools/tracemoe?url="
         }
       ]
@@ -210,63 +210,63 @@
       "items": [
         {
           "name": "YouTube",
-          "desc": "Search for Youtube",
+          "desc": "Search for YouTube content.",
           "path": "/search/youtube?q="
         }, 
         {
           "name": "Android1",
-          "desc": "Search for Android apps",
+          "desc": "Search for Android apps.",
           "path": "/search/android1?q="
         },
         {
           "name": "Apkcombo",
-          "desc": "Search for Android Apkcombo",
+          "desc": "Search for Android APKs.",
           "path": "/search/apkcombo?q="
         }, 
         {
           "name": "Font",
-          "desc": "Search for Fonts",
+          "desc": "Search for fonts.",
           "path": "/search/font?q="
         }, 
         {
           "name": "Pinterest",
-          "desc": "Search for Pinterest",
+          "desc": "Search for Pinterest content.",
           "path": "/search/pinterest?q="
         }, 
         {
           "name": "Spotify",
-          "desc": "Search for Spotift",
+          "desc": "Search for Spotify tracks.",
           "path": "/search/spotify?q="
         }, 
         {
           "name": "GoogleImg",
-          "desc": "Search for Googleimg",
+          "desc": "Search for images on Google.",
           "path": "/search/googleimg?q="
         }, 
         {
           "name": "Xnxx",
-          "desc": "Search for Bing",
+          "desc": "Search for content on Xnxx.",
           "path": "/search/xnxxsearch?q="
         }, 
         {
           "name": "Lirik",
-          "desc": "Search for Lirik",
+          "desc": "Search for song lyrics.",
           "path": "/search/lirik?q="
         }, 
         {
           "name": "F-Droid",
-          "desc": "Search for F-Droid",
+          "desc": "Search for F-Droid apps.",
           "path": "/search/fdroidsearch?q="
         }, 
         {
           "name": "F-Droid Detail",
-          "desc": "Detail for F-Droid",
+          "desc": "Get details for a specific F-Droid app.",
           "path": "/search/fdroiddetail?q="
         }, 
         {
-            "name": "Gelbooru",
-            "desc": "Search for images on Gelbooru",
-            "path": "/search/gelbooru?q="
+          "name": "Gelbooru",
+          "desc": "Search for images on Gelbooru.",
+          "path": "/search/gelbooru?q="
         }
       ]
     }
