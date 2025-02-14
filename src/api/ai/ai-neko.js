@@ -1,8 +1,4 @@
 const axios = require('axios');
-const NodeCache = require('node-cache');
-
-// Inisialisasi cache dengan waktu TTL 5 menit
-const cache = new NodeCache({ stdTTL: 60 * 5 });
 
 module.exports = function(app) {
     // Fungsi untuk mengambil konten dari API
@@ -10,21 +6,12 @@ module.exports = function(app) {
         try {
             const API_URL = "https://api.siputzx.my.id/api/ai/llama33";
 
-            // Cek apakah jawaban sudah ada di cache
-            const cachedResponse = cache.get(content);
-            if (cachedResponse) {
-                return { Neko: cachedResponse };
-            }
-
-            // Jika tidak ada di cache, request ke API AI
+            // Request ke API AI
             const response = await axios.get(API_URL, {
                 params: { prompt: "Be a helpful assistant", text: content }
             });
 
             const reply = response.data.data;
-
-            // Simpan ke cache sebelum dikirim
-            cache.set(content, reply);
 
             return { Neko: reply };
 
