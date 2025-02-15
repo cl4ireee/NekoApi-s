@@ -1,7 +1,7 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
 
-module.exports = function(app) {
+module.exports = function (app) {
     app.get('/search/yahoo', async (req, res) => {
         const { q } = req.query;
 
@@ -20,33 +20,22 @@ module.exports = function(app) {
 
             $('li.s-card').each((i, el) => {
                 const title = $(el).find('.s-card-hl').text().trim();
-                let url = $(el).find('a.s-card-wrapAnchor').attr('href');
-                const duration = $(el).find('.ctimestamp').text().trim();
-                const uploadDate = $(el).find('.s-card-date').text().trim();
-                const views = $(el).find('.s-card-views').text().trim();
+                let link = $(el).find('a.s-card-wrapAnchor').attr('href');
+                const snippet = $(el).find('.s-card-snippet').text().trim();
 
-                // Perbaikan URL agar tidak mengarah ke Yahoo search sendiri
-                if (url) {
-                    if (url.startsWith('/')) {
-                        url = `https://search.yahoo.com${url}`;
-                    } else if (url.includes("r.search.yahoo.com")) {
-                        const urlMatch = url.match(/RU=([^\/]+)/);
-                        if (urlMatch) {
-                            url = decodeURIComponent(urlMatch[1]);
-                        }
-                    }
+                // Pastikan URL tidak undefined dan formatnya benar
+                if (link && !link.startsWith('http')) {
+                    link = `https://search.yahoo.com${link}`;
                 }
 
                 results.push({
                     title,
-                    url,
-                    duration,
-                    uploadDate,
-                    views
+                    link,
+                    snippet
                 });
             });
 
-            // Kirim hasil scraping dalam bentuk JSON
+            // Kirim hasil dalam format JSON yang sesuai
             res.status(200).json({
                 status: true,
                 result: results
