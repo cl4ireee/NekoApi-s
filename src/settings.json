@@ -319,6 +319,11 @@
           "path": "/search/yahoo?q="
         },
         {
+          "name": "Pixiv",
+          "desc": "Get details for a specific F-Droid app.",
+          "path": "/search/pixiv?q="
+        },
+        {
           "name": "Gelbooru",
           "desc": "Search for images on Gelbooru.",
           "path": "/search/gelbooru?q="
