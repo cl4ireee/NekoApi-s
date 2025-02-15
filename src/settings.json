@@ -248,6 +248,11 @@
           "name": "Roblox Stalk",
           "desc": "Retrieve random Blue Archive images.",
           "path": "/stalk/roblox?q="
+        }, 
+        {
+          "name": "Tracemoe",
+          "desc": "Retrieve random Blue Archive images.",
+          "path": "/stalk/tracemoe?imageUrl="
         }
       ]
     },
