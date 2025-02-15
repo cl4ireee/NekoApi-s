@@ -1,48 +1,48 @@
-import axios from "axios";
-import * as cheerio from "cheerio";
+const axios = require("axios");
+const cheerio = require("cheerio");
 
-export function searchYahoo(app) {
-  app.get('/search/yahoo', async (req, res) => {
-    const { query } = req.query;
+module.exports = function(app) {
+    app.get('/search/yahoo', async (req, res) => {
+        const { query } = req.query;
 
-    // Pastikan parameter query diberikan
-    if (!query) {
-      return res.status(400).json({ status: false, error: "Parameter query diperlukan" });
-    }
+        // Pastikan parameter query diberikan
+        if (!query) {
+            return res.status(400).json({ status: false, error: "Parameter query diperlukan" });
+        }
 
-    try {
-      const { data: html } = await axios.get(
-        `https://search.yahoo.com/search?p=${encodeURIComponent(query)}&fr=yfp-hrmob&fr2=p%3Afp%2Cm%3Asb&.tsrc=yfp-hrmob&ei=UTF-8&fp=1&toggle=1&cop=mss`
-      );
+        try {
+            const { data: html } = await axios.get(
+                `https://search.yahoo.com/search?p=${encodeURIComponent(query)}&fr=yfp-hrmob&fr2=p%3Afp%2Cm%3Asb&.tsrc=yfp-hrmob&ei=UTF-8&fp=1&toggle=1&cop=mss`
+            );
 
-      const $ = cheerio.load(html);
-      const results = [];
+            const $ = cheerio.load(html);
+            const results = [];
 
-      $('li.s-card').each((i, el) => {
-        const title = $(el).find('.s-card-hl').text().trim();
-        const url = $(el).find('a.s-card-wrapAnchor').attr('href');
-        const duration = $(el).find('.ctimestamp').text().trim();
-        const uploadDate = $(el).find('.s-card-date').text().trim();
-        const views = $(el).find('.s-card-views').text().trim();
+            $('li.s-card').each((i, el) => {
+                const title = $(el).find('.s-card-hl').text().trim();
+                const url = $(el).find('a.s-card-wrapAnchor').attr('href');
+                const duration = $(el).find('.ctimestamp').text().trim();
+                const uploadDate = $(el).find('.s-card-date').text().trim();
+                const views = $(el).find('.s-card-views').text().trim();
 
-        results.push({
-          title,
-          url,
-          duration,
-          uploadDate,
-          views,
-        });
-      });
+                results.push({
+                    title,
+                    url,
+                    duration,
+                    uploadDate,
+                    views
+                });
+            });
 
-      // Kirim hasil scraping dalam bentuk JSON
-      res.status(200).json({
-        status: true,
-        result: results,
-      });
+            // Kirim hasil scraping dalam bentuk JSON
+            res.status(200).json({
+                status: true,
+                result: results
+            });
 
-    } catch (error) {
-      console.error('Error fetching or parsing data:', error);
-      res.status(500).json({ status: false, error: error.message });
-    }
-  });
-}
+        } catch (error) {
+            console.error('Error fetching or parsing data:', error);
+            res.status(500).json({ status: false, error: error.message });
+        }
+    });
+};
