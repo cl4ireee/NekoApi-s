@@ -97,7 +97,7 @@ module.exports = function (app) {
     const kuronime = new Kuronime();
 
     // Route untuk mendapatkan anime terbaru
-    app.get("/kuronime/latest", async (req, res) => {
+    app.get("/anime/kuronimelatest", async (req, res) => {
         try {
             const results = await kuronime.latest();
             res.status(200).json({ status: true, results });
@@ -108,7 +108,7 @@ module.exports = function (app) {
     });
 
     // Route untuk mencari anime
-    app.get("/kuronime/search", async (req, res) => {
+    app.get("/anime/kuronimesearch", async (req, res) => {
         const { q } = req.query;
 
         if (!q) {
@@ -125,7 +125,7 @@ module.exports = function (app) {
     });
 
     // Route untuk mendapatkan detail anime
-    app.get("/kuronime/detail", async (req, res) => {
+    app.get("/anime/kuronimedetail", async (req, res) => {
         const { url } = req.query;
 
         if (!url) {
