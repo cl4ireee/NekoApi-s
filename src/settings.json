@@ -181,12 +181,12 @@
         {
           "name": "Nekopoi Detail",
           "desc": "Get data from Livechart.",
-          "path": "/anime/nekopoi-detail?q="
+          "path": "/anime/nekopoi-detail?url="
         }, 
         {
           "name": "Nekopoi Episode",
           "desc": "Get data from Livechart.",
-          "path": "/anime/nekopoi-episode?q="
+          "path": "/anime/nekopoi-episode?url="
         }, 
         {
           "name": "Mangafox",
@@ -322,7 +322,7 @@
         {
           "name": "Spotify Detail",
           "desc": "Search for Spotify tracks.",
-          "path": "/search/spotify-detail?q="
+          "path": "/search/spotify-detail?url="
         }, 
         {
           "name": "GoogleImg",
