@@ -201,7 +201,7 @@
         {
           "name": "TikTok",
           "desc": "Download TikTok videos.",
-          "path": "/download/tiktok?url="
+          "path": "/download/tiktok-download?url="
         },
         {
           "name": "Douyin",
