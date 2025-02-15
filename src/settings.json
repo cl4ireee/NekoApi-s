@@ -299,6 +299,11 @@
           "path": "/search/meme-sound?q="
         },
         {
+          "name": "Yahoo",
+          "desc": "Get details for a specific F-Droid app.",
+          "path": "/search/yahoo?q="
+        },
+        {
           "name": "Gelbooru",
           "desc": "Search for images on Gelbooru.",
           "path": "/search/gelbooru?q="
