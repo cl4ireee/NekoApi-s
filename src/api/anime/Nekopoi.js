@@ -200,7 +200,7 @@ module.exports = function (app) {
     });
 
     // Route untuk mencari
-    app.get("/nekopoi/search", async (req, res) => {
+    app.get("/anime/nekopoi-search", async (req, res) => {
         const { q } = req.query;
 
         if (!q) {
