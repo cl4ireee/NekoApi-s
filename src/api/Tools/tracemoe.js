@@ -57,7 +57,8 @@ async function traceMoe(imageUrl, limit = 5, minSimilarity = 0.7) {
 
     return resultsWithDetails;
   } catch (error) {
-    throw error.response?.data || error.message;
+    console.error('Error fetching trace.moe data:', error.message);
+    throw new Error(error.response?.data || 'Failed to fetch trace.moe data');
   }
 }
 
@@ -106,7 +107,7 @@ async function getAnilistDetails(AniListId) {
     return response.data.data.Media;
   } catch (error) {
     console.error('Error fetching AniList details:', error.message);
-    return error;
+    return null; // Return null if AniList details could not be fetched
   }
 }
 
@@ -124,7 +125,7 @@ module.exports = function (app) {
       res.status(200).json({ status: true, results });
     } catch (error) {
       console.error('Error fetching trace.moe data:', error.message);
-      res.status(500).json({ status: false, error: 'Failed to fetch trace.moe data' });
+      res.status(500).json({ status: false, error: error.message });
     }
   });
 };
