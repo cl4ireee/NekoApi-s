@@ -11,7 +11,7 @@ async function fetchAnimeQuote() {
 }
 
 module.exports = function (app) {
-    app.get("/qutos/anime", async (req, res) => {
+    app.get("/quotos/anime", async (req, res) => {
         try {
             const quote = await fetchAnimeQuote();
             res.status(200).json({
