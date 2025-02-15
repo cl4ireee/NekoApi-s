@@ -155,7 +155,7 @@ module.exports = function (app) {
     const nekopoi = new NekoPoi();
 
     // Route untuk mendapatkan data terbaru
-    app.get("/nekopoi/latest", async (req, res) => {
+    app.get("/anime/nekopoi-latest", async (req, res) => {
         try {
             const results = await nekopoi.latest();
             res.status(200).json({ status: true, results });
