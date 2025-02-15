@@ -1,33 +1,38 @@
 const axios = require('axios');
 
-module.exports = function(app) {
-    app.get('/ai/simsimi', async (req, res) => {
-        const { text, languageCode } = req.query; // Mengambil parameter query 'text' dan 'languageCode'
-
-        if (!text) {
-            return res.status(400).json({ status: false, error: 'Text is required' });
+async function SimSimi(text, language = 'id') {
+  try {
+    const { data } = await axios.post(
+      "https://api.simsimi.vn/v1/simtalk",
+      new URLSearchParams({ text, lc: language }).toString(),
+      {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
         }
+      }
+    );
+    return { status: true, message: data.message };
+  } catch (error) {
+    console.error("Error fetching SimSimi data:", error.message);
+    return { status: false, error: "Failed to fetch SimSimi data" };
+  }
+}
 
-        const url = 'https://api.simsimi.vn/v1/simtalk';
-        const headers = {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'User -Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-        };
+module.exports = function (app) {
+  app.get('/ai/simsimi', async (req, res) => {
+    const { text, language = 'id' } = req.query;
 
-        // Membuat body request secara manual
-        const body = `text=${encodeURIComponent(text)}&lc=${encodeURIComponent(languageCode || 'id')}`;
+    if (!text) {
+      return res.status(400).json({ status: false, error: "Query parameter (text) is required" });
+    }
 
-        try {
-            const response = await axios.post(url, body, { headers });
-            console.log('API Response:', response.data); // Log respons dari API
+    const response = await SimSimi(text, language);
 
-            res.status(200).json({
-                status: true,
-                result: response.data.message // Mengembalikan pesan dari SimSimi
-            });
-        } catch (error) {
-            console.error('Error asking SimSimi:', error.message);
-            res.status(500).json({ status: false, error: 'Failed to get response from SimSimi' });
-        }
-    });
+    if (!response.status) {
+      return res.status(500).json(response);
+    }
+
+    res.status(200).json(response);
+  });
 };
