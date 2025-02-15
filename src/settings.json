@@ -159,6 +159,11 @@
           "path": "/anime/livechart?q="
         }, 
         {
+          "name": "Kuronime Latest",
+          "desc": "Get data from Livechart.",
+          "path": "/anime/kuronimelatest"
+        }, 
+        {
           "name": "Mangafox",
           "desc": "Get data from Livechart.",
           "path": "/manga/mangafox?q="
