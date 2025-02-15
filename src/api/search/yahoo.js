@@ -1,7 +1,6 @@
 const axios = require("axios");
-const cheerio = require("cheerio");
 
-module.exports = function(app) {
+module.exports = function (app) {
     app.get('/search/yahoo', async (req, res) => {
         const { q } = req.query;
 
@@ -10,28 +9,17 @@ module.exports = function(app) {
         }
 
         try {
-            const { data: html } = await axios.get(
-                `https://search.yahoo.com/search?p=${encodeURIComponent(q)}&fr=yfp-hrmob&fr2=p%3Afp%2Cm%3Asb&.tsrc=yfp-hrmob&ei=UTF-8&fp=1&toggle=1&cop=mss`
-            );
+            const { data } = await axios.get(`https://archive-ui.tanakadomp.biz.id/search/yahoosearch?q=${encodeURIComponent(q)}`);
 
-            const $ = cheerio.load(html);
-            const results = [];
+            if (!data || !data.result) {
+                return res.status(500).json({ status: false, error: "Gagal mengambil data dari API" });
+            }
 
-            $('li.s-card').each((i, el) => {
-                const title = $(el).find('.s-card-hl').text().trim();
-                let url = $(el).find('a.s-card-wrapAnchor').attr('href');
-                const snippet = $(el).find('.s-desc').text().trim(); // Pastikan elemen ini benar
-
-                if (url && !url.startsWith('http')) {
-                    url = `https://search.yahoo.com${url}`;
-                }
-
-                results.push({
-                    title,
-                    link: url,
-                    snippet
-                });
-            });
+            const results = data.result.map(item => ({
+                title: item.title,
+                link: item.link,
+                snippet: item.snippet
+            }));
 
             res.status(200).json({
                 status: true,
@@ -39,7 +27,7 @@ module.exports = function(app) {
             });
 
         } catch (error) {
-            console.error('Error fetching or parsing data:', error);
+            console.error('Error fetching data from API:', error);
             res.status(500).json({ status: false, error: error.message });
         }
     });
