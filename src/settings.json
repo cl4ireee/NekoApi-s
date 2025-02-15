@@ -121,6 +121,11 @@
           "name": "Fcredeem",
           "desc": "Get random anime images.",
           "path": "/redeem/fcmobile"
+        }, 
+        {
+          "name": "qutosAnime",
+          "desc": "Get random anime images.",
+          "path": "/quotes/anime"
         }
       ]
     },
