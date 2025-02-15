@@ -125,7 +125,7 @@
         {
           "name": "qutosAnime",
           "desc": "Get random anime images.",
-          "path": "/quotes/anime"
+          "path": "/random/quotesanime"
         }
       ]
     },
