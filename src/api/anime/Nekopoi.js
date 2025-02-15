@@ -166,7 +166,7 @@ module.exports = function (app) {
     });
 
     // Route untuk mendapatkan detail
-    app.get("/nekopoi/detail", async (req, res) => {
+    app.get("/anime/nekopoi-detail", async (req, res) => {
         const { url } = req.query;
 
         if (!url) {
@@ -183,7 +183,7 @@ module.exports = function (app) {
     });
 
     // Route untuk mendapatkan episode
-    app.get("/nekopoi/episode", async (req, res) => {
+    app.get("/anime/nekopoi-episode", async (req, res) => {
         const { url } = req.query;
 
         if (!url) {
