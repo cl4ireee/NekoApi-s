@@ -1,11 +1,10 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
 
-module.exports = function (app) {
+module.exports = function(app) {
     app.get('/search/yahoo', async (req, res) => {
         const { q } = req.query;
 
-        // Pastikan parameter query diberikan
         if (!q) {
             return res.status(400).json({ status: false, error: "Parameter query diperlukan" });
         }
@@ -20,22 +19,20 @@ module.exports = function (app) {
 
             $('li.s-card').each((i, el) => {
                 const title = $(el).find('.s-card-hl').text().trim();
-                let link = $(el).find('a.s-card-wrapAnchor').attr('href');
-                const snippet = $(el).find('.s-card-snippet').text().trim();
+                let url = $(el).find('a.s-card-wrapAnchor').attr('href');
+                const snippet = $(el).find('.s-desc').text().trim(); // Pastikan elemen ini benar
 
-                // Pastikan URL tidak undefined dan formatnya benar
-                if (link && !link.startsWith('http')) {
-                    link = `https://search.yahoo.com${link}`;
+                if (url && !url.startsWith('http')) {
+                    url = `https://search.yahoo.com${url}`;
                 }
 
                 results.push({
                     title,
-                    link,
+                    link: url,
                     snippet
                 });
             });
 
-            // Kirim hasil dalam format JSON yang sesuai
             res.status(200).json({
                 status: true,
                 result: results
