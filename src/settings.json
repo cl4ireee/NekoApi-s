@@ -149,7 +149,7 @@
           "path": "/komik/komikusearch?q="
         }, 
         {
-          "name": "Nekopoi",
+          "name": "Nekopoi Latest",
           "desc": "Access data from Nekopoi.",
           "path": "/anime/nekopoi"
         }, 
@@ -179,7 +179,7 @@
           "path": "/anime/nekopoi-search?q="
         }, 
         {
-          "name": "Nekopoi Search",
+          "name": "Nekopoi Detail",
           "desc": "Get data from Livechart.",
           "path": "/anime/nekopoi-detail?q="
         }, 
