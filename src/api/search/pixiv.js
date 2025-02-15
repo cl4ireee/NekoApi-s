@@ -1,4 +1,4 @@
-import axios from "axios";
+const axios = require("axios");
 
 const fetchPixiv = async (q) => {
     try {
@@ -17,7 +17,7 @@ const fetchPixiv = async (q) => {
     }
 };
 
-export default function (app) {
+module.exports = function (app) {
     app.get("/search/pixiv", async (req, res) => {
         const { q } = req.query;
 
@@ -33,4 +33,4 @@ export default function (app) {
 
         res.status(200).json(response);
     });
-}
+};
