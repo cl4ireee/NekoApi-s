@@ -1,42 +1,72 @@
-const axios = require('axios');
+const fetch = require("node-fetch");
 
-module.exports = function(app) {
-    async function fetchSpotifyData(query) {
-        try {
-            // Menggunakan API Spotify dengan metode GET
-            const response = await axios.get(`https://archive-ui.tanakadomp.biz.id/search/spotify?q=${encodeURIComponent(query)}`);
-            return response.data;
-        } catch (error) {
-            console.error("Error fetching content from Spotify API:", error.message);
-            throw error;
+const Spotify = {
+    async search(q) {
+        const response = await fetch(`https://spotifydown.app/api/metadata?link=${q}`, { method: "POST" });
+        return response.json();
+    },
+    async details(url) {
+        const response = await fetch(`https://spotifydown.app/api/metadata?link=${url}`, { method: "POST" });
+        return response.json();
+    },
+    async download(url) {
+        const response = await fetch(`https://spotifydown.app/api/download?link=${url}`, {
+            headers: { Referer: "https://spotifydown.app/" },
+        });
+        return response.json();
+    },
+};
+
+// Ekspor fungsi untuk digunakan dengan `app.get`
+module.exports = function (app) {
+    // Route untuk mencari lagu
+    app.get("/search/spotifu-search", async (req, res) => {
+        const { q } = req.query;
+
+        if (!q) {
+            return res.status(400).json({ status: false, error: "Query parameter (q) is required" });
         }
-    }
 
-    app.get('/search/spotify', async (req, res) => {
         try {
-            const { q } = req.query; // Mengambil parameter query 'q'
-            if (!q) {
-                return res.status(400).json({ status: false, error: 'Parameter query diperlukan' });
-            }
-            const apiResponse = await fetchSpotifyData(q);
-            const { status, result } = apiResponse; // Mengambil status dan result dari respons API
-
-            // Memeriksa apakah ada hasil
-            if (!result || result.length === 0) {
-                return res.status(404).json({ status: false, error: 'Tidak ada lagu yang ditemukan.' });
-            }
-
-            // Mengembalikan respons yang terstruktur
-            res.status(200).json({
-                status,
-                result: result.map(item => ({
-                    trackName: item.trackName,
-                    artistName: item.artistName,
-                    externalUrl: item.externalUrl
-                }))
-            });
+            const results = await Spotify.search(q);
+            res.status(200).json({ status: true, results });
         } catch (error) {
-            res.status(500).json({ status: false, error: error.message });
+            console.error("Error searching Spotify:", error.message);
+            res.status(500).json({ status: false, error: "Failed to search Spotify" });
+        }
+    });
+
+    // Route untuk mendapatkan detail lagu
+    app.get("/search/spotify-details", async (req, res) => {
+        const { url } = req.query;
+
+        if (!url) {
+            return res.status(400).json({ status: false, error: "Query parameter (url) is required" });
+        }
+
+        try {
+            const results = await Spotify.details(url);
+            res.status(200).json({ status: true, results });
+        } catch (error) {
+            console.error("Error fetching Spotify details:", error.message);
+            res.status(500).json({ status: false, error: "Failed to fetch Spotify details" });
+        }
+    });
+
+    // Route untuk mengunduh lagu
+    app.get("/download/spotify-download", async (req, res) => {
+        const { url } = req.query;
+
+        if (!url) {
+            return res.status(400).json({ status: false, error: "Query parameter (url) is required" });
+        }
+
+        try {
+            const results = await Spotify.download(url);
+            res.status(200).json({ status: true, results });
+        } catch (error) {
+            console.error("Error downloading from Spotify:", error.message);
+            res.status(500).json({ status: false, error: "Failed to download from Spotify" });
         }
     });
 };
