@@ -151,7 +151,7 @@
         {
           "name": "Nekopoi Latest",
           "desc": "Access data from Nekopoi.",
-          "path": "/anime/nekopoi"
+          "path": "/anime/nekopoi-latest"
         }, 
         {
           "name": "Livechart",
@@ -322,7 +322,7 @@
         {
           "name": "Spotify Detail",
           "desc": "Search for Spotify tracks.",
-          "path": "/search/spotify-detail?url="
+          "path": "/search/spotify-details?url="
         }, 
         {
           "name": "GoogleImg",
