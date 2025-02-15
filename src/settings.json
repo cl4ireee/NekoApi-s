@@ -69,7 +69,7 @@
         {
           "name": "Simsimi",
           "desc": "Interact with Simsimi.",
-          "path": "/ai/simsimi?text=&language="
+          "path": "/ai/simsimi?text=&language=", 
           "innerDesc": "You can choose the language here (e.g., id, en, es, fr, etc.)."
         }, 
         {
