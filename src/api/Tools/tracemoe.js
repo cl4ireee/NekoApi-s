@@ -1,15 +1,15 @@
 const axios = require('axios');
 const FormData = require('form-data');
 
-async function traceMoe(imageUrl, limit = 5, minSimilarity = 0.7) {
+async function traceMoe(url, limit = 5, minSimilarity = 0.7) {
   const form = new FormData();
-  form.append('url', imageUrl);
+  form.append('url', url);
 
   try {
     const response = await axios.post('https://api.trace.moe/search', form, {
       headers: form.getHeaders(),
       params: {
-        url: imageUrl,
+        url: url,
         anilistInfo: true,
         cutBorders: false,
       },
@@ -114,14 +114,14 @@ async function getAnilistDetails(AniListId) {
 // Ekspor fungsi untuk digunakan dengan `app.get`
 module.exports = function (app) {
   app.get('/tools/tracemoe', async (req, res) => {
-    const { imageUrl, limit = 5, minSimilarity = 0.7 } = req.query;
+    const { url, limit = 5, minSimilarity = 0.7 } = req.query;
 
-    if (!imageUrl) {
-      return res.status(400).json({ status: false, error: 'Query parameter (imageUrl) is required' });
+    if (!url) {
+      return res.status(400).json({ status: false, error: 'Query parameter (url) is required' });
     }
 
     try {
-      const results = await traceMoe(imageUrl, parseInt(limit), parseFloat(minSimilarity));
+      const results = await traceMoe(url, parseInt(limit), parseFloat(minSimilarity));
       res.status(200).json({ status: true, results });
     } catch (error) {
       console.error('Error fetching trace.moe data:', error.message);
