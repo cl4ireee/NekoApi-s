@@ -1,14 +1,14 @@
-const cloudscraper = require("cloudscraper");
+const axios = require("axios");
 
 async function fetchData(url, method = "GET", payload = null) {
     try {
         const response = method === "POST"
-            ? await cloudscraper.post(url, { json: payload })
-            : await cloudscraper.get(url);
+            ? await axios.post(url, payload, { headers: { "Content-Type": "application/json" } })
+            : await axios.get(url);
 
-        return JSON.parse(response);
+        return response.data;
     } catch (error) {
-        return { error: error.message };
+        return { error: error.response?.data || error.message };
     }
 }
 
