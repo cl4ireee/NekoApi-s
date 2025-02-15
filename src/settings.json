@@ -164,6 +164,16 @@
           "path": "/anime/kuronimelatest"
         }, 
         {
+          "name": "Kuronime Detail",
+          "desc": "Get data from Livechart.",
+          "path": "/anime/kuronimedetail?url="
+        }, 
+        {
+          "name": "Kuronime Search",
+          "desc": "Get data from Livechart.",
+          "path": "/anime/kuronimesearch?q="
+        }, 
+        {
           "name": "Mangafox",
           "desc": "Get data from Livechart.",
           "path": "/manga/mangafox?q="
