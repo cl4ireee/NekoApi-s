@@ -252,7 +252,7 @@
         {
           "name": "Tracemoe",
           "desc": "Retrieve random Blue Archive images.",
-          "path": "/stalk/tracemoe?imageUrl="
+          "path": "/tools/tracemoe?imageUrl="
         }
       ]
     },
