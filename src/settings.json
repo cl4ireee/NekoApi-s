@@ -116,6 +116,11 @@
           "name": "Blue Archive Detail",
           "desc": "Get detailed info about a Blue Archive character.",
           "path": "/random/badetail?q="
+        }, 
+        {
+          "name": "Fcredeem",
+          "desc": "Get random anime images.",
+          "path": "/redeem/fcmobile"
         }
       ]
     },
