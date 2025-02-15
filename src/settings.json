@@ -324,6 +324,11 @@
           "path": "/search/pixiv?q="
         },
         {
+          "name": "Pixiv 18+",
+          "desc": "Get details for a specific F-Droid app.",
+          "path": "/search/pixiv-r18?q="
+        },
+        {
           "name": "Gelbooru",
           "desc": "Search for images on Gelbooru.",
           "path": "/search/gelbooru?q="
