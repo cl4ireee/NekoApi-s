@@ -25,9 +25,16 @@ module.exports = function(app) {
                 const uploadDate = $(el).find('.s-card-date').text().trim();
                 const views = $(el).find('.s-card-views').text().trim();
 
-                // Pastikan URL tidak undefined
-                if (url && !url.startsWith('http')) {
-                    url = `https://search.yahoo.com${url}`;
+                // Perbaikan URL agar tidak mengarah ke Yahoo search sendiri
+                if (url) {
+                    if (url.startsWith('/')) {
+                        url = `https://search.yahoo.com${url}`;
+                    } else if (url.includes("r.search.yahoo.com")) {
+                        const urlMatch = url.match(/RU=([^\/]+)/);
+                        if (urlMatch) {
+                            url = decodeURIComponent(urlMatch[1]);
+                        }
+                    }
                 }
 
                 results.push({
