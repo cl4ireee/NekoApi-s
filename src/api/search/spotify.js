@@ -20,7 +20,7 @@ const Spotify = {
 // Ekspor fungsi untuk digunakan dengan `app.get`
 module.exports = function (app) {
     // Route untuk mencari lagu
-    app.get("/search/spotifu-search", async (req, res) => {
+    app.get("/search/spotify-search", async (req, res) => {
         const { q } = req.query;
 
         if (!q) {
