@@ -199,9 +199,9 @@
           "path": "/manga/mangafox?q="
         }, 
         {
-          "name": "Anime Filler",
+          "name": "Filler Search",
           "desc": "Get data from Livechart.",
-          "path": "/anime/anime-filler?q="
+          "path": "/anime/filler-search?q="
         }
       ]
     },
