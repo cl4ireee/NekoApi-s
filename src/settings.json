@@ -210,9 +210,9 @@
           "path": "/anime/filler-search?q="
         }, 
         {
-          "name": "Filler Search",
+          "name": "Filler Detail",
           "desc": "Get data from Livechart.",
-          "path": "/anime/filler-detail?url="
+          "path": "/anime/filler-detailsrl="
         }
       ]
     },
