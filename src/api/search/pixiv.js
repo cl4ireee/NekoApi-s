@@ -1,24 +1,23 @@
-const crypto = require("crypto");
 const axios = require("axios");
 
-function generateHash(input) {
-    return crypto.createHash("sha1").update(input).digest("hex");
-}
-
-async function pixivNet(query) {
+const fetchPixiv = async (q) => {
     try {
-        let hash = await generateHash(query);
-        let { data: pixiv } = await axios.get(`https://pixiv.net/touch/ajax/tag_portal?word=${query}&lang=id&version=${hash}`);
-        return pixiv.body;
+        const URI = `https://api.rynn-archive.biz.id/search/pixiv?q=${encodeURIComponent(q)}`;
+        const { data } = await axios.get(URI);
+
+        // Pastikan response memiliki struktur yang diharapkan
+        if (data && Array.isArray(data.result)) {
+            return { status: true, results: data.result };
+        } else {
+            return { status: false, error: "Invalid response format from API" };
+        }
     } catch (error) {
         console.error("Error fetching Pixiv data:", error.message);
-        return null;
+        return { status: false, error: "Failed to fetch Pixiv data" };
     }
-}
+};
 
-// Ekspor fungsi untuk digunakan dengan `app.get`
 module.exports = function (app) {
-    // Route untuk mencari data di Pixiv
     app.get("/search/pixiv", async (req, res) => {
         const { q } = req.query;
 
@@ -26,12 +25,12 @@ module.exports = function (app) {
             return res.status(400).json({ status: false, error: "Query parameter (q) is required" });
         }
 
-        try {
-            const results = await pixivNet(q);
-            res.status(200).json({ status: true, results });
-        } catch (error) {
-            console.error("Error searching Pixiv:", error.message);
-            res.status(500).json({ status: false, error: "Failed to search Pixiv" });
+        const response = await fetchPixiv(q);
+
+        if (!response.status) {
+            return res.status(500).json(response);
         }
+
+        res.status(200).json(response);
     });
 };
