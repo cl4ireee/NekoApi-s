@@ -386,9 +386,9 @@
           "path": "/search/pixiv-r18?q="
         },
         {
-          "name": "Reddit Search",
+          "name": "Coc Search",
           "desc": "Get details for a specific F-Droid app.",
-          "path": "/search/reddit-search?q="
+          "path": "/search/coc-th?q="
         },
         {
           "name": "Gelbooru",
