@@ -144,7 +144,7 @@ const murianews = {
 };
 
 // Fungsi untuk mendaftarkan endpoint API
-const registerMurianewsAPI = (app) => {
+module.exports = function (app) {
    app.get("/news/muria-now", async (req, res) => {
       try {
          const news = await murianews.now();
