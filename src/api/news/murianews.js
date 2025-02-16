@@ -1,5 +1,5 @@
-const axios = require("axios");
-const cheerio = require("cheerio");
+const axios = require('axios');
+const cheerio = require('cheerio');
 
 const NOW_URL = "https://murianews.com/";
 const SEARCH_URL = "https://murianews.com/search?keyword=";
@@ -127,11 +127,11 @@ const murianews = {
             let image = $(el).find("img").attr("src") || $(el).find(".img-card").css("background-image");
 
             if (image && image.startsWith('url(')) {
-               image = image.replace(/^url\(['"]?|['"]?\)$/g, '');
+               image = image.replace(/^url\("|"\)$/g, '');
             }
 
             if (title && link) {
-               sportNews.push({ title, link, image });
+               sportNews.push({ title, link, image, });
             }
          });
 
@@ -143,71 +143,33 @@ const murianews = {
    }
 };
 
-// Fungsi untuk mendaftarkan endpoint API
-module.exports = function (app) {
-   app.get("/news/muria-now", async (req, res) => {
-      try {
-         const news = await murianews.now();
-         res.json({
-            creator: "Claire", // Tambahkan field creator
-            data: news        // Data berita
-         });
-      } catch (error) {
-         res.status(500).json({ error: "Gagal mengambil berita terbaru" });
-      }
+function setupRoutes(app) {
+   app.get('/now', async (req, res) => {
+      const news = await murianews.now();
+      res.json(news);
    });
 
-   app.get("/news/muria-search", async (req, res) => {
-      try {
-         const { q } = req.query;
-
-         if (!q) {
-            return res.status(400).json({ error: "Parameter 'q' diperlukan" });
-         }
-
-         const results = await murianews.search(q);
-         res.json({
-            creator: "Claire", // Tambahkan field creator
-            data: results     // Data hasil pencarian
-         });
-      } catch (error) {
-         res.status(500).json({ error: "Gagal mencari berita" });
+   app.get('/search', async (req, res) => {
+      const query = req.query.q;
+      if (!query) {
+         return res.status(400).json({ error: 'Query parameter "q" is required' });
       }
+      const results = await murianews.search(query);
+      res.json(results);
    });
 
-   app.get("/news/muria-cek-fakta", async (req, res) => {
-      try {
-         const cekFaktaNews = await murianews.cekFakta();
-         res.json({
-            creator: "Claire", // Tambahkan field creator
-            data: cekFaktaNews // Data Cek Fakta
-         });
-      } catch (error) {
-         res.status(500).json({ error: "Gagal mengambil data Cek Fakta" });
-      }
+   app.get('/cek-fakta', async (req, res) => {
+      const news = await murianews.cekFakta();
+      res.json(news);
    });
 
-   app.get("/news/muria-nasional", async (req, res) => {
-      try {
-         const nasionalNews = await murianews.nasional();
-         res.json({
-            creator: "Claire", // Tambahkan field creator
-            data: nasionalNews // Data Nasional
-         });
-      } catch (error) {
-         res.status(500).json({ error: "Gagal mengambil data Nasional" });
-      }
+   app.get('/nasional', async (req, res) => {
+      const news = await murianews.nasional();
+      res.json(news);
    });
 
-   app.get("/sport", async (req, res) => {
-      try {
-         const sportNews = await murianews.sport();
-         res.json({
-            creator: "Claire", // Tambahkan field creator
-            data: sportNews   // Data Sport
-         });
-      } catch (error) {
-         res.status(500).json({ error: "Gagal mengambil data Sport" });
-      }
+   app.get('/sport', async (req, res) => {
+      const news = await murianews.sport();
+      res.json(news);
    });
-};
+}
