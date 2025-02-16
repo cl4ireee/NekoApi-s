@@ -181,7 +181,7 @@ module.exports = function (app) {
     const samehadaku = new Samehadaku();
 
     // Route untuk mendapatkan anime terbaru
-    app.get("/anime/samehadaku-new", async (req, res) => {
+    app.get("/anime/samehadaku-latest", async (req, res) => {
         try {
             const results = await samehadaku.newAnimes();
             res.status(200).json({ status: true, results });
