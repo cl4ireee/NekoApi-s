@@ -1,33 +1,22 @@
-const axios = require('axios');
+const fetch = require("node-fetch");
 
-module.exports = function(app) {
-    app.get('/download/spotify', async (req, res) => {
-        const { url } = req.query; // Mengambil URL dari query parameter
+module.exports = function (app) {
+    app.get("/download/spotify-download", async (req, res) => {
+        const { url } = req.query;
+
         if (!url) {
-            return res.status(400).json({ status: false, error: 'URL is required' });
+            return res.status(400).json({ status: false, error: "Query parameter (url) is required" });
         }
 
         try {
-            const response = await axios.get(`https://archive-ui.tanakadomp.biz.id/download/spotify?url=${encodeURIComponent(url)}`);
-            const { status, result } = response.data;
-
-            if (status) {
-                const spotifyData = {
-                    status: true,
-                    title: result.data.title,
-                    type: result.data.type,
-                    artist: result.data.artis,
-                    duration: result.data.durasi,
-                    image: result.data.image,
-                    download: result.data.download // Link untuk mengunduh lagu
-                };
-                res.status(200).json(spotifyData);
-            } else {
-                res.status(400).json({ status: false, error: 'Failed to fetch track' });
-            }
+            const response = await fetch(`https://spotifydown.app/api/download?link=${url}`, {
+                headers: { Referer: "https://spotifydown.app/" },
+            });
+            const results = await response.json();
+            res.status(200).json({ status: true, results });
         } catch (error) {
-            console.error("Error fetching Spotify data:", error.message);
-            res.status(500).json({ status: false, error: `Terjadi kesalahan: ${error.message}` });
+            console.error("Error downloading from Spotify:", error.message);
+            res.status(500).json({ status: false, error: "Failed to download from Spotify" });
         }
     });
 };
