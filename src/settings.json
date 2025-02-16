@@ -288,6 +288,12 @@
           "name": "Roblox Stalk",
           "desc": "Retrieve random Blue Archive images.",
           "path": "/stalk/roblox?q="
+        },
+        {
+        "name": "PxPic AI",
+        "desc": "Process images using AI tools from PxPic.",
+        "path": "/tools/pxpic?url=&tool=",
+        "innerDesc": "Use 'url' for the image link and choose a tool: removebg, enhance, upscale, restore, colorize."
         }, 
         {
           "name": "Tracemoe",
