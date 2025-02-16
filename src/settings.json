@@ -213,6 +213,11 @@
           "name": "Filler Detail",
           "desc": "Get data from Livechart.",
           "path": "/anime/filler-details?url="
+        }, 
+        {
+          "name": "Samehadaku",
+          "desc": "Get data from Livechart.",
+          "path": "/anime/samehadaku-new"
         }
       ]
     },
