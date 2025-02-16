@@ -87,6 +87,11 @@
           "name": "DeepSeekV3",
           "desc": "Interact with Simsimi.",
           "path": "/ai/deepseek-v3?text="
+        }, 
+        {
+          "name": "Gemini",
+          "desc": "Interact with Simsimi.",
+          "path": "/ai/gemini?text="
         }
       ]
     },
