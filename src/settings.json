@@ -201,7 +201,7 @@
         {
           "name": "Anime Filler",
           "desc": "Get data from Livechart.",
-          "path": "/anime/filler?q="
+          "path": "/anime/anime-filler?q="
         }
       ]
     },
