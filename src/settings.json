@@ -386,6 +386,11 @@
           "path": "/search/pixiv-r18?q="
         },
         {
+          "name": "Reddit Search",
+          "desc": "Get details for a specific F-Droid app.",
+          "path": "/search/reddit-search?q="
+        },
+        {
           "name": "Gelbooru",
           "desc": "Search for images on Gelbooru.",
           "path": "/search/gelbooru?q="
