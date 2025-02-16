@@ -3,10 +3,21 @@ const cheerio = require("cheerio");
 
 module.exports = (app) => {
     // Fungsi untuk mengambil data base TH Clash of Clans
-    const cocTh = async (thLevel) => {
+    const cocTh = async (query) => {
         try {
-            let { data } = await axios.get(`https://clashofclans-layouts.com/plans/th_${thLevel}/`);
+            // Request dengan User-Agent agar tidak terdeteksi sebagai bot
+            let { data } = await axios.get(`https://clashofclans-layouts.com/plans/th_${query}/`, {
+                headers: {
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+                }
+            });
+
             let $ = cheerio.load(data);
+
+            // Cek apakah halaman valid atau tidak
+            if ($("title").text().includes("404") || $(".base_grid_item").length === 0) {
+                return { status: false, error: "Town Hall level tidak ditemukan atau tidak valid" };
+            }
 
             let categories = [];
             $(".select_base_type a").each((_, el) => {
@@ -41,20 +52,20 @@ module.exports = (app) => {
 
             return { status: true, categories, tags, bases };
         } catch (error) {
-            console.error("Error fetching data:", error.message);
-            return { status: false, error: error.message };
+            console.error("Error fetching data:", error.response?.status, error.response?.data);
+            return { status: false, error: `Error ${error.response?.status || 500}: ${error.message}` };
         }
     };
 
     // Endpoint API untuk mengambil layout berdasarkan Town Hall
     app.get("/search/coc-th", async (req, res) => {
-        const { th } = req.query;
+        const { q } = req.query;
 
-        if (!th) {
-            return res.status(400).json({ status: false, error: "Town Hall level diperlukan" });
+        if (!q || isNaN(q)) {
+            return res.status(400).json({ status: false, error: "Query (q) diperlukan dan harus berupa angka" });
         }
 
-        const result = await cocTh(th);
+        const result = await cocTh(q);
 
         if (!result.status) {
             return res.status(500).json({ status: false, error: result.error });
