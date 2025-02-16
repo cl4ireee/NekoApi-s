@@ -10,26 +10,31 @@ module.exports = function (app) {
                 throw new Error(`Pilih salah satu dari tools ini: ${tools.join(', ')}`);
             }
 
-            // Menggunakan URLSearchParams sebagai pengganti qs.stringify
-            let data = new URLSearchParams({
-                'imageUrl': url,
-                'targetFormat': 'png',
-                'needCompress': 'no',
-                'imageQuality': '100',
-                'compressLevel': '6',
-                'fileOriginalExtension': 'png',
-                'aiFunction': tool,
-                'upscalingLevel': ''
-            });
+            // Data yang akan dikirim ke API PxPic
+            const data = {
+                imageUrl: url,
+                targetFormat: 'png',
+                needCompress: 'no',
+                imageQuality: '100',
+                compressLevel: '6',
+                fileOriginalExtension: 'png',
+                aiFunction: tool,
+                upscalingLevel: ''
+            };
 
-            const response = await axios.post('https://pxpic.com/callAiFunction', data.toString(), {
+            // Request ke API PxPic
+            const response = await axios.post('https://pxpic.com/callAiFunction', data, {
                 headers: {
-                    'User-Agent': 'Mozilla/5.0 (Android 10; Mobile; rv:131.0) Gecko/131.0 Firefox/131.0',
-                    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/png,image/svg+xml,*/*;q=0.8',
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'accept-language': 'id-ID'
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Accept-Language': 'id-ID',
+                    'Referer': 'https://pxpic.com/',
+                    'Cookie': 'SESSION_ID=xxx; other_cookie=yyy' // Ganti dengan cookie dari browser jika perlu
                 }
             });
+
+            console.log("PxPic API Response:", response.data); // Debugging response
 
             return response.data;
         } catch (error) {
@@ -49,10 +54,9 @@ module.exports = function (app) {
 
             const result = await processImage(url, tool);
 
-            // Cek apakah API PxPic memberikan URL gambar
+            // Cek apakah API PxPic memberikan URL gambar hasil
             if (result && result.processedImageUrl) {
-                // Redirect langsung ke gambar hasil
-                return res.redirect(result.processedImageUrl);
+                return res.redirect(result.processedImageUrl); // Redirect langsung ke gambar hasil
             }
 
             res.status(500).json({ status: false, error: "Gagal mendapatkan gambar hasil." });
