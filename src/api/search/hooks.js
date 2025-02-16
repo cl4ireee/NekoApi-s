@@ -25,7 +25,7 @@ const Hooks = async (memeTitle) => {
 
 // Fungsi untuk mendaftarkan endpoint API
 module.exports.registerHooksAPI = (app) => {
-    app.get("/search/hooks", async (req, res) => {
+    app.get('/search/hooks', async (req, res) => {
         const { q } = req.query; // Ganti `title` dengan `q`
 
         if (!q) {
