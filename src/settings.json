@@ -405,6 +405,11 @@
           "name": "Gelbooru",
           "desc": "Search for images on Gelbooru.",
           "path": "/search/gelbooru?q="
+        }, 
+        {
+          "name": "Hooks",
+          "desc": "Search for images on Gelbooru.",
+          "path": "/search/hooks?q="
         }
       ]
     }
