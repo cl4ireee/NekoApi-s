@@ -82,7 +82,7 @@
           "desc": "Generate images with various effects.",
           "path": "/ai/deepimg?text=&type=",
           "innerDesc": "Supported styles include: Headsot, Anime, Tatto, ID Photo, Cartoon, Fantasy 3D."
-        }
+        }, 
         {
           "name": "DeepSeekV3",
           "desc": "Interact with Simsimi.",
