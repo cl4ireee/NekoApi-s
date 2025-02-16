@@ -6,24 +6,23 @@ const Hooks = async (memeTitle) => {
         let { data } = await axios.get(`https://thetransitionalhooks.com/?vgp_search=${encodeURIComponent(memeTitle)}`);
         let $ = cheerio.load(data);
 
-        let results = [];
+        let results = {};
         $(".vgp-video-item").each((i, el) => {
             let title = $(el).find("h3").text().trim();
             let downloadUrl = $(el).find(".vgp-download-btn").attr("href");
 
             if (downloadUrl) {
-                results.push({ title, download: downloadUrl });
+                results[i] = { title, download: downloadUrl };
             }
         });
 
-        return results;
+        return results; 
     } catch (error) {
         console.error("Error scraping:", error.message);
-        return [];
+        return {};
     }
 };
 
-// Ekspor langsung tanpa `const`
 module.exports = (app) => {
     app.get('/search/hooks', async (req, res) => {
         try {
@@ -35,7 +34,13 @@ module.exports = (app) => {
 
             const results = await Hooks(q);
             res.setHeader("Content-Type", "application/json");
-            res.json(results);
+
+            // Format JSON yang sesuai
+            res.json({
+                status: true,
+                results
+            });
+
         } catch (error) {
             console.error("API Error:", error.message);
             res.status(500).json({ error: "Internal Server Error" });
