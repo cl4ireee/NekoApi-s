@@ -67,6 +67,11 @@
           "path": "/ai/neko?text="
         }, 
         {
+          "name": "DeepAi",
+          "desc": "Chat with NekoAi.",
+          "path": "/ai/deepai-image?text="
+        }, 
+        {
           "name": "Simsimi",
           "desc": "Interact with Simsimi.",
           "path": "/ai/simsimi?text=&language=", 
