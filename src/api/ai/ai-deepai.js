@@ -88,7 +88,7 @@ module.exports = function (app) {
     });
 
     // Route untuk generate video
-    app.get("/ai/deepai-video", async (req, res) => {
+    app.get("/deepai/video", async (req, res) => {
         const { q } = req.query;
 
         if (!q) {
