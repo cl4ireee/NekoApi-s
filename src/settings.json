@@ -357,7 +357,7 @@
         {
           "name": "F-Droid Detail",
           "desc": "Get details for a specific F-Droid app.",
-          "path": "/search/fdroiddetail?q="
+          "path": "/search/fdroiddetail?url="
         },
         {
           "name": "Meme Sound",
