@@ -1,81 +1,59 @@
-const axios = require('axios');
+const axios = require("axios");
+const FormData = require("form-data");
+const cheerio = require("cheerio");
 
-// Fungsi untuk mengunduh video Douyin
-async function douyin(url) {
-    const api = "https://lovetik.app/api/ajaxSearch";
-    const payload = { q: url, lang: "en" };
+class DouyinDl {
+    async generateHash(input, insertStr, position) {
+        let base64Encoded = Buffer.from(input).toString("base64");
+        let result = base64Encoded.slice(0, position) + insertStr + base64Encoded.slice(position);
+        return result;
+    }
 
-    try {
-        const { data } = await axios.post(api, payload, {
-            headers: {
-                accept: "*/*",
-                "accept-language": "en-US,en;q=0.9",
-                "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
-                origin: "https://lovetik.app",
-                priority: "u=1, i",
-                referer: "https://lovetik.app/en",
-                "sec-ch-ua":
-                    '"Not A(Brand";v="8", "Chromium";v="132", "Microsoft Edge";v="132"',
-                "sec-ch-ua-mobile": "?0",
-                "sec-ch-ua-platform": '"Windows"',
-                "sec-fetch-dest": "empty",
-                "sec-fetch-mode": "cors",
-                "sec-fetch-site": "same-origin",
-                "user-agent":
-                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 Edg/132.0.0.0",
-                "x-requested-with": "XMLHttpRequest",
-            },
-            transformRequest: [
-                (data) =>
-                    Object.keys(data)
-                        .map(
-                            (key) =>
-                                `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`,
-                        )
-                        .join("&"),
-            ],
-        });
+    async process(url) {
+        try {
+            let { data } = await axios.get("https://snapdouyin.app/id/");
+            let pso = Math.floor(Buffer.from(url).toString("base64").length / 2);
+            let hashh = await this.generateHash(url, "1034", pso);
+            let $ = cheerio.load(data);
+            let token = $("#token").val();
+            let d = new FormData();
+            d.append("url", url);
+            d.append("token", token);
+            d.append("hash", hashh);
 
-        const extractData = data.data;
-        const downloadUrls =
-            extractData.match(
-                /https:\/\/(dl\.snapcdn\.app|v\d+-cold\.douyinvod\.com)\/get\?token=[^"]+/g,
-            ) || [];
+            let headers = {
+                headers: {
+                    ...d.getHeaders(),
+                },
+            };
 
-        return {
-            downloadUrls,
-        };
-    } catch {
-        return { error: "Gagal mengambil video, coba lagi nanti." };
+            let { data: result } = await axios.post("https://snapdouyin.app/wp-json/mx-downloader/video-data", d, headers);
+            return result;
+        } catch (error) {
+            console.error("Error processing Douyin URL:", error.message);
+            throw error;
+        }
     }
 }
 
-// Endpoint untuk menangani permintaan unduhan video Douyin
-module.exports = function(app) {
-    app.get('/download/douyin', async (req, res) => {
-        const { url } = req.query; // Mengambil parameter query 'url'
+// Ekspor fungsi untuk digunakan dengan `app.get`
+module.exports = function (app) {
+    const douyinDl = new DouyinDl();
 
-        // Memastikan URL disediakan
+    // Route untuk mengunduh video Douyin
+    app.get("/download/douyin-download", async (req, res) => {
+        const { url } = req.query;
+
         if (!url) {
-            return res.status(400).json({ status: false, error: 'URL video Douyin diperlukan.' });
+            return res.status(400).json({ status: false, error: "Query parameter (url) is required" });
         }
 
         try {
-            const result = await douyin(url);
-            if (result.error) {
-                return res.status(500).json({ status: false, error: result.error });
-            }
-
-            const { downloadUrls } = result;
-            if (!downloadUrls.length) {
-                return res.status(404).json({ status: false, error: 'Gagal mengambil video.' });
-            }
-
-            // Mengembalikan URL unduhan pertama
-            res.status(200).json({ status: true, downloadUrl: downloadUrls[0] });
+            const results = await douyinDl.process(url);
+            res.status(200).json({ status: true, results });
         } catch (error) {
-            console.error("Kesalahan saat memproses permintaan:", error);
-            res.status(500).json({ status: false, error: 'Terjadi kesalahan saat memproses permintaan.' });
+            console.error("Error downloading Douyin video:", error.message);
+            res.status(500).json({ status: false, error: "Failed to download Douyin video" });
         }
     });
 };
