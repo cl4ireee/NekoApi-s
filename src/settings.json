@@ -212,7 +212,7 @@
         {
           "name": "Filler Detail",
           "desc": "Get data from Livechart.",
-          "path": "/anime/filler-detailsrl="
+          "path": "/anime/filler-details?url="
         }
       ]
     },
