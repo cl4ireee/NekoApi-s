@@ -196,9 +196,3 @@ const registerMurianewsAPI = (app) => {
       }
    });
 };
-
-// Ekspor modul
-module.exports = {
-   murianews,
-   registerMurianewsAPI
-};
