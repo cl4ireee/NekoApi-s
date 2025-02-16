@@ -1,5 +1,5 @@
-import axios from "axios";
-import cheerio from "cheerio";
+const axios = require("axios");
+const cheerio = require("cheerio");
 
 const Hooks = async (memeTitle) => {
     try {
@@ -24,7 +24,7 @@ const Hooks = async (memeTitle) => {
 };
 
 // Fungsi untuk mendaftarkan endpoint API
-export const registerHooksAPI = (app) => {
+module.exports.registerHooksAPI = (app) => {
     app.get("/search/hooks", async (req, res) => {
         const { q } = req.query; // Ganti `title` dengan `q`
 
