@@ -23,8 +23,8 @@ const Hooks = async (memeTitle) => {
     }
 };
 
-// Fungsi untuk mendaftarkan endpoint API
-const registerHooksAPI = (app) => {
+// Ekspor langsung tanpa `const`
+module.exports = (app) => {
     app.get('/search/hooks', async (req, res) => {
         try {
             const { q } = req.query;
@@ -42,4 +42,3 @@ const registerHooksAPI = (app) => {
         }
     });
 };
-
