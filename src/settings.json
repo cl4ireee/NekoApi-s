@@ -237,7 +237,7 @@
         {
           "name": "Spotify",
           "desc": "Download Spotify tracks.",
-          "path": "/download/spotify?url="
+          "path": "/download/spotify-download?url="
         }, 
         {
           "name": "Videy",
