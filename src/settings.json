@@ -197,6 +197,11 @@
           "name": "Mangafox",
           "desc": "Get data from Livechart.",
           "path": "/manga/mangafox?q="
+        }, 
+        {
+          "name": "Anime Filler",
+          "desc": "Get data from Livechart.",
+          "path": "/anime/filler?q="
         }
       ]
     },
