@@ -78,6 +78,12 @@
           "innerDesc": "You can choose the language here (e.g., id, en, es, fr, etc.)."
         }, 
         {
+          "name": "Deepimg",
+          "desc": "Generate images with various effects.",
+          "path": "/ai/deepimg?text=&type=",
+          "innerDesc": "Supported styles include: Headsot, Anime, Tatto, ID Photo, Cartoon, Fantasy 3D."
+        }
+        {
           "name": "DeepSeekV3",
           "desc": "Interact with Simsimi.",
           "path": "/ai/deepseek-v3?text="
