@@ -211,7 +211,7 @@
         {
           "name": "Douyin",
           "desc": "Download TikTok videos.",
-          "path": "/download/douyin?url="
+          "path": "/download/douyin-download?url="
         }, 
         {
           "name": "Instagram",
