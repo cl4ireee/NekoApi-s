@@ -67,9 +67,9 @@
           "path": "/ai/neko?text="
         }, 
         {
-          "name": "DeepAi",
+          "name": "Hoshino",
           "desc": "Chat with NekoAi.",
-          "path": "/ai/deepai-image?text="
+          "path": "/ai/hoshino?text="
         }, 
         {
           "name": "Simsimi",
