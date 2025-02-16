@@ -39,7 +39,7 @@ module.exports = function (app) {
     }
 
     // Endpoint API untuk memproses video Douyin
-    app.get("/download/download-douyin", async (req, res) => {
+    app.get("/download/douyin-download", async (req, res) => {
         try {
             const { url } = req.query;
 
