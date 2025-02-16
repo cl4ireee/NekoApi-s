@@ -22,7 +22,7 @@ const gemini = {
 // Mengekspor fungsi yang menerima objek app
 module.exports = function (app) {
     // Endpoint untuk Gemini menggunakan GET
-    app.get('/gemini/chat', async (req, res) => {
+    app.get('/ai/gemini', async (req, res) => {
         try {
             const { question } = req.query; // Ambil question dari query parameter
 
