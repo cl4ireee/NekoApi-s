@@ -299,6 +299,11 @@
           "name": "Free Fire News",
           "desc": "Stay updated with the latest Free Fire news.",
           "path": "/news/free-fire"
+        }, 
+        {
+          "name": "Muria Now",
+          "desc": "Stay updated with the latest Free Fire news.",
+          "path": "/news/muria-now"
         }
       ]
     },
