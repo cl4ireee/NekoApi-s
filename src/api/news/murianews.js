@@ -148,7 +148,10 @@ module.exports = function (app) {
    app.get("/news/muria-now", async (req, res) => {
       try {
          const news = await murianews.now();
-         res.json(news);
+         res.json({
+            creator: "Claire", // Tambahkan field creator
+            data: news        // Data berita
+         });
       } catch (error) {
          res.status(500).json({ error: "Gagal mengambil berita terbaru" });
       }
@@ -163,7 +166,10 @@ module.exports = function (app) {
          }
 
          const results = await murianews.search(q);
-         res.json(results);
+         res.json({
+            creator: "Claire", // Tambahkan field creator
+            data: results     // Data hasil pencarian
+         });
       } catch (error) {
          res.status(500).json({ error: "Gagal mencari berita" });
       }
@@ -172,7 +178,10 @@ module.exports = function (app) {
    app.get("/news/muria-cek-fakta", async (req, res) => {
       try {
          const cekFaktaNews = await murianews.cekFakta();
-         res.json(cekFaktaNews);
+         res.json({
+            creator: "Claire", // Tambahkan field creator
+            data: cekFaktaNews // Data Cek Fakta
+         });
       } catch (error) {
          res.status(500).json({ error: "Gagal mengambil data Cek Fakta" });
       }
@@ -181,7 +190,10 @@ module.exports = function (app) {
    app.get("/news/muria-nasional", async (req, res) => {
       try {
          const nasionalNews = await murianews.nasional();
-         res.json(nasionalNews);
+         res.json({
+            creator: "Claire", // Tambahkan field creator
+            data: nasionalNews // Data Nasional
+         });
       } catch (error) {
          res.status(500).json({ error: "Gagal mengambil data Nasional" });
       }
@@ -190,7 +202,10 @@ module.exports = function (app) {
    app.get("/sport", async (req, res) => {
       try {
          const sportNews = await murianews.sport();
-         res.json(sportNews);
+         res.json({
+            creator: "Claire", // Tambahkan field creator
+            data: sportNews   // Data Sport
+         });
       } catch (error) {
          res.status(500).json({ error: "Gagal mengambil data Sport" });
       }
