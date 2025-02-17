@@ -385,6 +385,12 @@
           "name": "imgretouch",
           "desc": "Retrieve random Blue Archive images.",
           "path": "/tools/imgretouch?url="
+        }, 
+        {
+          "name": "iplookup",
+          "desc": "Retrieve random Blue Archive images.",
+          "path": "/tools/iplookup?q=", 
+          "innerDesc": "example.com"
         }
       ]
     },
