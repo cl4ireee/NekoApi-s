@@ -12,12 +12,10 @@ module.exports = function (app) {
         try {
             // Mengambil data dari API Otakudesu
             const response = await axios.get(`https://api.rynn-archive.biz.id/search/otakudesu?q=${encodeURIComponent(q)}`);
-            const result = response.data; // Mengambil data dari respons
+            const { creator, ...result } = response.data; // Mengambil data dan menghapus creator
 
-            // Menghapus bagian creator dari hasil
-            const { creator, ...filteredResult } = result;
-
-            res.status(200).json({ status: true, result: filteredResult }); // Mengembalikan hasil tanpa creator
+            // Mengembalikan hasil tanpa creator
+            res.status(200).json({ status: true, result: result.result }); // Mengembalikan hanya array hasil
         } catch (error) {
             console.error("Error fetching Otakudesu search results:", error.message);
             res.status(500).json({ status: false, error: "Failed to fetch Otakudesu search results" });
