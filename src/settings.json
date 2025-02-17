@@ -250,7 +250,7 @@
           "path": "/anime/nhentai?q="
         }, 
         {
-          "name": "Komikcast",
+          "name": "Komikcast List",
           "desc": "Get data from Livechart.",
           "path": "/komik/komikcast-list"
         }
