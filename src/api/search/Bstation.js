@@ -1,9 +1,9 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
 
-async function BSearch(query) {
+async function BSearch(q) { // Mengganti parameter 'query' menjadi 'q'
     try {
-        let { data: m } = await axios.get(`https://www.bilibili.tv/id/search-result?q=${encodeURIComponent(query)}`);
+        let { data: m } = await axios.get(`https://www.bilibili.tv/id/search-result?q=${encodeURIComponent(q)}`); // Menggunakan 'q' sebagai parameter
         let $ = cheerio.load(m);
 
         const results = [];
@@ -16,15 +16,18 @@ async function BSearch(query) {
             const creatorLink = $(element).find('.bstar-video-card__nickname').attr('href');
             const duration = $(element).find('.bstar-video-card__cover-mask-text').text().trim();
 
-            results.push({
-                title,
-                videoLink: `https://www.bilibili.tv${videoLink}`,
-                thumbnail,
-                views,
-                creatorName,
-                creatorLink: `https://www.bilibili.tv${creatorLink}`,
-                duration
-            });
+            // Hanya tambahkan hasil jika ada judul
+            if (title) {
+                results.push({
+                    title,
+                    videoLink: `https://www.bilibili.tv${videoLink}`,
+                    thumbnail,
+                    views,
+                    creatorName,
+                    creatorLink: `https://www.bilibili.tv${creatorLink}`,
+                    duration
+                });
+            }
         });
 
         return results;
@@ -36,7 +39,7 @@ async function BSearch(query) {
 
 module.exports = function (app) {
     // Endpoint untuk pencarian Bilibili
-    app.get("/search/bilibili-search", async (req, res) => {
+    app.get("/search/search-bilibili", async (req, res) => {
         const { q } = req.query; // Mengambil parameter 'q' dari query string
 
         if (!q) {
