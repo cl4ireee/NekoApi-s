@@ -2,7 +2,7 @@ const axios = require("axios");
 
 module.exports = function (app) {
     // Endpoint untuk pencarian Otakudesu
-    app.get("/anime/otakudesu-search", async (req, res) => {
+    app.get("/anime/otakudesu", async (req, res) => {
         const { q } = req.query; // Mengambil parameter 'q' dari query string
 
         if (!q) {
