@@ -3,8 +3,8 @@ const cheerio = require("cheerio");
 
 async function nasaGov(q) {
     try {
-        let { data: s } = await axios.get(`https://www.nasa.gov/?search=${q}`);
-        const $ = cheerio.load(s);
+        let { data } = await axios.get(`https://www.nasa.gov/search?query=${encodeURIComponent(q)}`);
+        const $ = cheerio.load(data);
         const results = [];
 
         $("a.hds-search-result").each((_, el) => {
@@ -15,7 +15,7 @@ async function nasaGov(q) {
 
             results.push({
                 title,
-                url,
+                url: url.startsWith("http") ? url : `https://www.nasa.gov${url}`,
                 excerpt,
                 image: image ? `https://www.nasa.gov${image}` : null,
             });
@@ -23,20 +23,35 @@ async function nasaGov(q) {
 
         return results;
     } catch (error) {
-        console.error(error);
+        console.error("Error fetching NASA search results:", error.message);
         return [];
     }
 }
 
-// Ekspor langsung di dalam deklarasi fungsi
+// Export langsung dalam module
 module.exports = function setupNasaGovAPI(app) {
     app.get("/search/nasa-search", async (req, res) => {
-        const q = req.query.q; // Menggunakan `q` sebagai parameter
+        const { q } = req.query; // Menggunakan parameter `q` dalam request
+
         if (!q) {
-            return res.status(400).json({ error: "Query parameter 'q' is required" });
+            return res.status(400).json({ 
+                status: false, 
+                error: "Query parameter 'q' is required" 
+            });
         }
 
-        const results = await nasaGov(q);
-        res.json(results);
+        try {
+            const results = await nasaGov(q);
+            res.status(200).json({ 
+                status: true, 
+                results 
+            });
+        } catch (error) {
+            console.error("Error processing NASA search API:", error.message);
+            res.status(500).json({ 
+                status: false, 
+                error: "Internal Server Error" 
+            });
+        }
     });
 };
