@@ -339,6 +339,11 @@
           "name": "Muria Cek Fakta",
           "desc": "Stay updated with the latest Free Fire news.",
           "path": "/news/muria-cek-fakta"
+        }, 
+        {
+          "name": "Jkt48 News",
+          "desc": "Stay updated with the latest Free Fire news.",
+          "path": "/news/jkt48"
         }
       ]
     },
