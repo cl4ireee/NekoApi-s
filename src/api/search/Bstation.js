@@ -44,8 +44,8 @@ module.exports = function (app) {
         }
 
         try {
-            const results = await BSearch(q); // Menggunakan 'q' sebagai parameter
-            res.status(200).json({ status: true, data: results });
+            const result = await BSearch(q); // Menggunakan 'q' sebagai parameter
+            res.status(200).json({ status: true, result }); // Mengganti 'data' menjadi 'result'
         } catch (error) {
             console.error("Error fetching Bilibili search results:", error.message);
             res.status(500).json({ status: false, error: "Failed to fetch Bilibili search results" });
