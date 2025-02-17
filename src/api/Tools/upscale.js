@@ -11,7 +11,7 @@ module.exports = function (app) {
             const headers = {
                 ...formData.getHeaders(),
                 'Accept': 'application/json, text/plain, */*',
-                'User -Agent': 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Mobile Safari/537.36',
+                'User  -Agent': 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Mobile Safari/537.36',
             };
 
             try {
@@ -38,7 +38,7 @@ module.exports = function (app) {
                 const headers = {
                     'Accept': 'application/json, text/plain, */*',
                     'Content-Type': 'application/json',
-                    'User -Agent': 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Mobile Safari/537.36',
+                    'User  -Agent': 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Mobile Safari/537.36',
                 };
 
                 try {
@@ -62,11 +62,11 @@ module.exports = function (app) {
     };
 
     // Endpoint untuk meng-upscale gambar dari URL
-    app.post('/tools/upscale', async (req, res) => {
-        const { url, ratio = 2 } = req.body; // Mengambil URL gambar dan rasio dari request body
+    app.get('/tools/upscale', async (req, res) => {
+        const { url } = req.query; // Mengambil URL gambar dari query string
 
         if (!url) {
-            return res.status(400).json({ status: false, error: "Parameter 'url' is required" });
+            return res.status(400).json({ status: false, error: "Query parameter 'url' is required" });
         }
 
         try {
@@ -74,7 +74,7 @@ module.exports = function (app) {
             const response = await axios.get(url, { responseType: 'arraybuffer' });
             const imageBuffer = Buffer.from(response.data, 'binary');
 
-            const uploadResponse = await Upscale.send(imageBuffer, ratio);
+            const uploadResponse = await Upscale.send(imageBuffer); // Menggunakan default ratio
             const finalResult = await Upscale.wait(uploadResponse);
 
             // Mengembalikan URL gambar hasil upscale
