@@ -13,15 +13,19 @@ async function nasaGov(q) {
             const excerpt = $(el).find(".hds-search-result-excerpt").text().trim();
             const image = $(el).find(".hds-search-result-thumbnail img").attr("src");
 
+            // Memastikan URL lengkap jika link relatif ditemukan
+            const fullUrl = url.startsWith("http") ? url : `https://www.nasa.gov${url}`;
+            
             results.push({
                 title,
-                url,
+                url: fullUrl,
                 excerpt,
                 image: image ? `https://www.nasa.gov${image}` : null,
             });
         });
 
-        return results;
+        // Membalikkan urutan hasil
+        return results.reverse();
     } catch (error) {
         console.error(error);
         return [];
