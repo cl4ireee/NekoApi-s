@@ -145,7 +145,7 @@ const murianews = {
 
 // Ekspor fungsi yang menerima `app` sebagai parameter
 module.exports = function (app) {
-   app.get('/now', async (req, res) => {
+   app.get('/news/muriana-now', async (req, res) => {
       const news = await murianews.now();
       res.json(news);
    });
@@ -159,17 +159,17 @@ module.exports = function (app) {
       res.json(results);
    });
 
-   app.get('/cek-fakta', async (req, res) => {
+   app.get('/news/muriana-cek-fakta', async (req, res) => {
       const news = await murianews.cekFakta();
       res.json(news);
    });
 
-   app.get('/nasional', async (req, res) => {
+   app.get('/news/muriana-nasional', async (req, res) => {
       const news = await murianews.nasional();
       res.json(news);
    });
 
-   app.get('/sport', async (req, res) => {
+   app.get('/news/muriana-sport', async (req, res) => {
       const news = await murianews.sport();
       res.json(news);
    });
