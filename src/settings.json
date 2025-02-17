@@ -455,6 +455,11 @@
           "name": "Hooks",
           "desc": "Search for images on Gelbooru.",
           "path": "/search/hooks?q="
+        }, 
+        {
+          "name": "Halodoc",
+          "desc": "Search for images on Gelbooru.",
+          "path": "/search/halodoc-search?q="
         }
       ]
     }
