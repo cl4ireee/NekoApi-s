@@ -16,12 +16,17 @@ module.exports = function (app) {
                 responseType: 'arraybuffer' // Mengambil respons sebagai buffer
             });
 
+            // Cek status kode respons
+            if (response.status !== 200) {
+                return res.status(response.status).json({ status: false, error: 'Failed to upscale image', details: 'Received non-200 response' });
+            }
+
             // Mengatur header untuk mengembalikan gambar
             res.set('Content-Type', 'image/jpg');
             res.send(response.data); // Mengirimkan data gambar ke klien
         } catch (error) {
-            console.error('Error in upscale process:', error.response ? error.response.data : error.message);
-            res.status(500).json({ status: false, error: 'Failed to upscale image', details: error.response ? error.response.data : error.message });
+            console.error('Error in upscale process:', error.response ? error.response.data.toString() : error.message);
+            res.status(500).json({ status: false, error: 'Failed to upscale image', details: error.response ? error.response.data.toString() : error.message });
         }
     });
 };
