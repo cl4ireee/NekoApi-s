@@ -380,6 +380,11 @@
           "name": "Upscale",
           "desc": "Retrieve random Blue Archive images.",
           "path": "/tools/upscale?url="
+        }, 
+        {
+          "name": "imgretouch",
+          "desc": "Retrieve random Blue Archive images.",
+          "path": "/tools/imgretouch?url="
         }
       ]
     },
