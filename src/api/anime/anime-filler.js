@@ -5,7 +5,7 @@ const bes = 'https://www.animefillerlist.com';
 
 const FillerList = {
     async search(q) {
-        const { data } = await axios.get(`${bes}/search/node/${encodeURIComponent(q)}`);
+        const { data } = await axios.get(bes + '/search/node/' + encodeURIComponent(q));
         const $ = cheerio.load(data);
         const result = [];
 
@@ -20,7 +20,6 @@ const FillerList = {
         });
         return result;
     },
-
     async list(url) {
         const { data } = await axios.get(url);
         const $ = cheerio.load(data);
@@ -42,7 +41,6 @@ const FillerList = {
         result.canon = $('#Condensed > .filler > .Episodes').text().trim();
         return result;
     },
-
     async detail(url) {
         const { data } = await axios.get(url);
         const $ = cheerio.load(data);
@@ -56,55 +54,83 @@ const FillerList = {
     },
 };
 
+// Fungsi untuk mendaftarkan endpoint API
 module.exports = function (app) {
-    // Route untuk pencarian anime
+    // Endpoint untuk pencarian anime
     app.get('/anime/filler-search', async (req, res) => {
-        const { q } = req.query;
-
-        if (!q) {
-            return res.status(400).json({ status: false, error: 'Query parameter (q) is required' });
-        }
-
         try {
+            const { q } = req.query;
+
+            if (!q) {
+                return res.status(400).json({
+                    creator: "Claire",
+                    error: "Parameter 'q' diperlukan"
+                });
+            }
+
             const results = await FillerList.search(q);
-            res.status(200).json({ status: true, results });
+            res.json({
+                creator: "Claire",
+                data: results
+            });
         } catch (error) {
-            console.error('Error searching filler:', error.message);
-            res.status(500).json({ status: false, error: 'Failed to search filler' });
+            console.error(error);
+            res.status(500).json({
+                creator: "Claire",
+                error: "Gagal melakukan pencarian"
+            });
         }
     });
 
-    // Route untuk mendapatkan daftar episode
+    // Endpoint untuk mendapatkan daftar episode anime
     app.get('/anime/filler-list', async (req, res) => {
-        const { url } = req.query;
-
-        if (!url) {
-            return res.status(400).json({ status: false, error: 'Query parameter (url) is required' });
-        }
-
         try {
-            const result = await FillerList.list(url);
-            res.status(200).json({ status: true, result });
+            const { url } = req.query;
+
+            if (!url) {
+                return res.status(400).json({
+                    creator: "Claire",
+                    error: "Parameter 'url' diperlukan"
+                });
+            }
+
+            const list = await FillerList.list(url);
+            res.json({
+                creator: "Claire",
+                data: list
+            });
         } catch (error) {
-            console.error('Error fetching filler list:', error.message);
-            res.status(500).json({ status: false, error: 'Failed to fetch filler list' });
+            console.error(error);
+            res.status(500).json({
+                creator: "Claire",
+                error: "Gagal mengambil daftar episode"
+            });
         }
     });
 
-    // Route untuk mendapatkan detail episode
+    // Endpoint untuk mendapatkan detail episode
     app.get('/anime/filler-detail', async (req, res) => {
-        const { url } = req.query;
-
-        if (!url) {
-            return res.status(400).json({ status: false, error: 'Query parameter (url) is required' });
-        }
-
         try {
-            const result = await FillerList.detail(url);
-            res.status(200).json({ status: true, result });
+            const { url } = req.query;
+
+            if (!url) {
+                return res.status(400).json({
+                    creator: "Claire",
+                    error: "Parameter 'url' diperlukan"
+                });
+            }
+
+            const detail = await FillerList.detail(url);
+            res.json({
+                creator: "Claire",
+                data: detail
+            });
         } catch (error) {
-            console.error('Error fetching filler details:', error.message);
-            res.status(500).json({ status: false, error: 'Failed to fetch filler details' });
+            console.error(error);
+            res.status(500).json({
+                creator: "Claire",
+                error: "Gagal mengambil detail episode"
+            });
         }
     });
 };
