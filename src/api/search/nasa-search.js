@@ -25,10 +25,18 @@ async function nasaGov(q) {
         });
 
         // Membalikkan urutan hasil
-        return results.reverse();
+        return {
+            status: true,
+            creator: "Claire",
+            result: results.reverse(),
+        };
     } catch (error) {
         console.error(error);
-        return [];
+        return {
+            status: false,
+            creator: "Claire",
+            result: [],
+        };
     }
 }
 
