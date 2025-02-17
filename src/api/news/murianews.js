@@ -31,7 +31,7 @@ const murianews = {
          return news;
       } catch (error) {
          console.error("Gagal mengambil data:", error);
-         return [];
+         return { error: "Gagal mengambil data", details: error.message };
       }
    },
    
@@ -58,7 +58,7 @@ const murianews = {
          return results;
       } catch (error) {
          console.error("Gagal mencari berita:", error);
-         return [];
+         return { error: "Gagal mencari berita", details: error.message };
       }
    },
    
@@ -84,7 +84,7 @@ const murianews = {
          return cekFaktaNews;
       } catch (error) {
          console.error("Gagal mengambil data Cek Fakta:", error);
-         return [];
+         return { error: "Gagal mengambil data Cek Fakta", details: error.message };
       }
    },
    
@@ -110,7 +110,7 @@ const murianews = {
          return nasionalNews;
       } catch (error) {
          console.error("Gagal mengambil data Nasional:", error);
-         return [];
+         return { error: "Gagal mengambil data Nasional", details: error.message };
       }
    },
    
@@ -131,14 +131,14 @@ const murianews = {
             }
 
             if (title && link) {
-               sportNews.push({ title, link, image, });
+               sportNews.push({ title, link, image });
             }
          });
 
          return sportNews;
       } catch (error) {
          console.error("Gagal mengambil data Sport:", error);
-         return [];
+         return { error: "Gagal mengambil data Sport", details: error.message };
       }
    }
 };
