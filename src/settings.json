@@ -220,9 +220,9 @@
           "path": "/anime/filler-details?url="
         }, 
         {
-          "name": "Samehadaku Latest",
+          "name": "Samehadaku New",
           "desc": "Get data from Livechart.",
-          "path": "/anime/samehadaku-latest"
+          "path": "/anime/samehadaku-new"
         }, 
         {
           "name": "Samehadaku List",
@@ -233,6 +233,11 @@
           "name": "Samehadaku Detail",
           "desc": "Get data from Livechart.",
           "path": "/anime/samehadaku-detail?url="
+        }, 
+        {
+          "name": "Samehadaku Episode",
+          "desc": "Get data from Livechart.",
+          "path": "/anime/samehadaku-episode?url="
         }
       ]
     },
