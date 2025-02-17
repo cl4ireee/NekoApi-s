@@ -7,15 +7,15 @@ const CEKFAKTA_URL = "https://berita.murianews.com/cek-fakta";
 const NASIONAL_URL = "https://berita.murianews.com/nasional";
 const SPORT_URL = "https://sport.murianews.com/";
 
+const headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+    'Accept-Language': 'en-US,en;q=0.9',
+};
+
 const murianews = {
    now: async () => {
       try {
-         const headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
-            'Accept-Language': 'en-US,en;q=0.9',
-            'Referer': 'https://murianews.com/'
-         };
          let { data } = await axios.get(NOW_URL, { headers });
          let $ = cheerio.load(data);
          
@@ -37,18 +37,12 @@ const murianews = {
          return news;
       } catch (error) {
          console.error("Gagal mengambil data:", error);
-         return { error: "Gagal mengambil data", details: error.message };
+         return [];
       }
    },
    
    search: async (query) => {
       try {
-         const headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
-            'Accept-Language': 'en-US,en;q=0.9',
-            'Referer': 'https://murianews.com/'
-         };
          let { data } = await axios.get(SEARCH_URL + encodeURIComponent(query), { headers });
          let $ = cheerio.load(data);
 
@@ -70,18 +64,12 @@ const murianews = {
          return results;
       } catch (error) {
          console.error("Gagal mencari berita:", error);
-         return { error: "Gagal mencari berita", details: error.message };
+         return [];
       }
    },
    
    cekFakta: async () => {
       try {
-         const headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
-            'Accept-Language': 'en-US,en;q=0.9',
-            'Referer': 'https://berita.murianews.com/'
-         };
          let { data } = await axios.get(CEKFAKTA_URL, { headers });
          let $ = cheerio.load(data);
          
@@ -102,18 +90,12 @@ const murianews = {
          return cekFaktaNews;
       } catch (error) {
          console.error("Gagal mengambil data Cek Fakta:", error);
-         return { error: "Gagal mengambil data Cek Fakta", details: error.message };
+         return [];
       }
    },
    
    nasional: async () => {
       try {
-         const headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
-            'Accept-Language': 'en-US,en;q=0.9',
-            'Referer': 'https://berita.murianews.com/'
-         };
          let { data } = await axios.get(NASIONAL_URL, { headers });
          let $ = cheerio.load(data);
          
@@ -134,18 +116,12 @@ const murianews = {
          return nasionalNews;
       } catch (error) {
          console.error("Gagal mengambil data Nasional:", error);
-         return { error: "Gagal mengambil data Nasional", details: error.message };
+         return [];
       }
    },
    
    sport: async () => {
       try {
-         const headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
-            'Accept-Language': 'en-US,en;q=0.9',
-            'Referer': 'https://sport.murianews.com/'
-         };
          let { data } = await axios.get(SPORT_URL, { headers });
          let $ = cheerio.load(data);
          
@@ -157,7 +133,7 @@ const murianews = {
             let image = $(el).find("img").attr("src") || $(el).find(".img-card").css("background-image");
 
             if (image && image.startsWith('url(')) {
-               image = image.replace(/^url\("|"\)$/g, '');
+               image = image.replace(/^url"|"$/g, '');
             }
 
             if (title && link) {
@@ -168,7 +144,7 @@ const murianews = {
          return sportNews;
       } catch (error) {
          console.error("Gagal mengambil data Sport:", error);
-         return { error: "Gagal mengambil data Sport", details: error.message };
+         return [];
       }
    }
 };
