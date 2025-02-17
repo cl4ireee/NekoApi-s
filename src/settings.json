@@ -377,6 +377,11 @@
           "path": "/search/youtube?q="
         }, 
         {
+          "name": "Bilibili Search",
+          "desc": "Search for YouTube content.",
+          "path": "/search/bilibili-search?q="
+        }, 
+        {
           "name": "Android1",
           "desc": "Search for Android apps.",
           "path": "/search/android1?q="
