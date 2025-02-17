@@ -2,291 +2,231 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 
 // URL untuk masing-masing kategori
-const NOW_URL = "https://murianews.com/";
-const SEARCH_URL = "https://murianews.com/search?keyword=";
-const CEKFAKTA_URL = "https://berita.murianews.com/cek-fakta";
-const NASIONAL_URL = "https://berita.murianews.com/nasional";
-const SPORT_URL = "https://sport.murianews.com/";
+const NOW_URL = "https://www.murianews.com/";
+const SEARCH_URL = "https://www.murianews.com/search?keyword=";
+const CEKFAKTA_URL = "https://www.murianews.com/tag/cek-fakta";
+const NASIONAL_URL = "https://www.murianews.com/kanal/nasional";
+const SPORT_URL = "https://www.murianews.com/kanal/sport";
 
 // Konfigurasi axios
 const axiosConfig = {
-    timeout: 10000,
+    timeout: 30000, // Timeout 30 detik
     headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
         'Accept-Language': 'en-US,en;q=0.9',
+        'Cache-Control': 'no-cache',
+        'Pragma': 'no-cache'
+    },
+    validateStatus: function (status) {
+        return status >= 200 && status < 500;
     }
 };
 
-// Fungsi helper untuk scraping dengan retry logic
-const fetchWithRetry = async (url, retries = 3) => {
-    let lastError;
-    for (let i = 0; i < retries; i++) {
-        try {
-            const response = await axios.get(url, axiosConfig);
-            return response.data;
-        } catch (error) {
-            console.error(`Attempt ${i + 1} failed for ${url}:`, error.message);
-            lastError = error;
-            if (i < retries - 1) await new Promise(r => setTimeout(r, 1000 * (i + 1)));
+// Helper function untuk extract data
+const extractNewsData = ($, el) => {
+    try {
+        const title = $(el).find("h2, h3, h4, h5, .title").first().text().trim();
+        const link = $(el).find("a").first().attr("href");
+        const image = $(el).find("img").attr("src") || 
+                     $(el).find("[style*='background-image']").attr("style")?.match(/url\(['"]?(.*?)['"]?\)/)?.[1] || 
+                     null;
+        const date = $(el).find("time, .date, span:contains(WIB)").first().text().trim();
+        const description = $(el).find("p, .excerpt, .description").first().text().trim();
+
+        if (title && link) {
+            return { title, link, image, date, description };
         }
+        return null;
+    } catch (err) {
+        console.error("Error extracting news data:", err);
+        return null;
     }
-    throw lastError;
 };
 
-// Fungsi utama untuk mengambil berita dari berbagai kategori
+// Fungsi utama untuk mengambil berita
 const murianews = {
-    // Ambil berita dari halaman utama
+    // Ambil berita terkini
     now: async () => {
         try {
-            const data = await fetchWithRetry(NOW_URL);
-            const $ = cheerio.load(data);
+            const response = await axios.get(NOW_URL, axiosConfig);
+            if (response.status !== 200) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const $ = cheerio.load(response.data);
             const news = [];
 
-            $(".blockbox .card-box").each((_, el) => {
-                try {
-                    const title = $(el).find("h3.title").text().trim();
-                    const link = $(el).find("a").attr("href");
-                    const image = $(el).find("img").attr("src");
-                    const category = $(el).find("h6.title a").text().trim();
-                    const date = $(el).find("h6.title span").text().trim();
-                    const description = $(el).find("p.line2").text().trim();
-
-                    if (title && link) {
-                        news.push({ title, link, image, category, date, description });
-                    }
-                } catch (err) {
-                    console.error("Error scraping individual item:", err.message);
-                }
+            $("article, .latest__item, .news-item, .card-box").each((_, el) => {
+                const newsItem = extractNewsData($, el);
+                if (newsItem) news.push(newsItem);
             });
 
             return news;
         } catch (error) {
-            console.error("Gagal mengambil data now:", error.message);
-            return [];
+            console.error("Error fetching latest news:", error);
+            throw error;
         }
     },
 
-    // Cari berita berdasarkan query
-    search: async (q) => {
+    // Pencarian berita
+    search: async (query) => {
+        if (!query) throw new Error("Search query is required");
+        
         try {
-            const data = await fetchWithRetry(SEARCH_URL + encodeURIComponent(q));
-            const $ = cheerio.load(data);
+            const response = await axios.get(`${SEARCH_URL}${encodeURIComponent(query)}`, axiosConfig);
+            if (response.status !== 200) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const $ = cheerio.load(response.data);
             const results = [];
 
-            $(".blockbox .card-box").each((_, el) => {
-                try {
-                    const title = $(el).find("h3.title").text().trim();
-                    const link = $(el).find("a").attr("href");
-                    const image = $(el).find("img").attr("src");
-                    const category = $(el).find("h6.title span").first().text().trim();
-                    const date = $(el).find("h6.title span").last().text().trim();
-                    const description = $(el).find("p.line2").text().trim();
-
-                    if (title && link) {
-                        results.push({ title, link, image, category, date, description });
-                    }
-                } catch (err) {
-                    console.error("Error scraping search item:", err.message);
-                }
+            $("article, .search-item, .news-item, .card-box").each((_, el) => {
+                const newsItem = extractNewsData($, el);
+                if (newsItem) results.push(newsItem);
             });
 
             return results;
         } catch (error) {
-            console.error("Gagal mencari berita:", error.message);
-            return [];
+            console.error("Error searching news:", error);
+            throw error;
         }
     },
 
-    // Ambil berita Cek Fakta
+    // Berita Cek Fakta
     cekFakta: async () => {
         try {
-            const data = await fetchWithRetry(CEKFAKTA_URL);
-            const $ = cheerio.load(data);
-            const cekFaktaNews = [];
+            const response = await axios.get(CEKFAKTA_URL, axiosConfig);
+            if (response.status !== 200) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
 
-            $(".blockbox .card-box").each((_, el) => {
-                try {
-                    const title = $(el).find("h3.title").text().trim();
-                    const link = $(el).find("a").attr("href");
-                    const image = $(el).find("img").attr("src");
-                    const date = $(el).find("h6.title span").last().text().trim();
-                    const description = $(el).find("p.line2").text().trim();
+            const $ = cheerio.load(response.data);
+            const factChecks = [];
 
-                    if (title && link) {
-                        cekFaktaNews.push({ title, link, image, date, description });
-                    }
-                } catch (err) {
-                    console.error("Error scraping cek fakta item:", err.message);
-                }
+            $("article, .fact-check-item, .news-item, .card-box").each((_, el) => {
+                const newsItem = extractNewsData($, el);
+                if (newsItem) factChecks.push(newsItem);
             });
 
-            return cekFaktaNews;
+            return factChecks;
         } catch (error) {
-            console.error("Gagal mengambil data Cek Fakta:", error.message);
-            return [];
+            console.error("Error fetching fact checks:", error);
+            throw error;
         }
     },
 
-    // Ambil berita Nasional
+    // Berita Nasional
     nasional: async () => {
         try {
-            const data = await fetchWithRetry(NASIONAL_URL);
-            const $ = cheerio.load(data);
-            const nasionalNews = [];
+            const response = await axios.get(NASIONAL_URL, axiosConfig);
+            if (response.status !== 200) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
 
-            $(".blockbox .card-box").each((_, el) => {
-                try {
-                    const title = $(el).find("h3.title").text().trim();
-                    const link = $(el).find("a").attr("href");
-                    const image = $(el).find("img").attr("src");
-                    const date = $(el).find("h6.title span").last().text().trim();
-                    const description = $(el).find("p.line2").text().trim();
+            const $ = cheerio.load(response.data);
+            const nationalNews = [];
 
-                    if (title && link) {
-                        nasionalNews.push({ title, link, image, date, description });
-                    }
-                } catch (err) {
-                    console.error("Error scraping nasional item:", err.message);
-                }
+            $("article, .national-item, .news-item, .card-box").each((_, el) => {
+                const newsItem = extractNewsData($, el);
+                if (newsItem) nationalNews.push(newsItem);
             });
 
-            return nasionalNews;
+            return nationalNews;
         } catch (error) {
-            console.error("Gagal mengambil data Nasional:", error.message);
-            return [];
+            console.error("Error fetching national news:", error);
+            throw error;
         }
     },
 
-    // Ambil berita Sport
+    // Berita Olahraga
     sport: async () => {
         try {
-            const data = await fetchWithRetry(SPORT_URL);
-            const $ = cheerio.load(data);
-            const sportNews = [];
+            const response = await axios.get(SPORT_URL, axiosConfig);
+            if (response.status !== 200) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
 
-            $(".card-box").each((_, el) => {
-                try {
-                    const title = $(el).find("h3.title, h5.title").text().trim();
-                    const link = $(el).find("a").attr("href");
-                    let image = $(el).find("img").attr("src") || $(el).find(".img-card").css("background-image");
+            const $ = cheerio.load(response.data);
+            const sportsNews = [];
 
-                    if (image && image.startsWith('url(')) {
-                        image = image.replace(/^url\(['"]?|['"]?\)$/g, '');
-                    }
-
-                    if (title && link) {
-                        sportNews.push({ title, link, image });
-                    }
-                } catch (err) {
-                    console.error("Error scraping sport item:", err.message);
-                }
+            $("article, .sport-item, .news-item, .card-box").each((_, el) => {
+                const newsItem = extractNewsData($, el);
+                if (newsItem) sportsNews.push(newsItem);
             });
 
-            return sportNews;
+            return sportsNews;
         } catch (error) {
-            console.error("Gagal mengambil data Sport:", error.message);
-            return [];
+            console.error("Error fetching sports news:", error);
+            throw error;
         }
     }
 };
 
 // Express routes
 module.exports = function(app) {
-    app.get('/news/muria-now', async (req, res) => {
-        try {
-            const news = await murianews.now();
-            if (!news.length) {
-                return res.status(404).json({ 
-                    status: false, 
-                    message: 'Tidak ada berita yang ditemukan' 
-                });
-            }
-            res.json({ status: true, data: news });
-        } catch (error) {
-            res.status(500).json({ 
-                status: false, 
-                message: 'Gagal mengambil berita terkini' 
-            });
-        }
-    });
+    // Middleware untuk menangani errors
+    const asyncHandler = (fn) => (req, res, next) => {
+        return Promise.resolve(fn(req, res, next)).catch(next);
+    };
 
-    app.get('/news/muria-search', async (req, res) => {
-        try {
-            const q = req.query.q;
-            if (!q) {
-                return res.status(400).json({ 
-                    status: false, 
-                    message: 'Parameter pencarian (q) diperlukan' 
-                });
-            }
-            const results = await murianews.search(q);
-            if (!results.length) {
-                return res.status(404).json({ 
-                    status: false, 
-                    message: 'Tidak ada hasil pencarian' 
-                });
-            }
-            res.json({ status: true, data: results });
-        } catch (error) {
-            res.status(500).json({ 
-                status: false, 
-                message: 'Gagal melakukan pencarian' 
+    // Response helper
+    const sendResponse = (res, data) => {
+        if (!data || (Array.isArray(data) && data.length === 0)) {
+            return res.status(404).json({
+                status: false,
+                message: 'Tidak ada data yang ditemukan'
             });
         }
-    });
+        
+        res.json({
+            status: true,
+            count: Array.isArray(data) ? data.length : 1,
+            data: data
+        });
+    };
 
-    app.get('/news/muria-cek-fakta', async (req, res) => {
-        try {
-            const news = await murianews.cekFakta();
-            if (!news.length) {
-                return res.status(404).json({ 
-                    status: false, 
-                    message: 'Tidak ada berita cek fakta' 
-                });
-            }
-            res.json({ status: true, data: news });
-        } catch (error) {
-            res.status(500).json({ 
-                status: false, 
-                message: 'Gagal mengambil berita cek fakta' 
-            });
-        }
-    });
+    // Routes
+    app.get('/news/muria-now', asyncHandler(async (req, res) => {
+        const news = await murianews.now();
+        sendResponse(res, news);
+    }));
 
-    app.get('/news/muria-nasional', async (req, res) => {
-        try {
-            const news = await murianews.nasional();
-            if (!news.length) {
-                return res.status(404).json({ 
-                    status: false, 
-                    message: 'Tidak ada berita nasional' 
-                });
-            }
-            res.json({ status: true, data: news });
-        } catch (error) {
-            res.status(500).json({ 
-                status: false, 
-                message: 'Gagal mengambil berita nasional' 
+    app.get('/news/muria-search', asyncHandler(async (req, res) => {
+        const { q } = req.query;
+        if (!q) {
+            return res.status(400).json({
+                status: false,
+                message: 'Parameter pencarian (q) diperlukan'
             });
         }
-    });
+        const results = await murianews.search(q);
+        sendResponse(res, results);
+    }));
 
-    app.get('/news/muria-sport', async (req, res) => {
-        try {
-            const news = await murianews.sport();
-            if (!news.length) {
-                return res.status(404).json({ 
-                    status: false, 
-                    message: 'Tidak ada berita olahraga' 
-                });
-            }
-            res.json({ status: true, data: news });
-        } catch (error) {
-            res.status(500).json({ 
-                status: false, 
-                message: 'Gagal mengambil berita olahraga' 
-            });
-        }
+    app.get('/news/muria-cek-fakta', asyncHandler(async (req, res) => {
+        const news = await murianews.cekFakta();
+        sendResponse(res, news);
+    }));
+
+    app.get('/news/muria-nasional', asyncHandler(async (req, res) => {
+        const news = await murianews.nasional();
+        sendResponse(res, news);
+    }));
+
+    app.get('/news/muria-sport', asyncHandler(async (req, res) => {
+        const news = await murianews.sport();
+        sendResponse(res, news);
+    }));
+
+    // Error handler middleware
+    app.use((error, req, res, next) => {
+        console.error('Error:', error);
+        res.status(error.status || 500).json({
+            status: false,
+            message: error.message || 'Terjadi kesalahan pada server',
+            error: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        });
     });
 };
