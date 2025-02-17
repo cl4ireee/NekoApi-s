@@ -387,6 +387,11 @@
           "path": "/tools/imgretouch?url="
         }, 
         {
+          "name": "stockfruit",
+          "desc": "Retrieve random Blue Archive images.",
+          "path": "/info/stockfruit"
+        }, 
+        {
           "name": "iplookup",
           "desc": "Retrieve random Blue Archive images.",
           "path": "/tools/iplookup?q=", 
