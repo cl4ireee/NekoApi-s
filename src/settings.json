@@ -238,6 +238,11 @@
           "name": "Samehadaku Episode",
           "desc": "Get data from Livechart.",
           "path": "/anime/samehadaku-episode?url="
+        }, 
+        {
+          "name": "nHentai Search",
+          "desc": "Get data from Livechart.",
+          "path": "/anime/nhentai?q="
         }
       ]
     },
