@@ -10,6 +10,7 @@ module.exports = function (app) {
         }
 
         try {
+            console.log(`Calling Suraweb API with URL: ${url}`);
             // Memanggil API Suraweb untuk meng-upscale gambar
             const response = await axios.get(`https://api.suraweb.online/tools/upscale?url=${encodeURIComponent(url)}`, {
                 responseType: 'arraybuffer' // Mengambil respons sebagai buffer
