@@ -280,6 +280,11 @@
           "path": "/download/douyin-download?url="
         }, 
         {
+          "name": "Rednote",
+          "desc": "Download TikTok videos.",
+          "path": "/download/rednote?url="
+        }, 
+        {
           "name": "Instagram",
           "desc": "Download content from Instagram.",
           "path": "/download/instagram?url="
