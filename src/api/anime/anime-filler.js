@@ -1,126 +1,110 @@
-const axios = require("axios");
-const cheerio = require("cheerio");
+const axios = require('axios');
+const cheerio = require('cheerio');
 
-const animeFilter = async (animeName) => {
-    try {
-        let { data } = await axios.get(`https://www.animefillerlist.com/search/node/${animeName}`);
-        let $ = cheerio.load(data);
+const bes = 'https://www.animefillerlist.com';
 
-        let results = [];
+const FillerList = {
+    async search(q) {
+        const { data } = await axios.get(`${bes}/search/node/${encodeURIComponent(q)}`);
+        const $ = cheerio.load(data);
+        const result = [];
 
-        $(".search-results .search-result").each((i, el) => {
-            let title = $(el).find(".title a").text().trim();
-            let link = "https://www.animefillerlist.com" + $(el).find(".title a").attr("href");
-            let desc = $(el).find(".search-snippet").text().trim();
-
-            results.push({ title, link, desc });
+        $('.search-result').each((i, e) => {
+            let item = {};
+            item.title = $(e).find('.title').text().trim();
+            item.description = $(e).find('.search-snippet').text().trim().replace(/ +/g, ' ');
+            item.link = $(e).find('a').attr('href');
+            item.isAnime = item.link.split('/').length == 5;
+            item.isEpisode = !item.isAnime;
+            result.push(item);
         });
+        return result;
+    },
 
-        return results;
-    } catch (error) {
-        console.error("Error fetching data:", error.message);
-        return [];
-    }
-};
+    async list(url) {
+        const { data } = await axios.get(url);
+        const $ = cheerio.load(data);
+        const result = { title: url.split('/').pop() };
 
-const animeFilterGetDetailsByUrl = async (urlAnimes) => {
-    try {
-        let { data } = await axios.get(urlAnimes);
-        let $ = cheerio.load(data);
-
-        let animeTitle = $("h1").text().trim();
-        let episodeNum = $(".field-name-field-number .field-item").text().trim();
-        let japaneseReleaseDate = $(".field-name-field-japanese-airdate .date-display-single").text().trim();
-        let englishReleaseDate = $(".field-name-field-english-airdate .date-display-single").text().trim();
-        let animeType = $(".field-name-field-type .field-item").text().trim();
-
-        let contributorsList = [];
-        $(".Contributors a").each((_, el) => {
-            let contributorName = $(el).attr("title");
-            let contributorAvatar = $(el).find("img").attr("src");
-            if (contributorName) {
-                contributorsList.push({ contributorName, contributorAvatar });
-            }
+        const list = [];
+        $('tbody > tr').each((i, e) => {
+            let item = {};
+            item.number = parseInt($(e).find('.Number').text().trim());
+            item.title = $(e).find('.Title').text().trim();
+            item.link = bes + $(e).find('a').attr('href');
+            item.type = $(e).find('.Type').text().trim();
+            item.date = $(e).find('.Date').text().trim();
+            list.push(item);
         });
+        result.list = list;
+        result.filler = $('#Condensed > .manga_canon .Episodes').text().trim();
+        result.mixed = $('#Condensed > .mixed_canon/filler > .Episodes').text().trim();
+        result.canon = $('#Condensed > .filler > .Episodes').text().trim();
+        return result;
+    },
 
-        let previousEpisodeLink = $(".EpisodePager a").first().attr("href");
-        let nextEpisodeLink = $(".EpisodePager a").last().attr("href");
-
-        let response = {
-            animeTitle,
-            episodeNum,
-            japaneseReleaseDate,
-            englishReleaseDate,
-            animeType,
-            contributorsList,
-            previousEpisode: previousEpisodeLink ? `https://www.animefillerlist.com${previousEpisodeLink}` : null,
-            nextEpisode: nextEpisodeLink ? `https://www.animefillerlist.com${nextEpisodeLink}` : null,
+    async detail(url) {
+        const { data } = await axios.get(url);
+        const $ = cheerio.load(data);
+        return {
+            title: url.split('/').pop(),
+            number: parseInt($('.field-name-field-number field-items').text().trim()),
+            date: $('.field-name-field-japanese-airdate field-items').text().trim(),
+            type: $('.field-name-field-type field-items').text().trim(),
+            manga: $('.field-name-field-manga-chapters field-items').text().trim(),
         };
-
-        if ($(".TitleExtra").length > 0) {
-            let characterList = [];
-
-            $(".EpisodeList tbody tr").each((_, el) => {
-                let episodeIndex = $(el).find(".Number").text().trim();
-                let characterName = $(el).find(".Title a").text().trim();
-                let episodeUrl = $(el).find(".Title a").attr("href");
-                let characterCategory = $(el).find(".Type span").text().trim();
-                let lahir = $(el).find(".Date").text().trim();
-
-                if (episodeIndex && characterName) {
-                    characterList.push({
-                        episodeIndex,
-                        characterName,
-                        characterUrls: episodeUrl ? `https://www.animefillerlist.com${episodeUrl}` : null,
-                        characterCategory,
-                        lahir,
-                    });
-                }
-            });
-
-            response.characterList = characterList;
-        }
-
-        return response;
-    } catch (error) {
-        console.error("Error fetching anime details:", error.message);
-        return null;
-    }
+    },
 };
 
-// Ekspor fungsi untuk digunakan dengan `app.get`
 module.exports = function (app) {
-    // Route untuk mencari anime
-    app.get("/anime/filler-search", async (req, res) => {
+    // Route untuk pencarian anime
+    app.get('/anime/filler-search', async (req, res) => {
         const { q } = req.query;
 
         if (!q) {
-            return res.status(400).json({ status: false, error: "Query parameter (q) is required" });
+            return res.status(400).json({ status: false, error: 'Query parameter (q) is required' });
         }
 
         try {
-            const results = await animeFilter(q);
+            const results = await FillerList.search(q);
             res.status(200).json({ status: true, results });
         } catch (error) {
-            console.error("Error searching anime:", error.message);
-            res.status(500).json({ status: false, error: "Failed to search anime" });
+            console.error('Error searching filler:', error.message);
+            res.status(500).json({ status: false, error: 'Failed to search filler' });
         }
     });
 
-    // Route untuk mendapatkan detail anime
-    app.get("/anime/filler-details", async (req, res) => {
+    // Route untuk mendapatkan daftar episode
+    app.get('/anime/filler-list', async (req, res) => {
         const { url } = req.query;
 
         if (!url) {
-            return res.status(400).json({ status: false, error: "Query parameter (url) is required" });
+            return res.status(400).json({ status: false, error: 'Query parameter (url) is required' });
         }
 
         try {
-            const results = await animeFilterGetDetailsByUrl(url);
-            res.status(200).json({ status: true, results });
+            const result = await FillerList.list(url);
+            res.status(200).json({ status: true, result });
         } catch (error) {
-            console.error("Error fetching anime details:", error.message);
-            res.status(500).json({ status: false, error: "Failed to fetch anime details" });
+            console.error('Error fetching filler list:', error.message);
+            res.status(500).json({ status: false, error: 'Failed to fetch filler list' });
+        }
+    });
+
+    // Route untuk mendapatkan detail episode
+    app.get('/anime/filler-detail', async (req, res) => {
+        const { url } = req.query;
+
+        if (!url) {
+            return res.status(400).json({ status: false, error: 'Query parameter (url) is required' });
+        }
+
+        try {
+            const result = await FillerList.detail(url);
+            res.status(200).json({ status: true, result });
+        } catch (error) {
+            console.error('Error fetching filler details:', error.message);
+            res.status(500).json({ status: false, error: 'Failed to fetch filler details' });
         }
     });
 };
