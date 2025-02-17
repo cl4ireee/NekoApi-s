@@ -301,9 +301,14 @@
           "path": "/news/free-fire"
         }, 
         {
-          "name": "Muria Now",
+          "name": "Muria Sport",
           "desc": "Stay updated with the latest Free Fire news.",
           "path": "/news/muria-sport"
+        }, 
+        {
+          "name": "Muria Cek Fakta",
+          "desc": "Stay updated with the latest Free Fire news.",
+          "path": "/news/muria-cek-fakta"
         }
       ]
     },
