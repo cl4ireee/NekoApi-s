@@ -253,6 +253,11 @@
           "name": "Komikcast List",
           "desc": "Get data from Livechart.",
           "path": "/komik/komikcast-list"
+        }, 
+        {
+          "name": "Anichin Search",
+          "desc": "Get data from Livechart.",
+          "path": "/anime/anichin-search?q="
         }
       ]
     },
