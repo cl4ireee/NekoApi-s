@@ -353,6 +353,16 @@
       ]
     },
     {
+      "name": "Games",
+      "items": [
+        {
+          "name": "Asah otak",
+          "desc": "Blue Archive Random Images",
+          "path": "/games/asahotak"
+        }
+      ]
+    },
+    {
       "name": "Tools",
       "items": [
         {
