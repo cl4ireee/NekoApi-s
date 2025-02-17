@@ -10,7 +10,13 @@ const SPORT_URL = "https://sport.murianews.com/";
 const murianews = {
    now: async () => {
       try {
-         let { data } = await axios.get(NOW_URL);
+         const headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+            'Accept-Language': 'en-US,en;q=0.9',
+            'Referer': 'https://murianews.com/'
+         };
+         let { data } = await axios.get(NOW_URL, { headers });
          let $ = cheerio.load(data);
          
          let news = [];
@@ -37,7 +43,13 @@ const murianews = {
    
    search: async (query) => {
       try {
-         let { data } = await axios.get(SEARCH_URL + encodeURIComponent(query));
+         const headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+            'Accept-Language': 'en-US,en;q=0.9',
+            'Referer': 'https://murianews.com/'
+         };
+         let { data } = await axios.get(SEARCH_URL + encodeURIComponent(query), { headers });
          let $ = cheerio.load(data);
 
          let results = [];
@@ -64,7 +76,13 @@ const murianews = {
    
    cekFakta: async () => {
       try {
-         let { data } = await axios.get(CEKFAKTA_URL);
+         const headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+            'Accept-Language': 'en-US,en;q=0.9',
+            'Referer': 'https://berita.murianews.com/'
+         };
+         let { data } = await axios.get(CEKFAKTA_URL, { headers });
          let $ = cheerio.load(data);
          
          let cekFaktaNews = [];
@@ -90,7 +108,13 @@ const murianews = {
    
    nasional: async () => {
       try {
-         let { data } = await axios.get(NASIONAL_URL);
+         const headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+            'Accept-Language': 'en-US,en;q=0.9',
+            'Referer': 'https://berita.murianews.com/'
+         };
+         let { data } = await axios.get(NASIONAL_URL, { headers });
          let $ = cheerio.load(data);
          
          let nasionalNews = [];
@@ -116,7 +140,13 @@ const murianews = {
    
    sport: async () => {
       try {
-         let { data } = await axios.get(SPORT_URL);
+         const headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+            'Accept-Language': 'en-US,en;q=0.9',
+            'Referer': 'https://sport.murianews.com/'
+         };
+         let { data } = await axios.get(SPORT_URL, { headers });
          let $ = cheerio.load(data);
          
          let sportNews = [];
