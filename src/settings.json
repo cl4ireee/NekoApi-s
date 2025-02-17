@@ -401,6 +401,11 @@
           "desc": "Retrieve random Blue Archive images.",
           "path": "/tools/iplookup?q=", 
           "innerDesc": "example.com"
+        }, 
+        {
+          "name": "Proxy list",
+          "desc": "Retrieve random Blue Archive images.",
+          "path": "/tools/proxy-list"
         }
       ]
     },
