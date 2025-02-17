@@ -39,7 +39,7 @@ async function BSearch(q) { // Mengganti parameter 'query' menjadi 'q'
 
 module.exports = function (app) {
     // Endpoint untuk pencarian Bilibili
-    app.get("/search/search-bilibili", async (req, res) => {
+    app.get("/search/bilibili-search", async (req, res) => {
         const { q } = req.query; // Mengambil parameter 'q' dari query string
 
         if (!q) {
