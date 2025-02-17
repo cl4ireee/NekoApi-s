@@ -21,7 +21,18 @@ module.exports = function (app) {
             const title = $('title').text();
             const description = $('meta[name="description"]').attr('content') || "No description available";
 
-            res.json({ title, description });
+            // Menyiapkan hasil dalam format yang diinginkan
+            const result = {
+                status: true,
+                results: [
+                    {
+                        title: title,
+                        description: description
+                    }
+                ]
+            };
+
+            res.json(result);  // Mengirim hasil sebagai JSON
         } catch (error) {
             console.error("Error scraping Kwai:", error);
             res.status(500).json({ error: 'Error fetching data from Kwai' });
