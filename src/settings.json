@@ -465,6 +465,11 @@
           "name": "Nasa Search",
           "desc": "Search for images on Gelbooru.",
           "path": "/search/nasa-search?q="
+        }, 
+        {
+          "name": "Kwai Search",
+          "desc": "Search for images on Gelbooru.",
+          "path": "/search/kwai?q="
         }
       ]
     }
