@@ -481,6 +481,11 @@
           "name": "img2promt",
           "desc": "Retrieve random Blue Archive images.",
           "path": "/tools/generate-prompt?url="
+        }, 
+        {
+          "name": "Krakenfiles",
+          "desc": "Retrieve random Blue Archive images.",
+          "path": "/tools/krakenfiles?url="
         }
       ]
     },
