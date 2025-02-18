@@ -270,6 +270,11 @@
           "path": "/anime/anichin-populer"
         },
         {
+          "name": "Anichin Populer",
+          "desc": "Get data from Livechart.",
+          "path": "/anime/anichin-detail?url="
+        },
+        {
           "name": "Otakudesu Search",
           "desc": "Get data from Livechart.",
           "path": "/anime/otakudesu?q="
