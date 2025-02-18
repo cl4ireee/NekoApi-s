@@ -67,7 +67,7 @@ async function toZombie(url) {
 
 // Fungsi untuk mengatur API
 module.exports = function (app) {
-    app.get('/tools/toZombie', async (req, res) => {
+    app.get('/ai/toZombie', async (req, res) => {
         const { url } = req.query; // Mengambil URL dari query string
 
         if (!url) {
