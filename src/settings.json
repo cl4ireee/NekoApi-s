@@ -563,6 +563,11 @@
           "path": "/search/halodoc-search?q="
         }, 
         {
+          "name": "Apkdog Search",
+          "desc": "Search for images on Gelbooru.",
+          "path": "/search/apkdog-search?q="
+        }, 
+        {
           "name": "Nasa Search",
           "desc": "Search for images on Gelbooru.",
           "path": "/search/nasa-search?q="
