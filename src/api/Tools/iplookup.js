@@ -2,7 +2,7 @@ const axios = require('axios');
 
 module.exports = function (app) {
     // Endpoint untuk melakukan IP Lookup
-    app.get('/tools/iplookup', async (req, res) => {
+    app.get('/tools/ip-lookup', async (req, res) => {
         const { q } = req.query; // Mengambil parameter 'q' dari query string
 
         if (!q) {
@@ -10,18 +10,16 @@ module.exports = function (app) {
         }
 
         try {
-            // Memanggil API untuk melakukan IP Lookup
-            const response = await axios.get(`https://fastrestapis.fasturl.cloud/tool/iplookup?query=${encodeURIComponent(q)}`, {
+            const response = await axios.get(`https://whoisjson.com/api/v1/whois?domain=${q}`, {
                 headers: {
-                    'accept': 'application/json' // Mengatur header untuk menerima JSON
+                    'Authorization': 'Token=4d0b7541d8d3a6e9b4daeb0c2a2497b9602cac13d62b9d4a84e94f5869a0d4da' // Ganti dengan token Anda
                 }
             });
 
-            // Mengembalikan hasil dari API
-            res.status(response.status).json(response.data);
+            res.status(200).json({ status: true, data: response.data });
         } catch (error) {
-            console.error('Error fetching IP lookup data:', error.response ? error.response.data : error.message);
-            res.status(500).json({ status: false, error: 'Failed to fetch IP lookup data', details: error.response ? error.response.data : error.message });
+            console.error('Error fetching IP lookup data:', error.message);
+            res.status(500).json({ status: false, error: 'Failed to fetch IP lookup data' });
         }
     });
 };
