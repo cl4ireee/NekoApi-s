@@ -2,14 +2,12 @@ const fetch = require('node-fetch');
 const FormData = require('form-data');
 
 /**
- * Image to Zombie
- * wm by natsumiworld / ty: Kaori Miyazono (RIP My Waifu)
- * 
+ * Fungsi untuk mengubah gambar menjadi zombie
  * @async
  * @function toZombie
- * @param {string} url - URL of the image to process
- * @returns {Promise<string>} Promise that resolves to the processed zombie image URL
- * @throws {Error} Throws error if any step in fetching, uploading, or processing fails
+ * @param {string} url - URL gambar yang akan diproses
+ * @returns {Promise<Buffer>} Promise yang mengembalikan buffer gambar zombie
+ * @throws {Error} Menghasilkan error jika ada langkah yang gagal
  */
 async function toZombie(url) {
     const fetchImage = async () => {
@@ -80,7 +78,14 @@ async function toZombie(url) {
 
     const imageBuffer = await fetchImage();
     const imageId = await uploadImage(imageBuffer);
-    return await checkProcessing(imageId);
+    const zombieImageUrl = await checkProcessing(imageId);
+
+    // Ambil gambar zombie dari URL
+    const zombieImageResponse = await fetch(zombieImageUrl);
+    if (!zombieImageResponse.ok) {
+        throw new Error(`Failed to fetch zombie image! status: ${zombieImageResponse.status}`);
+    }
+    return await zombieImageResponse.buffer(); // Kembalikan buffer gambar zombie
 }
 
 // Fungsi untuk mengatur API
@@ -93,8 +98,9 @@ module.exports = function (app) {
         }
 
         try {
-            const zombieUrl = await toZombie(url);
-            res.status(200).json({ zombieUrl });
+            const zombieImageBuffer = await toZombie(url);
+            res.set('Content-Type', 'image/jpeg'); // Set header untuk gambar
+            res.status(200).send(zombieImageBuffer); // Kirim gambar sebagai respons
         } catch (error) {
             console.error("Error:", error);
             res.status(500).json({ error: error.message });
