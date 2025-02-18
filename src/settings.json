@@ -293,6 +293,11 @@
           "name": "Otakudesu Search",
           "desc": "Get data from Livechart.",
           "path": "/anime/otakudesu?q="
+        }, 
+        {
+          "name": "Anilist Populer",
+          "desc": "Get data from Livechart.",
+          "path": "/anime/anilist-populer"
         }
       ]
     },
