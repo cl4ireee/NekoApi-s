@@ -408,6 +408,16 @@
       ]
     },
     {
+      "name": "Info",
+      "items": [
+        {
+          "name": "Libur",
+          "desc": "Blue Archive Random Images",
+          "path": "/inffo/libur?q="
+        }
+      ]
+    },
+    {
       "name": "Tools",
       "items": [
         {
