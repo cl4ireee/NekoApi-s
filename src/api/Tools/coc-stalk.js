@@ -1,20 +1,18 @@
-// detail.js
-
 const axios = require("axios");
 const cheerio = require("cheerio");
 
 module.exports = function(app) {
     app.get('/tools/stalk-coc', async (req, res) => {
-        const { playerTag } = req.query;
+        const { q } = req.query;  // Mengambil query parameter 'q' sebagai ganti 'playerTag'
 
-        // Validasi playerTag, jika tidak ada maka beri respons error
-        if (!playerTag) {
-            return res.status(400).json({ status: false, error: 'Player tag is required' });
+        // Validasi 'q', jika tidak ada maka beri respons error
+        if (!q) {
+            return res.status(400).json({ status: false, error: 'Player tag (q) is required' });
         }
 
         try {
-            // Mengambil data dari URL player COC
-            const url = `https://brawlace.com/coc/players/%23${playerTag}`;
+            // Mengambil data dari URL player COC dengan 'q'
+            const url = `https://brawlace.com/coc/players/%23${q}`;
             const response = await axios.get(url);
             const $ = cheerio.load(response.data);
 
@@ -22,7 +20,7 @@ module.exports = function(app) {
                 metadata: {},
             };
 
-            // Mengambil metadata pemain
+            // Fungsi untuk mengambil teks berdasarkan selector dan regex
             const getText = (selector, regex) => 
                 $(selector).filter((_, el) => $(el).text().includes(regex.split(" ")[0]))
                     .text().match(new RegExp(regex))?.[1] || "Tidak ditemukan";
