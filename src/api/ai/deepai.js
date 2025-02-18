@@ -61,10 +61,17 @@ module.exports = function(app) {
         if (!text) return res.status(400).json({ error: "Mana query-nya?" });
 
         try {
-            const imageResult = await DeepAI.image(text); // Langsung pakai teks input tanpa translate
+            const imageResult = await DeepAI.image(text);
 
             if (imageResult?.output_url) {
-                res.json({ success: true, image_url: imageResult.output_url });
+                // Ambil gambar langsung dan stream ke response
+                const response = await fetch(imageResult.output_url);
+
+                // Set header agar langsung tampil sebagai gambar
+                res.setHeader('Content-Type', 'image/jpeg');
+
+                // Stream gambar langsung ke client tanpa menyimpan
+                response.body.pipe(res);
             } else {
                 res.status(500).json({ error: "Gagal generate gambar. Coba lagi!" });
             }
