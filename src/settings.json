@@ -364,6 +364,11 @@
           "name": "Jkt48 News",
           "desc": "Stay updated with the latest Free Fire news.",
           "path": "/news/jkt48"
+        }, 
+        {
+          "name": "Anime News",
+          "desc": "Stay updated with the latest Free Fire news.",
+          "path": "/news/anime-news"
         }
       ]
     },
