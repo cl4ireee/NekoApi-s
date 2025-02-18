@@ -1,7 +1,9 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
 
+// Animexin Scraper Class
 class Animexin {
+    // Update - Mengambil list anime terbaru
     Update = async function() {
         try {
             const { data } = await axios.get('https://animexin.dev/');
@@ -24,12 +26,13 @@ class Animexin {
                 });
             });
 
-            return animeList;
+            return { status: true, result: animeList };
         } catch (error) {
-            return error.message;
+            return { status: false, result: error.message };
         }
     }
 
+    // Detail - Mendapatkan detail episode berdasarkan URL
     Detail = async function(url) {
         try {
             const { data } = await axios.get(url);
@@ -66,15 +69,16 @@ class Animexin {
                 });
             });
 
-            return JSON.stringify(episodeData, null, 2);
+            return { status: true, result: episodeData };
         } catch (error) {
-            return error.message;
+            return { status: false, result: error.message };
         }
     }
 
-    Search = async function(keyword) {
+    // Search - Mencari anime berdasarkan query
+    Search = async function(query) {
         try {
-            const { data } = await axios.get('https://animexin.dev/?s=' + keyword);
+            const { data } = await axios.get('https://animexin.dev/?s=' + query);
             const $ = cheerio.load(data);
 
             const animeList = [];
@@ -97,40 +101,37 @@ class Animexin {
                 });
             });
 
-            return JSON.stringify(animeList, null, 2);
+            return { status: true, result: animeList };
         } catch (error) {
-            return error.message;
+            return { status: false, result: error.message };
         }
     }
 }
 
-// Fungsi API menggunakan `app.get`
-module.exports = (app) => {
-    const animexin = new Animexin();
-
-    // Endpoint untuk update daftar anime
+// Menyusun API menggunakan `app.get` tanpa mengimpor Express secara langsung
+const AnimexinAPI = (app) => {
+    // Endpoint untuk mendapatkan update anime
     app.get('/anime/animexin-update', async (req, res) => {
-        const result = await animexin.Update();
-        res.json({ status: 'success', results: result });
+        const animexin = new Animexin();
+        const updateData = await animexin.Update();
+        res.json(updateData);
     });
 
-    // Endpoint untuk mencari anime berdasarkan keyword
+    // Endpoint untuk mencari anime berdasarkan query
     app.get('/anime/animexin-search', async (req, res) => {
-        const keyword = req.query.keyword;
-        if (!keyword) {
-            return res.status(400).json({ status: 'error', message: 'Keyword query is required.' });
-        }
-        const result = await animexin.Search(keyword);
-        res.json({ status: 'success', results: JSON.parse(result) });
+        const { q } = req.query; // Mengambil query parameter q
+        const animexin = new Animexin();
+        const searchData = await animexin.Search(q);
+        res.json(searchData);
     });
 
-    // Endpoint untuk detail anime
+    // Endpoint untuk mendapatkan detail anime berdasarkan URL
     app.get('/anime/animexin-detail', async (req, res) => {
-        const url = req.query.url;
-        if (!url) {
-            return res.status(400).json({ status: 'error', message: 'URL query is required.' });
-        }
-        const result = await animexin.Detail(url);
-        res.json({ status: 'success', result: JSON.parse(result) });
+        const { url } = req.query; // Mengambil query parameter url
+        const animexin = new Animexin();
+        const detailData = await animexin.Detail(url);
+        res.json(detailData);
     });
-};
+}
+
+module.exports = AnimexinAPI;
