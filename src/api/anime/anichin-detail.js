@@ -1,7 +1,7 @@
 const axios = require("axios");
 
-// Endpoint untuk mendapatkan detail anime
-module.exports = function (app) {
+module.exports = (app) => {
+    // Endpoint untuk mendapatkan detail anime
     app.get("/anime/anichin-detail", async (req, res) => {
         const { url } = req.query; // Mengambil parameter 'url' dari query string
 
@@ -20,7 +20,13 @@ module.exports = function (app) {
             res.status(200).json({ status: true, data: filteredData.data }); // Mengembalikan hasil tanpa creator
         } catch (error) {
             console.error("Error fetching anime details:", error.message);
-            res.status(500).json({ status: false, error: "Failed to fetch anime details" });
+            if (error.response) {
+                // Jika ada respons dari server
+                res.status(error.response.status).json({ status: false, error: error.response.data });
+            } else {
+                // Jika tidak ada respons dari server
+                res.status(500).json({ status: false, error: "Failed to fetch anime details" });
+            }
         }
     });
 
@@ -35,12 +41,16 @@ module.exports = function (app) {
             res.status(200).json({ status: true, data: result.data });
         } catch (error) {
             console.error("Error fetching latest anime:", error.message);
-            res.status(500).json({ status: false, error: "Failed to fetch latest anime" });
+            if (error.response) {
+                res.status(error.response.status).json({ status: false, error: error.response.data });
+            } else {
+                res.status(500).json({ status: false, error: "Failed to fetch latest anime" });
+            }
         }
     });
 
     // Endpoint untuk mendapatkan anime populer
-    app.get("/anime/anichin-populer", async (req, res) => {
+    app.get("/anime/anichin-popular", async (req, res) => {
         try {
             // Mengambil data dari API populer
             const response = await axios.get("https://api.siputzx.my.id/api/anime/anichin-popular");
@@ -50,7 +60,11 @@ module.exports = function (app) {
             res.status(200).json({ status: true, data: result.data });
         } catch (error) {
             console.error("Error fetching popular anime:", error.message);
-            res.status(500).json({ status: false, error: "Failed to fetch popular anime" });
+            if (error.response) {
+                res.status(error.response.status).json({ status: false, error: error.response.data });
+            } else {
+                res.status(500).json({ status: false, error: "Failed to fetch popular anime" });
+            }
         }
     });
 
@@ -71,7 +85,11 @@ module.exports = function (app) {
             res.status(200).json({ status: true, data: result.data });
         } catch (error) {
             console.error("Error fetching anime search results:", error.message);
-            res.status(500).json({ status: false, error: "Failed to fetch anime search results" });
+            if (error.response) {
+                res.status(error.response.status).json({ status: false, error: error.response.data });
+            } else {
+                res.status(500).json({ status: false, error: "Failed to fetch anime search results" });
+            }
         }
     });
 };
