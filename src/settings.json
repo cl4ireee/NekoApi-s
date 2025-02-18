@@ -451,6 +451,11 @@
           "name": "Proxy list",
           "desc": "Retrieve random Blue Archive images.",
           "path": "/tools/proxy-list"
+        }, 
+        {
+          "name": "Google Lens",
+          "desc": "Retrieve random Blue Archive images.",
+          "path": "/tools/google-lens?url="
         }
       ]
     },
