@@ -97,6 +97,11 @@
           "name": "toZombie",
           "desc": "Interact with Simsimi.",
           "path": "/ai/toZombie?url="
+        }, 
+        {
+          "name": "Blackboxai Pro",
+          "desc": "Interact with Simsimi.",
+          "path": "/ai/blackboxai-pro?q="
         }
       ]
     },
@@ -611,6 +616,11 @@
           "name": "Film Search",
           "desc": "Search for images on Gelbooru.",
           "path": "/search/film?q="
+        },
+        {
+          "name": "Wikipedia Search",
+          "desc": "Search for images on Gelbooru.",
+          "path": "/search/wikipedia?q="
         },
         {
           "name": "Kwai Search",
