@@ -2,7 +2,7 @@ const axios = require("axios");
 
 // Endpoint untuk mendapatkan detail anime
 module.exports = function (app) {
-    app.get("/anime/detail", async (req, res) => {
+    app.get("/anime/anichin-detail", async (req, res) => {
         const { url } = req.query; // Mengambil parameter 'url' dari query string
 
         if (!url) {
@@ -25,7 +25,7 @@ module.exports = function (app) {
     });
 
     // Endpoint untuk mendapatkan anime terbaru
-    app.get("/anime/latest", async (req, res) => {
+    app.get("/anime/anichin-latest", async (req, res) => {
         try {
             // Mengambil data dari API terbaru
             const response = await axios.get("https://api.siputzx.my.id/api/anime/latest");
@@ -40,7 +40,7 @@ module.exports = function (app) {
     });
 
     // Endpoint untuk mendapatkan anime populer
-    app.get("/anime/popular", async (req, res) => {
+    app.get("/anime/anichin-populer", async (req, res) => {
         try {
             // Mengambil data dari API populer
             const response = await axios.get("https://api.siputzx.my.id/api/anime/anichin-popular");
@@ -55,7 +55,7 @@ module.exports = function (app) {
     });
 
     // Endpoint untuk mencari anime
-    app.get("/anime/search", async (req, res) => {
+    app.get("/anime/anichin-search", async (req, res) => {
         const { q } = req.query; // Mengambil parameter 'q' dari query string
 
         if (!q) {
