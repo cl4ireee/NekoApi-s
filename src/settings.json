@@ -404,7 +404,12 @@
           "name": "Ig Stalk",
           "desc": "Retrieve random Blue Archive images.",
           "path": "/stalk/igstalk?q="
-        }, 
+        },
+        {
+          "name": "Coc Stalk",
+          "desc": "Retrieve random Blue Archive images.",
+          "path": "/tools/stalk-coc?q="
+        },
         {
           "name": "Roblox Stalk",
           "desc": "Retrieve random Blue Archive images.",
