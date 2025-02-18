@@ -295,6 +295,11 @@
           "path": "/anime/otakudesu?q="
         }, 
         {
+          "name": "Animexin Up",
+          "desc": "Get data from Livechart.",
+          "path": "/anime/animexin-update"
+        }, 
+        {
           "name": "Anilist Populer",
           "desc": "Get data from Livechart.",
           "path": "/anime/anilist-populer"
