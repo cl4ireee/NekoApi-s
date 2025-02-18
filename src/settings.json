@@ -374,6 +374,16 @@
           "name": "Asah otak",
           "desc": "Blue Archive Random Images",
           "path": "/games/asahotak"
+        }, 
+        {
+          "name": "Caklontong",
+          "desc": "Blue Archive Random Images",
+          "path": "/games/caklontong"
+        }, 
+        {
+          "name": "Family100",
+          "desc": "Blue Archive Random Images",
+          "path": "/games/family100"
         }
       ]
     },
