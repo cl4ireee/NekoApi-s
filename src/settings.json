@@ -461,6 +461,11 @@
           "name": "Google Lens",
           "desc": "Retrieve random Blue Archive images.",
           "path": "/tools/google-lens?url="
+        }, 
+        {
+          "name": "Picsurf",
+          "desc": "Retrieve random Blue Archive images.",
+          "path": "/tools/picsurf?url="
         }
       ]
     },
