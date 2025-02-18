@@ -80,7 +80,7 @@
         {
           "name": "Deepimg",
           "desc": "Generate images with various effects.",
-          "path": "/ai/deepimg?text=&type=",
+          "path": "/ai/deepimg?text=",
           "innerDesc": "Supported styles include: Headsot, Anime, Tatto, ID Photo, Cartoon, Fantasy 3D."
         }, 
         {
