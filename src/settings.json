@@ -466,6 +466,11 @@
           "name": "Picsurf",
           "desc": "Retrieve random Blue Archive images.",
           "path": "/tools/picsurf?url="
+        }, 
+        {
+          "name": "img2promt",
+          "desc": "Retrieve random Blue Archive images.",
+          "path": "/tools/generate-prompt?url="
         }
       ]
     },
