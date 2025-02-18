@@ -419,6 +419,11 @@
           "name": "Libur",
           "desc": "Blue Archive Random Images",
           "path": "/info/libur?q="
+        }, 
+        {
+          "name": "Cuaca",
+          "desc": "Blue Archive Random Images",
+          "path": "/info/cuaca?q="
         }
       ]
     },
