@@ -47,7 +47,7 @@ async function toZombie(url) {
         }
 
         if (!result.ok) throw new Error("Upload failed");
-        return result.key;
+        return result.key; // Kembalikan ID gambar yang diupload
     };
 
     const checkProcessing = async (imageId) => {
@@ -73,7 +73,14 @@ async function toZombie(url) {
         }
 
         if (!result.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        return result.result_url;
+        
+        // Pastikan URL yang diambil adalah absolut
+        const zombieImageUrl = result.result_url;
+        if (!/^https?:\/\//i.test(zombieImageUrl)) {
+            throw new Error("Invalid URL for zombie image");
+        }
+
+        return zombieImageUrl; // Kembalikan URL gambar zombie
     };
 
     const imageBuffer = await fetchImage();
