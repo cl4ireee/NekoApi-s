@@ -444,7 +444,7 @@
         {
           "name": "iplookup",
           "desc": "Retrieve random Blue Archive images.",
-          "path": "/tools/iplookup?q=", 
+          "path": "/tools/ip-lookup?q=", 
           "innerDesc": "example.com"
         }, 
         {
