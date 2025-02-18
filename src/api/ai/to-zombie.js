@@ -22,11 +22,10 @@ async function toZombie(url) {
 
     const uploadImage = async (imageBuffer) => {
         const formData = new FormData();
-        formData.append(
-            "photofile",
-            new Blob([imageBuffer], { type: "image/jpeg" }),
-            "image.jpg"
-        );
+        formData.append("photofile", Buffer.from(imageBuffer), {
+            filename: "image.jpg",
+            contentType: "image/jpeg",
+        });
         formData.append("action", "upload");
 
         const response = await fetch("https://makemezombie.com/response.php", {
