@@ -345,6 +345,11 @@
           "path": "/download/threads?url="
         }, 
         {
+          "name": "Apple music",
+          "desc": "Download Threads post metadata and media.",
+          "path": "/download/apple-music?url="
+        }, 
+        {
           "name": "YouTube",
           "desc": "Download videos from YouTube.",
           "path": "/download/ytdl?url=&resolution=",
