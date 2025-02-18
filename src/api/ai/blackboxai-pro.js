@@ -3,12 +3,12 @@ const fetch = require('node-fetch');
 module.exports = function (app) {
     app.get('/ai/blackboxai-pro', async (req, res) => {
         try {
-            const content = req.query.content;
-            if (!content) {
-                return res.status(400).json({ status: false, message: "Query parameter 'content' is required" });
+            const q = req.query.q;
+            if (!q) {
+                return res.status(400).json({ status: false, message: "Query parameter 'q' is required" });
             }
 
-            const response = await fetch(`https://api.siputzx.my.id/api/ai/blackboxai-pro?content=${encodeURIComponent(content)}`);
+            const response = await fetch(`https://api.siputzx.my.id/api/ai/blackboxai-pro?content=${encodeURIComponent(q)}`);
             const data = await response.json();
 
             // Ubah key 'data' menjadi 'results'
