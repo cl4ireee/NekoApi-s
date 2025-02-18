@@ -603,6 +603,11 @@
           "path": "/search/duckduckgo?q="
         },
         {
+          "name": "Film Search",
+          "desc": "Search for images on Gelbooru.",
+          "path": "/search/film?q="
+        },
+        {
           "name": "Kwai Search",
           "desc": "Search for images on Gelbooru.",
           "path": "/search/kwai?q="
