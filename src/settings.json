@@ -300,9 +300,14 @@
           "path": "/anime/otakudesu?q="
         }, 
         {
-          "name": "Animexin Up",
+          "name": "Animexin Update",
           "desc": "Get data from Livechart.",
           "path": "/anime/animexin-update"
+        }, 
+        {
+          "name": "Animexin Search",
+          "desc": "Get data from Livechart.",
+          "path": "/anime/animexin-search?q="
         }, 
         {
           "name": "Anilist Populer",
