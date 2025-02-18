@@ -1,41 +1,74 @@
 const axios = require("axios");
-const cheerio = require("cheerio");
-
-async function anichinSearch(query) {
-    try {
-        let { data } = await axios.get(`https://anichin.xyz/?s=${encodeURIComponent(query)}`);
-        let $ = cheerio.load(data);
-
-        let result = [];
-        $(".listupd .bsx a").each((i, el) => {
-            let title = $(el).attr("title");
-            let link = $(el).attr("href");
-            let episode = $(el).find(".bt .epx").text().trim();
-            let type = $(el).find(".typez").text().trim();
-            let image = $(el).find("img").attr("data-lazy-src") || $(el).find("img").attr("src");
-
-            result.push({ title, episode, type, image, link });
-        });
-
-        return result;
-    } catch (error) {
-        console.error("Gagal mengambil data:", error);
-        return [];
-    }
-}
 
 module.exports = function (app) {
-    // Endpoint untuk pencarian anime
+    // Endpoint untuk mendapatkan detail anime
+    app.get("/anime/anichin-detail", async (req, res) => {
+        const { url } = req.query; // Mengambil parameter 'url' dari query string
+
+        if (!url) {
+            return res.status(400).json({ status: false, error: "Query parameter 'url' is required" });
+        }
+
+        try {
+            // Mengambil data dari API Anichin
+            const response = await axios.get(https://api.siputzx.my.id/api/anime/anichin-detail?url=${encodeURIComponent(url)});
+            const result = response.data; // Mengambil data dari respons
+
+            // Menghapus bagian creator jika ada
+            const { creator, ...filteredData } = result;
+
+            res.status(200).json({ status: true, data: filteredData.data }); // Mengembalikan hasil tanpa creator
+        } catch (error) {
+            console.error("Error fetching anime details:", error.message);
+            res.status(500).json({ status: false, error: "Failed to fetch anime details" });
+        }
+    });
+
+    // Endpoint untuk mendapatkan anime terbaru
+    app.get("/anime/anichin-latest", async (req, res) => {
+        try {
+            // Mengambil data dari API terbaru
+            const response = await axios.get("https://api.siputzx.my.id/api/anime/latest");
+            const result = response.data; // Mengambil data dari respons
+
+            // Mengembalikan hasil
+            res.status(200).json({ status: true, data: result.data });
+        } catch (error) {
+            console.error("Error fetching latest anime:", error.message);
+            res.status(500).json({ status: false, error: "Failed to fetch latest anime" });
+        }
+    });
+
+    // Endpoint untuk mendapatkan anime populer
+    app.get("/anime/anichin-populer", async (req, res) => {
+        try {
+            // Mengambil data dari API populer
+            const response = await axios.get("https://api.siputzx.my.id/api/anime/anichin-popular");
+            const result = response.data; // Mengambil data dari respons
+
+            // Mengembalikan hasil
+            res.status(200).json({ status: true, data: result.data });
+        } catch (error) {
+            console.error("Error fetching popular anime:", error.message);
+            res.status(500).json({ status: false, error: "Failed to fetch popular anime" });
+        }
+    });
+
+    // Endpoint untuk mencari anime
     app.get("/anime/anichin-search", async (req, res) => {
-        const { q } = req.query; // Mengganti 'query' menjadi 'q'
+        const { q } = req.query; // Mengambil parameter 'q' dari query string
 
         if (!q) {
             return res.status(400).json({ status: false, error: "Query parameter 'q' is required" });
         }
 
         try {
-            const results = await anichinSearch(q); // Menggunakan 'q' sebagai parameter
-            res.status(200).json({ status: true, data: results });
+            // Mengambil data dari API pencarian
+            const response = await axios.get(https://api.siputzx.my.id/api/anime/anichin-search?query=${encodeURIComponent(q)});
+            const result = response.data; // Mengambil data dari respons
+
+            // Mengembalikan hasil
+            res.status(200).json({ status: true, data: result.data });
         } catch (error) {
             console.error("Error fetching anime search results:", error.message);
             res.status(500).json({ status: false, error: "Failed to fetch anime search results" });
