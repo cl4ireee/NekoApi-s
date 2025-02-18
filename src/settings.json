@@ -280,6 +280,11 @@
           "path": "/anime/anichin-detail?url="
         },
         {
+          "name": "Mangatoon",
+          "desc": "Get data from Livechart.",
+          "path": "/search/mangatoon?q="
+        },
+        {
           "name": "Otakudesu Search",
           "desc": "Get data from Livechart.",
           "path": "/anime/otakudesu?q="
