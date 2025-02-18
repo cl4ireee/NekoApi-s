@@ -53,10 +53,10 @@ module.exports = function (app) {
 
         try {
             const imageUrlResponse = await uploadImageFromUrl(url); // Panggil fungsi uploadImageFromUrl
-            res.status(200).json({ url: imageUrlResponse }); // Mengembalikan URL gambar
+            res.status(200).json({ status: true, results: { url: imageUrlResponse } }); // Mengembalikan URL gambar dalam format yang diinginkan
         } catch (error) {
             console.error("Error:", error.message);
-            res.status(500).json({ error: error.message }); // Menangani kesalahan
+            res.status(500).json({ status: false, error: error.message }); // Menangani kesalahan
         }
     });
 };
