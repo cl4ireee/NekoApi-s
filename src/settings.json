@@ -92,6 +92,11 @@
           "name": "Gemini",
           "desc": "Interact with Simsimi.",
           "path": "/ai/gemini?text="
+        }, 
+        {
+          "name": "toZombie",
+          "desc": "Interact with Simsimi.",
+          "path": "/ai/toZombie?url="
         }
       ]
     },
