@@ -1,4 +1,5 @@
 const fetch = require('node-fetch');
+const FormData = require('form-data');
 
 /**
  * Image to Zombie
@@ -13,8 +14,9 @@ const fetch = require('node-fetch');
 async function toZombie(url) {
     const fetchImage = async () => {
         const response = await fetch(url);
-        if (!response.ok)
+        if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
+        }
         return await response.arrayBuffer();
     };
 
@@ -23,7 +25,7 @@ async function toZombie(url) {
         formData.append(
             "photofile",
             new Blob([imageBuffer], { type: "image/jpeg" }),
-            "image.jpg",
+            "image.jpg"
         );
         formData.append("action", "upload");
 
@@ -37,7 +39,16 @@ async function toZombie(url) {
             },
         });
 
-        const result = await response.json();
+        const text = await response.text(); // Ambil respons sebagai teks
+        console.log("Upload Response Text:", text); // Log respons
+
+        let result;
+        try {
+            result = JSON.parse(text); // Coba parsing JSON
+        } catch (error) {
+            throw new Error("Failed to parse JSON response");
+        }
+
         if (!result.ok) throw new Error("Upload failed");
         return result.key;
     };
@@ -54,9 +65,17 @@ async function toZombie(url) {
             body: `action=check&image_id=${imageId}`,
         });
 
-        const result = await response.json();
-        if (!result.ok)
-            throw new Error(`HTTP error! status: ${response.status}`);
+        const text = await response.text(); // Ambil respons sebagai teks
+        console.log("Check Processing Response Text:", text); // Log respons
+
+        let result;
+        try {
+            result = JSON.parse(text); // Coba parsing JSON
+        } catch (error) {
+            throw new Error("Failed to parse JSON response");
+        }
+
+        if (!result.ok) throw new Error(`HTTP error! status: ${response.status}`);
         return result.result_url;
     };
 
