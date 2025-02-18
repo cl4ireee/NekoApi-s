@@ -556,7 +556,17 @@
           "name": "Nasa Search",
           "desc": "Search for images on Gelbooru.",
           "path": "/search/nasa-search?q="
-        }, 
+        },
+        {
+          "name": "Brave Search",
+          "desc": "Search for images on Gelbooru.",
+          "path": "/search/brave?q="
+        },
+        {
+          "name": "DuckDuckGo Search",
+          "desc": "Search for images on Gelbooru.",
+          "path": "/search/duckduckgo?q="
+        },
         {
           "name": "Kwai Search",
           "desc": "Search for images on Gelbooru.",
