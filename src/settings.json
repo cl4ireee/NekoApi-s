@@ -185,6 +185,11 @@
           "path": "/anime/livechart?q="
         }, 
         {
+          "name": "Livechart Latest",
+          "desc": "Get data from Livechart.",
+          "path": "/anime/livechart-latest"
+        }, 
+        {
           "name": "Kuronime Latest",
           "desc": "Get data from Livechart.",
           "path": "/anime/kuronimelatest"
