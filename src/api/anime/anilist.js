@@ -52,14 +52,17 @@ async function populer() {
             .get();
 
         return {
-            trending,
-            populer,
-            upcoming,
-            top,
+            status: true,
+            result: {
+                trending,
+                populer,
+                upcoming,
+                top,
+            },
         };
     } catch (error) {
         console.error('Error scraping AniList:', error);
-        return null;
+        return { status: false, message: "Error fetching data." };
     }
 }
 
@@ -68,7 +71,7 @@ async function search(q) {
         const { data } = await axios.get(`https://anilist.co/search/anime?query=${encodeURIComponent(q)}`);
         const $ = cheerio.load(data);
 
-        const results = [];
+        const result = [];
 
         $('.media-card').each((index, element) => {
             const title = $(element).find('.title').text().trim();
@@ -76,7 +79,7 @@ async function search(q) {
             const link = $(element).find('.cover').attr('href');
 
             if (title && imageUrl && link) {
-                results.push({
+                result.push({
                     title,
                     imageUrl,
                     link: `https://anilist.co${link}` // Adding domain to the link
@@ -84,9 +87,13 @@ async function search(q) {
             }
         });
 
-        return results;
+        return {
+            status: true,
+            result
+        };
     } catch (error) {
         console.error('Error fetching data:', error);
+        return { status: false, message: "Error fetching data." };
     }
 }
 
@@ -119,7 +126,7 @@ async function detail(url) {
             descriptionParagraphs.map(paragraph => safeTranslate(paragraph))
         );
 
-        const results = {
+        const result = {
             title: {
                 romaji: cleanText($('.content h1').first().text()),
                 english: cleanText($('div.data-set:contains("English") .value').text()),
@@ -163,9 +170,12 @@ async function detail(url) {
             }
         };
 
-        return results;
+        return {
+            status: true,
+            result
+        };
     } catch (error) {
-        return { error: error.message };
+        return { status: false, message: error.message };
     }
 }
 
@@ -174,34 +184,26 @@ module.exports = (app) => {
     // Endpoint for popular, trending, upcoming, and top anime
     app.get('/anime/anilist-populer', async (req, res) => {
         const result = await populer();
-        if (result) {
-            res.json(result);
-        } else {
-            res.status(500).json({ error: 'Error fetching popular anime data.' });
-        }
+        res.json(result);
     });
 
     // Endpoint for search functionality (changed query to q)
     app.get('/anime/anilist-search', async (req, res) => {
         const q = req.query.q;
         if (!q) {
-            return res.status(400).json({ error: 'Query parameter q is required.' });
+            return res.status(400).json({ status: false, message: 'Query parameter q is required.' });
         }
-        const results = await search(q);
-        res.json(results);
+        const result = await search(q);
+        res.json(result);
     });
 
     // Endpoint for anime details
     app.get('/anime/anilist-detail', async (req, res) => {
         const url = req.query.url;
         if (!url) {
-            return res.status(400).json({ error: 'URL parameter is required.' });
+            return res.status(400).json({ status: false, message: 'URL parameter is required.' });
         }
         const result = await detail(url);
-        if (result.error) {
-            res.status(500).json({ error: result.error });
-        } else {
-            res.json(result);
-        }
+        res.json(result);
     });
 };
