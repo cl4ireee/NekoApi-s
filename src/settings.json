@@ -329,6 +329,11 @@
           "name": "Top anime",
           "desc": "Get data from Livechart.",
           "path": "/anime/top-anime"
+        }, 
+        {
+          "name": "Hanimetv Trend",
+          "desc": "Get data from Livechart.",
+          "path": "/anime/hanime-trend"
         }
       ]
     },
