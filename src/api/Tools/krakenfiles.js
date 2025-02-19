@@ -1,96 +1,59 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
 
-async function fetchKrakenfilesData(url) {
-    try {
-        // Fetch the page content
-        let { data } = await axios.get(url, {
-            headers: {
-                "User -Agent": "Posify/1.0.0",
-                "Referer": url,
-                "Accept": "*/*",
-            },
-        });
+async function fetchFileData(url) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let { data } = await axios.get(url, {
+                headers: {
+                    "User -Agent": "Posify/1.0.0",
+                    "Referer": url,
+                    "Accept": "*/*"
+                },
+            });
 
-        // Load the HTML into cheerio
-        let $ = cheerio.load(data);
-        let result = {
-            metadata: {},
-            buffer: null
-        };
+            let $ = cheerio.load(data);
+            let result = {
+                metadata: {},
+                downloadUrl: null
+            };
 
-        // Extract metadata
-        result.metadata.filename = $(".coin-info .coin-name h5").text().trim();
-        $(".nk-iv-wg4 .nk-iv-wg4-overview li").each((_, element) => {
-            let name = $(element).find(".sub-text").text().trim().split(" ").join("_").toLowerCase();
-            let value = $(element).find(".lead-text").text();
-            result.metadata[name] = value;
-        });
+            // Ambil nama file dari halaman
+            result.metadata.filename = $("title").text().trim(); // Mengambil judul halaman sebagai nama file
 
-        $(".nk-iv-wg4-list li").each((_, element) => {
-            let name = $(element).find("div").eq(0).text().trim().split(" ").join("_").toLowerCase();
-            let value = $(element).find("div").eq(1).text().trim().split(" ").join(",");
-            result.metadata[name] = value;
-        });
+            // Ambil thumbnail jika ada
+            const thumbnail = $("meta[property='og:image']").attr("content");
+            result.metadata.thumbnail = thumbnail ? thumbnail : "N/A";
 
-        // Determine the thumbnail
-        if ($("video").html()) {
-            result.metadata.thumbnail = "https:" + $("video").attr("poster");
-        } else if ($(".lightgallery").html()) {
-            result.metadata.thumbnail = "https:" + $(".lightgallery a").attr("href");
-        } else {
-            result.metadata.thumbnail = "N/A";
+            // Ambil URL unduhan (misalnya, jika ada tag <video> atau <img>)
+            if ($("video").length) {
+                result.downloadUrl = $("video source").attr("src");
+            } else if ($("img").length) {
+                result.downloadUrl = $("img").attr("src");
+            } else {
+                result.downloadUrl = url; // Jika tidak ada tag khusus, gunakan URL yang diberikan
+            }
+
+            resolve(result);
+        } catch (error) {
+            reject(error);
         }
-
-        // Determine the download link
-        let downloads = "";
-        if ($("video").html()) {
-            downloads = "https:" + $("video source").attr("src");
-        } else {
-            downloads = "https:" + $(".lightgallery a").attr("href");
-        }
-
-        // Fetch the download content
-        const resDownload = await axios.get(downloads, {
-            headers: {
-                "User -Agent": "Posify/1.0.0",
-                "Referer": url,
-                "Accept": "*/*",
-                "token": $("#dl-token").val(),
-            },
-            responseType: "arraybuffer"
-        });
-
-        // Check if the response is a buffer
-        if (!Buffer.isBuffer(resDownload.data)) {
-            throw new Error("Result is not a buffer!");
-        }
-
-        result.buffer = resDownload.data;
-
-        return result;
-    } catch (error) {
-        console.error("Error while fetching Krakenfiles data:", error);
-        throw error; // Rethrow the error to be handled in the endpoint
-    }
+    });
 }
 
-module.exports = function(app) {
-    // Endpoint for Krakenfiles
-    app.get("/tools/krakenfiles", async (req, res) => {
-        const url = req.query.url;
-
-        // Validate the input URL
-        if (!url || !/krakenfiles.com/.test(url)) {
-            return res.status(400).json({ error: "Input URL must be from Krakenfiles!" });
+// Fungsi untuk mengatur rute API
+module.exports = function setupFetchFileRoute(app) {
+    app.get('/tools/krakenfiles', async (req, res) => {
+        const { url } = req.query; // Mengambil URL dari parameter query
+        if (!url) {
+            return res.status(400).json({ status: false, message: 'URL harus disediakan.' });
         }
 
         try {
-            const result = await fetchKrakenfilesData(url); // Fetch data using the helper function
-            return res.status(200).json(result); // Return the result
+            const result = await fetchFileData(url);
+            res.json({ status: true, result }); // Mengembalikan hasil dalam format JSON
         } catch (error) {
-            console.error("Error fetching Krakenfiles data:", error.message);
-            return res.status(500).json({ error: "Failed to fetch data from Krakenfiles." });
+            res.status(500).json({ status: false, message: error.message });
         }
     });
 };
