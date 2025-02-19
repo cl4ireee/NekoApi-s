@@ -552,6 +552,11 @@
           "name": "Krakenfiles",
           "desc": "Retrieve random Blue Archive images.",
           "path": "/tools/krakenfiles?url="
+        }, 
+        {
+          "name": "Uguu.se",
+          "desc": "Retrieve random Blue Archive images.",
+          "path": "/tools/uguu?url="
         }
       ]
     },
