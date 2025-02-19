@@ -112,13 +112,14 @@
           "name": "Heckai",
           "desc": "Interact with Simsimi.",
           "path": "/ai/heckai?text=&model=", 
-          "innerDesc": "Available models: Anime, Photo, Cinematic, 3D Model"
+          "innerDesc": "Available models: Available models: 0 - openai/gpt-4o-mini, 1 - google/gemini-2.0-flash-001, 2 - deepseek/deepseek-r1"
+        }"
          }, 
         {
           "name": "MidJourney AI",
           "desc": "Generate images using MidJourney AI",
           "path": "/ai/midjourney?text=&model=",
-          "innerDesc": "Available models: 0 - openai/gpt-4o-mini, 1 - google/gemini-2.0-flash-001, 2 - deepseek/deepseek-r1"
+          "innerDesc": "Available models: Available models: Anime, Photo, Cinematic, 3D Model"
         }
       ]
     },
@@ -527,7 +528,7 @@
         "name": "Translate",
         "desc": "Process images using AI tools from PxPic.",
         "path": "/tools/translate?q=&language=",
-        "innerDesc": "Use this API to translate text from one language to another. To use the API, provide the following parameters:\n\n- **q**: The text you want to translate (e.g., 'Hello, how are you?').\n- **language**: The target language code you want to translate to (e.g., 'en' for English, 'id' for Indonesian, 'es' for Spanish, 'fr' for French, 'de' for German, etc.).\n\n**Supported Language Codes**:\n- 'en' - English\n- 'id' - Indonesian\n- 'es' - Spanish\n- 'fr' - French\n- 'de' - German\n- 'zh' - Mandarin (Chinese)\n- 'ja' - Japanese\n- 'ko' - Korean\n- 'ar' - Arabic\n- 'pt' - Portuguese\n\n**Note**: Use the two-letter language codes as defined by ISO 639-1.\n\nExample usage: `/api/translate?q=Hello%20world&language=id` will translate 'Hello world' to Indonesian."
+        "innerDesc": "You can choose the language here (e.g., id, en, es, fr, etc."
         }, 
         {
           "name": "Tracemoe",
