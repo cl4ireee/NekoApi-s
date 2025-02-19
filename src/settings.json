@@ -339,6 +339,11 @@
           "name": "Hanimetv Trend",
           "desc": "Get data from Livechart.",
           "path": "/anime/hanime-trend"
+        },
+        {
+          "name": "Westmanga",
+          "desc": "Get data from Livechart.",
+          "path": "/anime/westmanga?q="
         }
       ]
     },
