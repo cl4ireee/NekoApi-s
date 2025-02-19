@@ -4,7 +4,7 @@ const cheerio = require('cheerio');
 // Fungsi untuk mendapatkan URL gambar
 async function getImageUrl(titleUrl) {
     try {
-        const { data } = await axios.get(titleUrl);
+        const { data } = await axios.get(titleUrl, { timeout: 10000 }); // Set timeout 10 detik
         const $ = cheerio.load(data);
         const imgUrl = $('.hvpi-cover-container img').attr('src');
         return imgUrl || 'No image found'; 
@@ -17,7 +17,7 @@ async function getImageUrl(titleUrl) {
 // Fungsi untuk mendapatkan trending titles
 async function trend(m) {
     try {
-        const { data } = await axios.get('https://hanime.tv/browse/trending');
+        const { data } = await axios.get('https://hanime.tv/browse/trending', { timeout: 10000 }); // Set timeout 10 detik
         const $ = cheerio.load(data);
         
         const titles = [];
@@ -42,6 +42,7 @@ async function trend(m) {
             console.log(responseMessage); 
         }
     } catch (error) {
+        console.error('Error fetching trending titles:', error.message);
         if (m && typeof m.reply === 'function') {
             m.reply('Error fetching trending titles. Please try again later.');
         } else {
@@ -55,7 +56,7 @@ async function avzzz(query, m) {
     const url = `https://hanime.tv/browse/tags/${query}`;
     
     try {
-        const { data } = await axios.get(url);
+        const { data } = await axios.get(url, { timeout: 10000 }); // Set timeout 10 detik
         const $ = cheerio.load(data);
         
         let videoUrls = [];
@@ -96,7 +97,7 @@ Video URL: ${detail.videoUrl}
 // Fungsi untuk mendapatkan detail video
 async function avus(videoUrl) {
     try {
-        const { data } = await axios.get(videoUrl);
+        const { data } = await axios.get(videoUrl, { timeout: 10000 }); // Set timeout 10 detik
         const $ = cheerio.load(data);
 
         const title = $('h1.tv-title').text().trim();
