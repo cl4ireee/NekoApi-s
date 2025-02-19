@@ -415,7 +415,7 @@
           "name": "nHentai Download",
           "desc": "Get data from Livechart.",
           "path": "/download/nhentai-download?url="
-        }, 
+        }
       ]
     }, 
     {
