@@ -508,6 +508,12 @@
         "innerDesc": "Use 'url' for the image link and choose a tool: removebg, enhance, upscale, restore, colorize."
         }, 
         {
+        "name": "Translate",
+        "desc": "Process images using AI tools from PxPic.",
+        "path": "/tools/translate?q=&language=",
+        "innerDesc": "Use this API to translate text. Provide the text and the target language code.."
+        }, 
+        {
           "name": "Tracemoe",
           "desc": "Retrieve random Blue Archive images.",
           "path": "/tools/tracemoe?url="
