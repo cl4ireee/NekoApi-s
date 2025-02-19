@@ -37,6 +37,7 @@ module.exports = function setupPowerbrainRoute(app) {
             const response = await powerbrain(text);
             res.json({ status: true, response });
         } catch (error) {
+            console.error("Error from powerbrain API:", error.response ? error.response.data : error.message);
             res.json({ status: false, message: "Terjadi kesalahan saat memproses permintaan." });
         }
     });
