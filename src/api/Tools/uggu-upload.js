@@ -1,6 +1,7 @@
 const axios = require('axios');
 const FormData = require('form-data');
 
+// Fungsi untuk mengunggah file dari URL
 async function uploadFileFromUrl(fileUrl) {
     try {
         // Mengambil file dari URL
@@ -13,8 +14,13 @@ async function uploadFileFromUrl(fileUrl) {
             headers: form.getHeaders()
         });
 
+        console.log('Upload Response:', uploadResponse.data); // Log respons dari Uguu
+
+        // Memastikan bahwa kita mendapatkan URL gambar yang benar
         if (uploadResponse.data.files && uploadResponse.data.files[0]) {
-            return { status: true, url: uploadResponse.data.files[0].url };
+            const imageUrl = uploadResponse.data.files[0].url;
+            console.log('Image URL:', imageUrl); // Log URL gambar
+            return { status: true, url: imageUrl };
         } else {
             return { status: false, error: 'File upload failed' };
         }
