@@ -308,7 +308,12 @@
         {
           "name": "Otakudesu Search",
           "desc": "Get data from Livechart.",
-          "path": "/anime/otakudesu?q="
+          "path": "/anime/otakudesu-search?q="
+        }, 
+        {
+          "name": "Otakudesu Ongoing",
+          "desc": "Get data from Livechart.",
+          "path": "/anime/otakudesu-ongoing"
         }, 
         {
           "name": "Animexin Update",
