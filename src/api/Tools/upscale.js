@@ -72,7 +72,7 @@ const Upscale = {
 
 // Fungsi untuk mengatur rute API
 module.exports = function setupUpscaleRoute(app) {
-  app.get('/tools/upscale', async (req, res) => {
+  app.get('/ai/upscale', async (req, res) => {
     const { scale } = req.query; // Mengambil parameter skala dari query
     const ratio = scale ? parseInt(scale) : 2; // Default ke 2 jika tidak ada parameter
 
