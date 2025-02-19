@@ -109,10 +109,16 @@
           "path": "/ai/powerbrain?text="
         }, 
         {
+          "name": "Heckai",
+          "desc": "Interact with Simsimi.",
+          "path": "/ai/heckai?text=&model=", 
+          "innerDesc": "Available models: Anime, Photo, Cinematic, 3D Model"
+         }, 
+        {
           "name": "MidJourney AI",
           "desc": "Generate images using MidJourney AI",
           "path": "/ai/midjourney?text=&model=",
-          "innerDesc": "Available models: Anime, Photo, Cinematic, 3D Model"
+          "innerDesc": "Available models: 0 - openai/gpt-4o-mini, 1 - google/gemini-2.0-flash-001, 2 - deepseek/deepseek-r1"
         }
       ]
     },
