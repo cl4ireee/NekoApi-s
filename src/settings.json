@@ -109,6 +109,11 @@
           "path": "/ai/powerbrain?text="
         }, 
         {
+          "name": "Muslimai",
+          "desc": "Interact with Simsimi.",
+          "path": "/ai/muslimai?text="
+        }, 
+        {
           "name": "Heckai",
           "desc": "Interact with Simsimi.",
           "path": "/ai/heckai?text=&model=", 
