@@ -274,7 +274,7 @@
           "name": "nHentai Search",
           "desc": "Get data from Livechart.",
           "path": "/anime/nhentai?q="
-        }, 
+        },
         {
           "name": "Komikcast List",
           "desc": "Get data from Livechart.",
@@ -344,6 +344,11 @@
           "name": "Westmanga",
           "desc": "Get data from Livechart.",
           "path": "/anime/westmanga?q="
+        }, 
+        {
+          "name": "Kusonime Search",
+          "desc": "Get data from Livechart.",
+          "path": "/anime/kusonime-search?q="
         }
       ]
     },
@@ -405,7 +410,12 @@
           "desc": "Download videos from YouTube.",
           "path": "/download/ytdl?url=&resolution=",
           "innerDesc": "Specify the YouTube video URL and desired resolution (720, 1080, etc.)."
-        }
+        }, 
+        {
+          "name": "nHentai Download",
+          "desc": "Get data from Livechart.",
+          "path": "/download/nhentai-download?url="
+        }, 
       ]
     }, 
     {
