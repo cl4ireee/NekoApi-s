@@ -8,7 +8,7 @@ const midjourney = {
     request: async (text, model) => {
         const data = JSON.stringify({
             "data": [
-                text,
+                text, // Ganti dari prompt ke text
                 negativePrompt,
                 true,
                 model,
@@ -31,20 +31,29 @@ const midjourney = {
                 'User-Agent': 'Mozilla/5.0',
                 'Content-Type': 'application/json'
             },
-            data: data
+            data: data,
+            timeout: 30000 // Timeout 30 detik
         };
 
-        const response = await axios.request(config);
-        return response.data;
+        try {
+            const response = await axios.request(config);
+            return response.data;
+        } catch (error) {
+            console.error("Error requesting image:", error.message);
+            throw new Error("Failed to request image");
+        }
     },
 
     cekStatus: async () => {
         let attempts = 0;
-        const maxAttempts = 10; // Batasi polling agar tidak infinite loop
+        const maxAttempts = 20; // Tambah batas polling
+        const delay = 5000; // Delay 5 detik per polling
 
         while (attempts < maxAttempts) {
             try {
-                const response = await axios.get(`https://mukaist-midjourney.hf.space/queue/data?session_hash=${session_hash}`);
+                const response = await axios.get(`https://mukaist-midjourney.hf.space/queue/data?session_hash=${session_hash}`, {
+                    timeout: 10000
+                });
 
                 if (response.data.msg === "process_completed") {
                     return response.data;
@@ -52,10 +61,9 @@ const midjourney = {
                     throw new Error("Error processing image");
                 }
 
-                // Tunggu 3 detik sebelum polling lagi
-                await new Promise(resolve => setTimeout(resolve, 3000));
+                await new Promise(resolve => setTimeout(resolve, delay));
             } catch (error) {
-                console.error("Error checking status:", error);
+                console.error("Error checking status:", error.message);
                 return { status: false, message: "Failed to check image status" };
             }
 
@@ -71,7 +79,7 @@ const midjourney = {
             const statusResponse = await midjourney.cekStatus();
             return { status: true, result: statusResponse };
         } catch (error) {
-            console.error("Error:", error);
+            console.error("Error:", error.message);
             return { status: false, message: "Failed to generate image" };
         }
     }
