@@ -104,6 +104,11 @@
           "path": "/ai/blackboxai-pro?q="
         }, 
         {
+          "name": "Powerbrain",
+          "desc": "Interact with Simsimi.",
+          "path": "/ai/powerbrain?text="
+        }, 
+        {
           "name": "MidJourney AI",
           "desc": "Generate images using MidJourney AI",
           "path": "/ai/midjourney?text=&model=",
