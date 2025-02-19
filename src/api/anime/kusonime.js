@@ -1,15 +1,18 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
 
-// Objek kusonime untuk menangani pencarian dan detail
 const kusonime = {
     search: async function(q) {
         try {
-            // Mengambil data dari situs Kusonime
-            const { data } = await axios.get(`https://kusonime.com/?s=${encodeURIComponent(q)}&post_type=post`);
-            const $ = cheerio.load(data);
-            
-            // Mengambil hasil pencarian
+            const url = `https://kusonime.com/?s=${encodeURIComponent(q)}&post_type=post`;
+            console.log(`Fetching data from: ${url}`);
+            const response = await axios.get(url);
+
+            if (response.status !== 200) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const $ = cheerio.load(response.data);
             const result = $('.kover').map((_, element) => {
                 const $element = $(element);
                 return {
@@ -22,7 +25,6 @@ const kusonime = {
                 };
             }).get();
 
-            // Memeriksa apakah hasil pencarian kosong
             if (result.length === 0) {
                 return {
                     status: false,
@@ -35,7 +37,7 @@ const kusonime = {
                 data: result
             };
         } catch (error) {
-            console.error(error);
+            console.error('Error fetching data:', error.message);
             return {
                 status: false,
                 message: 'An error occurred while fetching data.'
@@ -82,7 +84,7 @@ const kusonime = {
                 }
             };
         } catch (error) {
-            console.error(error);
+            console.error('Error fetching details:', error.message);
             return {
                 status: false,
                 message: 'An error occurred while fetching details.'
@@ -103,7 +105,7 @@ module.exports = function(app) {
         return res.json(result);
     });
 
-    app.get('/anime/kusonime-detail', async (req, res) => {
+    app.get('/api/kusonime/detail', async (req, res) => {
         const { url } = req.query; // Mengambil URL dari parameter
         if (!url) {
             return res.status(400).json({ status: false, message: 'URL harus diisi.' });
