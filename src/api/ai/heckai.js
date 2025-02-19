@@ -37,6 +37,11 @@ const heckai = {
     response.data.on("data", (chunk) => {
       onData(chunk.toString());
     });
+
+    // Handle end of stream
+    response.data.on("end", () => {
+      onData(null); // Indicate that the stream has ended
+    });
   },
 };
 
@@ -51,8 +56,15 @@ module.exports = (app) => {
     try {
       let result = [];
       await heckai.chatStream(text, model, (data) => {
-        result.push(data);
+        if (data) {
+          result.push(data);
+        }
       });
+
+      // Check if result is empty
+      if (result.length === 0) {
+        return res.json({ status: true, result: "No response from the model." });
+      }
 
       return res.json({ status: true, result: result.join('') });
     } catch (error) {
