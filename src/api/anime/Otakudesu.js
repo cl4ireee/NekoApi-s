@@ -26,10 +26,10 @@ const otakudesu = {
             });
         });
 
-        return results;
+        return { status: true, results }; // Mengembalikan status dan results
     } catch (error) {
         console.error('Error fetching data:', error);
-        return { error: 'Error fetching data' };
+        return { status: false, error: 'Error fetching data' }; // Mengembalikan status dan error
     }
   },
   search: async (query) => {
@@ -56,11 +56,11 @@ const otakudesu = {
                 rating
             });
         });
-        return animeList;
+        return { status: true, results: animeList }; // Mengembalikan status dan results
         
     } catch (error) {
         console.error('Error fetching data:', error);
-        return { error: 'Error fetching data' };
+        return { status: false, error: 'Error fetching data' }; // Mengembalikan status dan error
     }
   },
   detail: async (url) => {
@@ -91,19 +91,16 @@ const otakudesu = {
             episodes.push({ title: episodeTitle, link: episodeLink, date: episodeDate });
         });
 
-        return {
-            animeInfo,
-            episodes
-        };
+        return { status: true, results: { animeInfo, episodes } }; // Mengembalikan status dan results
         
     } catch (error) {
         console.error('Error fetching data:', error);
-        return { error: 'Error fetching data' };
+        return { status: false, error: 'Error fetching data' }; // Mengembalikan status dan error
     }
   },
   download: async (url) => {
     try {
-        const { data } = await axios.get(url);
+        const { data } = await axios.get (url);
         const $ = cheerio.load(data);
        
         const episodeInfo = {
@@ -120,11 +117,11 @@ const otakudesu = {
             })).get();
             episodeInfo.downloads.push(...links);
         });
-        return episodeInfo;
+        return { status: true, results: episodeInfo }; // Mengembalikan status dan results
         
     } catch (error) {
         console.error('Error fetching data:', error);
-        return { error: 'Error fetching data' };
+        return { status: false, error: 'Error fetching data' }; // Mengembalikan status dan error
     }
   }
 }
@@ -139,7 +136,7 @@ module.exports = function setupOtakudesuRoutes(app) {
     app.get('/anime/otakudesu-search', async (req, res) => {
         const { q } = req.query;
         if (!q) {
-            return res.status(400).json({ error: 'Query parameter "q" is required.' });
+            return res.status(400).json({ status: false, error: 'Query parameter "q" is required.' });
         }
         const results = await otakudesu.search(q);
         res.json(results);
@@ -148,7 +145,7 @@ module.exports = function setupOtakudesuRoutes(app) {
     app.get('/anime/otakudesu-detail', async (req, res) => {
         const { url } = req.query;
         if (!url) {
-            return res.status(400).json({ error: 'Query parameter "url" is required.' });
+            return res.status(400).json({ status: false, error: 'Query parameter "url" is required.' });
         }
         const results = await otakudesu.detail(url);
         res.json(results);
@@ -157,7 +154,7 @@ module.exports = function setupOtakudesuRoutes(app) {
     app.get('/anime/otakudesu-download', async (req, res) => {
         const { url } = req.query;
         if (!url) {
-            return res.status(400).json({ error: 'Query parameter "url" is required.' });
+            return res.status(400).json({ status: false, error: 'Query parameter "url" is required.' });
         }
         const results = await otakudesu.download(url);
         res.json(results);
