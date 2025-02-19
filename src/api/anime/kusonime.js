@@ -1,12 +1,15 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
 
+// Objek kusonime untuk menangani pencarian dan detail
 const kusonime = {
     search: async function(q) {
         try {
+            // Mengambil data dari situs Kusonime
             const { data } = await axios.get(`https://kusonime.com/?s=${encodeURIComponent(q)}&post_type=post`);
             const $ = cheerio.load(data);
             
+            // Mengambil hasil pencarian
             const result = $('.kover').map((_, element) => {
                 const $element = $(element);
                 return {
@@ -18,12 +21,24 @@ const kusonime = {
                     genres: $element.find('.fa-tag').parent().find('a').map((_, genre) => $(genre).text().trim()).get()
                 };
             }).get();
+
+            // Memeriksa apakah hasil pencarian kosong
+            if (result.length === 0) {
+                return {
+                    status: false,
+                    message: 'No results found.'
+                };
+            }
+
             return {
+                status: true,
                 data: result
             };
         } catch (error) {
+            console.error(error);
             return {
-                data: []
+                status: false,
+                message: 'An error occurred while fetching data.'
             };
         }
     },
@@ -56,6 +71,7 @@ const kusonime = {
                 dlink[quality] = links;
             });
             return {
+                status: true,
                 data: {
                     title: $('.jdlz').text().trim(),
                     thumbnail: $('.post-thumb img').attr('src'),
@@ -66,8 +82,10 @@ const kusonime = {
                 }
             };
         } catch (error) {
+            console.error(error);
             return {
-                data: null
+                status: false,
+                message: 'An error occurred while fetching details.'
             };
         }
     }
@@ -82,16 +100,16 @@ module.exports = function(app) {
         }
 
         const result = await kusonime.search(q);
-        return res.json({ status: true, result: result.data });
+        return res.json(result);
     });
 
-    app.get('/api/kusonime/detail', async (req, res) => {
+    app.get('/anime/kusonime-detail', async (req, res) => {
         const { url } = req.query; // Mengambil URL dari parameter
         if (!url) {
             return res.status(400).json({ status: false, message: 'URL harus diisi.' });
         }
 
         const result = await kusonime.detail(url);
-        return res.json({ status: true, result: result.data });
+        return res.json(result);
     });
 };
