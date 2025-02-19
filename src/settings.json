@@ -319,6 +319,11 @@
           "name": "Anilist Populer",
           "desc": "Get data from Livechart.",
           "path": "/anime/anilist-populer"
+        }, 
+        {
+          "name": "Top anime",
+          "desc": "Get data from Livechart.",
+          "path": "/anime/top-anime"
         }
       ]
     },
