@@ -33,6 +33,6 @@ async function TopAnime() {
 module.exports = function setupAnimeRoute(app) {
     app.get('/anime/top-anime', async (req, res) => {
         const animeList = await TopAnime();
-        res.json({ success: true, data: animeList });
+        res.json({ status: true, result: animeList }); // Mengganti 'success' menjadi 'status'
     });
 };
