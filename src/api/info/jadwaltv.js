@@ -16,7 +16,12 @@ let jadwal = [];
 
 }
 
-module.exports = function(app) { app.get('/info/jadwaltv', async (req, res) => { const { q } = req.query; if (!q) { return res.status(400).json({ status: false, message: 'Parameter q harus disediakan.' }); }
+module.exports = function(app) { 
+    app.get('/api/jadwaltv', async (req, res) => { 
+        const { q } = req.query;
+        if (!q) { 
+            return res.status(400).json({ status: false, message: 'Parameter q harus disediakan.' }); 
+         }
 
 const result = await getJadwalTV(q);
     res.json(result);
