@@ -505,7 +505,7 @@
         {
           "name": "JadwalTv",
           "desc": "Blue Archive Random Images",
-          "path": "/info/jadwaltv?q="
+          "path": "/info/jadwal-tv?q="
         }
       ]
     },
