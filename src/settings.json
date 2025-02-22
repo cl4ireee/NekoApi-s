@@ -114,6 +114,11 @@
           "path": "/ai/muslimai?text="
         }, 
         {
+          "name": "Generate-image",
+          "desc": "Interact with Simsimi.",
+          "path": "/ai/generate-image?text="
+        }, 
+        {
           "name": "Heckai",
           "desc": "Interact with Simsimi.",
           "path": "/ai/heckai?text=&model=", 
