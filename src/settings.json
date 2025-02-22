@@ -589,6 +589,11 @@
           "name": "Uguu.se",
           "desc": "Retrieve random Blue Archive images.",
           "path": "/tools/uguu?url="
+        }, 
+        {
+          "name": "Monet",
+          "desc": "Retrieve random Blue Archive images.",
+          "path": "/tools/monet?url="
         }
       ]
     },
