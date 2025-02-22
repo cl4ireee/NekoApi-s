@@ -119,6 +119,11 @@
           "path": "/ai/generate-image?text="
         }, 
         {
+          "name": "BlcakBox",
+          "desc": "Interact with Simsimi.",
+          "path": "/ai/blackbox-ai?text="
+        }, 
+        {
           "name": "Heckai",
           "desc": "Interact with Simsimi.",
           "path": "/ai/heckai?text=&model=", 
