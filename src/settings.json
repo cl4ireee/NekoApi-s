@@ -501,6 +501,11 @@
           "name": "Cuaca",
           "desc": "Blue Archive Random Images",
           "path": "/info/cuaca?q="
+        }, 
+        {
+          "name": "JadwalTv",
+          "desc": "Blue Archive Random Images",
+          "path": "/info/jadwaltv?q="
         }
       ]
     },
