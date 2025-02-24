@@ -9,7 +9,7 @@ const checkHost = {
   },
   headers: {
     'Accept': 'application/json',
-    'User -Agent': 'Postify/1.0.0'
+    'User  -Agent': 'Postify/1.0.0'
   },
   types: ['ping', 'http', 'tcp', 'udp', 'dns', 'info'],
 
@@ -47,10 +47,10 @@ const checkHost = {
     }
   },
 
-  info: async (q) => {
+  info: async (url) => {
     try {
       const response = await axios.get(`${checkHost.api.base}/ip-info`, {
-        params: { host: q },
+        params: { host: url },
         headers: checkHost.headers,
         timeout: checkHost.api.timeout
       });
@@ -199,17 +199,27 @@ const checkHost = {
 module.exports = (app) => {
   // Endpoint for checking host
   app.get('/tools/check-host', async (req, res) => {
-    const { q, type, ...params } = req.query;
+    const { url, type, ...params } = req.query;
 
-    const result = await checkHost.check(q, type, params);
+    // Validasi untuk parameter url
+    if (!url || url.trim() === '') {
+      return res.status(400).json({ status: false, error: 'Parameter url tidak boleh kosong.' });
+    }
+
+    const result = await checkHost.check(url, type, params);
     res.json(result);
   });
 
   // Endpoint for getting info about a host
   app.get('/tools/info-host', async (req, res) => {
-    const { q } = req.query;
+    const { url } = req.query;
 
-    const result = await checkHost.info(q);
+    // Validasi untuk parameter url
+    if (!url || url.trim() === '') {
+      return res.status(400).json({ status: false, error: 'Parameter url tidak boleh kosong.' });
+    }
+
+    const result = await checkHost.info(url);
     res.json(result);
   });
 };
