@@ -609,6 +609,11 @@
           "name": "Monet",
           "desc": "Retrieve random Blue Archive images.",
           "path": "/tools/monet?url="
+        }, 
+        {
+          "name": "Chek Host",
+          "desc": "Retrieve random Blue Archive images.",
+          "path": "/tools/check-host?q="
         }
       ]
     },
