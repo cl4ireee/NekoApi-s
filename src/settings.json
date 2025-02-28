@@ -52,6 +52,11 @@
           "path": "/ai/deepseek?text="
         }, 
         {
+          "name": "Nsfw Ai",
+          "desc": "Communicate with DeepSeek.",
+          "path": "/ai/nsfwgenerator?text="
+        }, 
+        {
           "name": "Lilychan",
           "desc": "Talk to Lilychan.",
           "path": "/ai/lilychan?text="
