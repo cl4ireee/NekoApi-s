@@ -38,7 +38,7 @@
         {
           "name": "Text2Art",
           "desc": "Engage in conversation with LuminAI.",
-          "path": "/ai/text2art?promt="
+          "path": "/ai/text2art?prompt="
         },
         {
           "name": "HydroMind",
