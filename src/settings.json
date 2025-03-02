@@ -606,6 +606,11 @@
           "path": "/tools/upscale?url="
         }, 
         {
+          "name": "Remove",
+          "desc": "Retrieve random Blue Archive images.",
+          "path": "/tools/remove?imageUrl="
+        }, 
+        {
           "name": "imgretouch",
           "desc": "Retrieve random Blue Archive images.",
           "path": "/tools/imgretouch?url="
