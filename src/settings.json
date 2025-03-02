@@ -643,7 +643,7 @@
         {
           "name": "Jadwal Sholat",
           "desc": "Search for YouTube content.",
-          "path": "/search/jadwal-solat?q="
+          "path": "/search/jadwal-solat?kota="
         }, 
         {
           "name": "Bilibili Search",
