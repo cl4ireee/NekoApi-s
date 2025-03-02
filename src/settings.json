@@ -207,6 +207,16 @@
           "path": "/anime/latest"
         }, 
         {
+          "name": "Animeindo",
+          "desc": "Get the latest updates from Komiku.",
+          "path": "/anime/animeindo-home"
+        }, 
+        {
+          "name": "Animeindo Search",
+          "desc": "Get the latest updates from Komiku.",
+          "path": "/anime/animeindo-search?q="
+        }, 
+        {
           "name": "Komiku Detail",
           "desc": "Retrieve details of a specific Komiku.",
           "path": "/komik/komikudetail?url="
