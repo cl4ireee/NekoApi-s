@@ -41,6 +41,11 @@
           "path": "/ai/flat?prompt="
         },
         {
+          "name": "Supabase",
+          "desc": "Engage in conversation with LuminAI.",
+          "path": "/ai/supabase?prompt="
+        },
+        {
           "name": "Chatbox",
           "desc": "Engage in conversation with LuminAI.",
           "path": "/ai/chatbox?text="
