@@ -36,6 +36,11 @@
           "path": "/ai/luminai?text="
         },
         {
+          "name": "Chatbox",
+          "desc": "Engage in conversation with LuminAI.",
+          "path": "/ai/chatbox?text="
+        },
+        {
           "name": "Text2Art",
           "desc": "Engage in conversation with LuminAI.",
           "path": "/ai/text2art?prompt="
