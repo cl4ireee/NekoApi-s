@@ -598,7 +598,7 @@
         {
           "name": "img2promt",
           "desc": "Retrieve random Blue Archive images.",
-          "path": "/tools/generate-prompt?url="
+          "path": "/tools/image2prompt?url="
         }, 
         {
           "name": "Krakenfiles",
