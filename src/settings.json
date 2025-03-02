@@ -641,6 +641,11 @@
           "path": "/search/youtube?q="
         }, 
         {
+          "name": "Jadwal Sholat",
+          "desc": "Search for YouTube content.",
+          "path": "/search/jadwal-solat?q="
+        }, 
+        {
           "name": "Bilibili Search",
           "desc": "Search for YouTube content.",
           "path": "/search/bilibili-search?q="
