@@ -18,10 +18,10 @@ async function decxaScrape(q) {
             const result = await scrapeResult(linkElement);
             results.push(result);
         } else {
-            console.log('Tidak ada hasil ditemukan.');
+            throw new Error('Tidak ada hasil ditemukan.');
         }
     } catch (error) {
-        console.error('Error saat melakukan search:', error);
+        console.error('Error saat melakukan search:', error.message);
         throw new Error('Gagal melakukan pencarian. Silakan coba lagi.');
     }
     return results;
@@ -38,15 +38,20 @@ async function scrapeResult(linkElement) {
         const { data } = await axios.get(url);
         const $ = cheerio.load(data);
 
-        const artis = $('div.col-xs-12.col-lg-8.text-center').find('b').first().text();
-        const ft = $('div.col-xs-12.col-lg-8.text-center').find('span.feat').text();
-        const judul = $('div.col-xs-12.col-lg-8.text-center').find('h1').text();
-        const lirik = $('div.col-xs-12.col-lg-8.text-center')
-            .find('div')
-            .not('div.listalbum-item')
-            .not('div.noprint')
-            .text();
+        // Ambil artis
+        const artis = $('div.col-xs-12.col-lg-8.text-center').find('b').first().text().trim();
 
+        // Ambil judul lagu
+        const judul = $('div.col-xs-12.col-lg-8.text-center').find('h1').text().trim();
+
+        // Ambil feat (jika ada)
+        const ft = $('div.col-xs-12.col-lg-8.text-center').find('span.feat').text().trim();
+
+        // Ambil lirik lagu
+        const lirikContainer = $('div.col-xs-12.col-lg-8.text-center').find('div:not(.listalbum-item):not(.noprint)');
+        let lirik = lirikContainer.text().trim();
+
+        // Bersihkan lirik dari teks yang tidak diinginkan
         const cleanedLyrics = lirik
             .split('\n')
             .map(line => line.trim())
@@ -67,7 +72,7 @@ async function scrapeResult(linkElement) {
             Lirik: cleanedLyrics
         };
     } catch (error) {
-        console.error('Error saat melakukan scraping:', error);
+        console.error('Error saat melakukan scraping:', error.message);
         throw new Error('Gagal mengambil detail lirik. Silakan coba lagi.');
     }
 }
