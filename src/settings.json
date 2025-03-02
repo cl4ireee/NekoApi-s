@@ -461,6 +461,11 @@
           "name": "nHentai Download",
           "desc": "Get data from Livechart.",
           "path": "/download/nhentai-download?url="
+        }, 
+        {
+          "name": "Facebook Download",
+          "desc": "Get data from Livechart.",
+          "path": "/download/faacebook-download?url="
         }
       ]
     }, 
