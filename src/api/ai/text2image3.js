@@ -5,7 +5,7 @@ const fetch = require('node-fetch'); // Jika menggunakan Node.js
  * @param {string} prompt - The text prompt to generate the image from.
  * @param {string} [seed=""] - An optional seed for randomization; if empty, a random seed is used.
  * @param {string} [ratio="1:1"] - The aspect ratio of the generated image; available options are "1:1", "16:9", and "9:16".
- * @returns {Promise<Array<string>>} A promise that resolves to an array of image URLs if successful, or throws an error if the generation fails.
+ * @returns {Promise<string>} A promise that resolves to a base64-encoded image if successful, or throws an error if the generation fails.
  * @throws {Error} Throws an error if the nonce is not found or if image generation fails.
  */
 const flatAi = async (prompt, seed = "", ratio = "1:1") => {
@@ -51,7 +51,9 @@ const flatAi = async (prompt, seed = "", ratio = "1:1") => {
     const result = await generate.json();
 
     if (result.success) {
-      return result.data.images;
+      // Ambil data gambar base64 dari respons
+      const base64Image = result.data.images[0]; // Asumsi gambar pertama
+      return base64Image;
     } else {
       throw new Error("Image generation failed");
     }
@@ -77,10 +79,17 @@ module.exports = function (app) {
       }
 
       // Generate gambar menggunakan fungsi flatAi
-      const images = await flatAi(prompt, seed || "", ratio || "1:1");
+      const base64Image = await flatAi(prompt, seed || "", ratio || "1:1");
 
-      // Kirim respons JSON
-      res.json({ images });
+      // Pisahkan header base64 dari data gambar
+      const base64Data = base64Image.split(";base64,").pop();
+
+      // Konversi base64 ke buffer
+      const imageBuffer = Buffer.from(base64Data, "base64");
+
+      // Kirim gambar langsung sebagai respons
+      res.set("Content-Type", "image/jpeg");
+      res.send(imageBuffer);
     } catch (error) {
       console.error("Error di endpoint /generate-image:", error.message);
       res.status(500).json({ error: error.message || "Internal Server Error" });
