@@ -387,6 +387,11 @@
           "path": "/download/tiktok-download?url="
         },
         {
+          "name": "Aio",
+          "desc": "Download TikTok videos.",
+          "path": "/download/aio?url="
+        },
+        {
           "name": "Douyin",
           "desc": "Download TikTok videos.",
           "path": "/download/douyin-download?url="
