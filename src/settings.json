@@ -51,6 +51,12 @@
           "path": "/ai/text2art?prompt="
         },
         {
+          "name": "aicreate",
+          "desc": "Engage in conversation with LuminAI.",
+          "path": "/ai/aicreate?prompt=&model=", 
+          "innerDesx": "flux, PHOTOREALISTIC13"
+        },
+        {
           "name": "HydroMind",
           "desc": "Interact with HydroMind.",
           "path": "/ai/hydromind?text=&model=",
