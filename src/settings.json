@@ -36,6 +36,11 @@
           "path": "/ai/luminai?text="
         },
         {
+          "name": "FlatAI",
+          "desc": "Engage in conversation with LuminAI.",
+          "path": "/ai/flat?prompt="
+        },
+        {
           "name": "Chatbox",
           "desc": "Engage in conversation with LuminAI.",
           "path": "/ai/chatbox?text="
