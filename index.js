@@ -4,13 +4,11 @@ const fs = require('fs');
 const cors = require('cors');
 const path = require('path');
 const http = require('http');
-const socketIo = require('socket.io');
 const os = require('os'); // Untuk CPU Load
 let requestCount = 0; // Untuk menghitung request
 
 const app = express();
 const server = http.createServer(app); // Membuat server HTTP
-const io = socketIo(server); // Menghubungkan socket.io ke server HTTP
 
 const PORT = process.env.PORT || 4000;
 
@@ -84,7 +82,10 @@ app.get('/monitoring', (req, res) => {
     const status = {
         serverStatus: 'Online', // Kamu bisa menyesuaikan ini dengan pengecekan server atau kondisi lainnya
         time: new Date().toLocaleString(),
-        apiRoutes: routes
+        apiRoutes: routes,
+        uptime: formatUptime(Math.floor(process.uptime())),
+        cpuLoad: os.loadavg()[0].toFixed(2),
+        requestCount: requestCount
     };
 
     res.json(status);
@@ -105,20 +106,6 @@ app.use((err, req, res, next) => {
     res.status(500).sendFile(process.cwd() + "/api-page/500.html");
 });
 
-// WebSocket untuk real-time monitoring dengan optimasi
-setInterval(() => {
-    const uptime = Math.floor(process.uptime()); // Menghitung uptime dalam detik
-    const cpuLoad = os.loadavg()[0]; // CPU load 1 menit terakhir (0, 1, 5 menit avg)
-
-    // Mengirim data monitoring melalui Socket.io
-    io.emit('monitoringUpdate', {
-        uptime: formatUptime(uptime),
-        cpuLoad: cpuLoad.toFixed(2),
-        requestCount: requestCount
-    });
-
-}, 10000); // Update setiap 10 detik, untuk mengurangi beban
-
 // Fungsi untuk format uptime dalam format yang lebih mudah dibaca
 function formatUptime(seconds) {
     const hours = Math.floor(seconds / 3600);
@@ -133,7 +120,7 @@ app.use((req, res, next) => {
     next();
 });
 
-// Menjalankan server dengan socket.io
+// Menjalankan server
 server.listen(PORT, () => {
     console.log(chalk.bgHex('#90EE90').hex('#333').bold(` Server is running on port ${PORT} `));
 });
