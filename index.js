@@ -1,131 +1,205 @@
-const express = require('express');
-const chalk = require('chalk');
-const fs = require('fs');
-const cors = require('cors');
-const path = require('path');
-const http = require('http');
-const os = require('os'); // Untuk CPU Load
-
-let requestCount = 0; // Untuk menghitung request
-
-const app = express();
-const server = http.createServer(app); // Membuat server HTTP
-
-const PORT = process.env.PORT || 4000;
-
-app.enable("trust proxy");
-app.set("json spaces", 2);
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cors());
-app.use('/', express.static(path.join(__dirname, 'api-page')));
-app.use('/src', express.static(path.join(__dirname, 'src')));
-
-const settingsPath = path.join(__dirname, './src/settings.json');
-const settings = JSON.parse(fs.readFileSync(settingsPath, 'utf-8'));
-
-// Middleware untuk menambahkan informasi pada setiap response
-app.use((req, res, next) => {
-    const originalJson = res.json;
-    res.json = function (data) {
-        if (data && typeof data === 'object') {
-            const responseData = {
-                status: data.status,
-                creator: settings.apiSettings.creator || "Created Using Rynn UI",
-                ...data
-            };
-            return originalJson.call(this, responseData);
-        }
-        return originalJson.call(this, data);
+(async () => {
+    const express = require('express');
+    const fs = require('fs');
+    const path = require('path');
+    const set = require('./settings');
+    const chalk = require('chalk');
+    
+    const app = express();
+    const PORT = process.env.PORT || 4000;
+    
+    const logger = {
+        info: (message) => console.log(chalk.dim.blue('•') + chalk.dim(' info  - ') + message),
+        ready: (message) => console.log(chalk.dim.green('•') + chalk.dim(' ready - ') + message),
+        warn: (message) => console.log(chalk.dim.yellow('•') + chalk.dim(' warn  - ') + message),
+        error: (message) => console.log(chalk.dim.red('•') + chalk.dim(' error - ') + message),
+        event: (message) => console.log(chalk.dim.cyan('•') + chalk.dim(' event - ') + message)
     };
-    next();
-});
-
-// API Route - Memuat rute dari file API yang ada
-let totalRoutes = 0;
-const apiFolder = path.join(__dirname, './src/api');
-fs.readdirSync(apiFolder).forEach((subfolder) => {
-    const subfolderPath = path.join(apiFolder, subfolder);
-    if (fs.statSync(subfolderPath).isDirectory()) {
-        fs.readdirSync(subfolderPath).forEach((file) => {
-            const filePath = path.join(subfolderPath, file);
-            if (path.extname(file) === '.js') {
-                require(filePath)(app);
-                totalRoutes++;
-                console.log(chalk.bgHex('#FFFF99').hex('#333').bold(` Loaded Route: ${path.basename(file)} `));
+    
+    app.set('trust proxy', true);
+    app.set('json spaces', 2);
+    
+    app.use(express.json());
+    app.use(express.urlencoded({ extended: false }));
+    app.use('/', express.static(path.join(__dirname, 'docs')));
+    
+    logger.info('Starting server initialization...');
+    
+    app.use((req, res, next) => {
+        const originalJson = res.json;
+        res.json = function (data) {
+            if (data && typeof data === 'object') {
+                const statusCode = res.statusCode || 200;
+                
+                const responseData = {
+                    status: data.status,
+                    statusCode: statusCode,
+                    creator: set.author.toLowerCase(),
+                    ...data
+                };
+                
+                return originalJson.call(this, responseData);
+            }
+            return originalJson.call(this, data);
+        };
+        next();
+    });
+    
+    String.prototype.capitalize = function() {
+        return this.charAt(0).toUpperCase() + this.slice(1);
+    };
+    
+    logger.info('Loading scraper module...');
+    global.scraper = new(await require('./lib/scrape.js'))('./lib/scrape_file');
+    global.scrape = await scraper.list();
+    
+    setInterval(async () => {
+        try {
+            await scraper.load();
+        } catch (error) {
+            logger.error(`Failed to reload scraper: ${error.message}`);
+        }
+    }, 2000);
+    
+    function loadEndpointsFromDirectory(directory, baseRoute = '') {
+        let endpoints = [];
+        const fullPath = path.join(__dirname, directory);
+        
+        if (!fs.existsSync(fullPath)) {
+            logger.warn(`Directory not found: ${fullPath}`);
+            return endpoints;
+        }
+        
+        logger.info(`Scanning directory: ${directory}...`);
+        const items = fs.readdirSync(fullPath);
+        
+        items.forEach(item => {
+            const itemPath = path.join(fullPath, item);
+            const stats = fs.statSync(itemPath);
+            
+            if (stats.isDirectory()) {
+                console.log('');
+                logger.info(`Found subdirectory: ${item}`);
+                const nestedEndpoints = loadEndpointsFromDirectory(
+                    path.join(directory, item), 
+                    `${baseRoute}/${item}`
+                );
+                endpoints = [...endpoints, ...nestedEndpoints];
+            } else if (stats.isFile() && item.endsWith('.js')) {
+                try {
+                    const module = require(itemPath);
+                    
+                    if (module && module.run && typeof module.run === 'function') {
+                        const endpointName = item.replace('.js', '');
+                        const endpointPath = `${baseRoute}/${endpointName}`;
+                        
+                        app.all(endpointPath, module.run);
+                        
+                        let fullPathWithParams = endpointPath;
+                        if (module.params && module.params.length > 0) {
+                            fullPathWithParams += '?' + module.params.map(param => `${param}=`).join('&');
+                        }
+                        
+                        const category = module.category || 'Other';
+                        const categoryIndex = endpoints.findIndex(endpoint => endpoint.name === category);
+                        
+                        if (categoryIndex === -1) {
+                            endpoints.push({
+                                name: category,
+                                items: []
+                            });
+                        }
+                        
+                        const categoryObj = endpoints.find(endpoint => endpoint.name === category);
+                        
+                        const endpointObj = {};
+                        endpointObj[module.name || endpointName] = {
+                            desc: module.desc || 'No description provided',
+                            path: fullPathWithParams
+                        };
+                        
+                        categoryObj.items.push(endpointObj);
+                        
+                        logger.ready(`${chalk.green(endpointPath)} ${chalk.dim('(')}${chalk.cyan(category)}${chalk.dim(')')}`);
+                    }
+                } catch (error) {
+                    logger.error(`Failed to load module ${itemPath}: ${error.message}`);
+                }
             }
         });
+        
+        return endpoints;
     }
-});
-console.log(chalk.bgHex('#90EE90').hex('#333').bold(' Load Complete! ✓ '));
-console.log(chalk.bgHex('#90EE90').hex('#333').bold(` Total Routes Loaded: ${totalRoutes} `));
-
-// Monitoring Route - Mengembalikan informasi tentang server dan API Routes
-app.get('/monitoring', (req, res) => {
-    const routes = [];
-
-    // Looping untuk mendapatkan daftar API Routes yang ada
-    fs.readdirSync(apiFolder).forEach((subfolder) => {
-        const subfolderPath = path.join(apiFolder, subfolder);
-        if (fs.statSync(subfolderPath).isDirectory()) {
-            fs.readdirSync(subfolderPath).forEach((file) => {
-                const filePath = path.join(subfolderPath, file);
-                if (path.extname(file) === '.js') {
-                    routes.push({
-                        path: `/src/api/${subfolder}/${file}`,
-                        status: 'Active' // Status bisa ditentukan berdasarkan hasil cek tertentu
-                    });
-                }
-            });
-        }
+    
+    app.get('/', (req, res) => {
+        res.sendFile(path.join(__dirname, 'docs', 'index.html'));
     });
-
-    const status = {
-        serverStatus: 'Online', // Status server
-        time: new Date().toLocaleString(),
-        apiRoutes: routes,
-        uptime: formatUptime(Math.floor(process.uptime())),
-        cpuLoad: os.loadavg()[0].toFixed(2),
-        requestCount: requestCount
-    };
-
-    res.json(status);
-});
-
-// Halaman Utama - Mengirim halaman index.html
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'api-page', 'index.html'));
-});
-
-// Menangani 404
-app.use((req, res, next) => {
-    res.status(404).sendFile(process.cwd() + "/api-page/404.html");
-});
-
-// Menangani error
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).sendFile(process.cwd() + "/api-page/500.html");
-});
-
-// Fungsi untuk format uptime dalam format yang lebih mudah dibaca
-function formatUptime(seconds) {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const secondsRemaining = seconds % 60;
-    return `${hours}h ${minutes}m ${secondsRemaining}s`;
-}
-
-// Menghitung request count
-app.use((req, res, next) => {
-    requestCount++;
-    next();
-});
-
-// Menjalankan server
-server.listen(PORT, () => {
-    console.log(chalk.bgHex('#90EE90').hex('#333').bold(` Server is running on port ${PORT} `));
-});
-
-module.exports = app;
+    
+    logger.info('Loading API endpoints...');
+    const allEndpoints = loadEndpointsFromDirectory('api');
+    console.log('');
+    logger.ready(`Loaded ${allEndpoints.reduce((total, category) => total + category.items.length, 0)} endpoints`);
+    
+    app.get('/endpoints', (req, res) => {
+        const totalEndpoints = allEndpoints.reduce((total, category) => {
+            return total + category.items.length;
+        }, 0);
+        res.json({
+            status: true,
+            count: totalEndpoints,
+            endpoints: allEndpoints
+        });
+    });
+    
+    app.get('/set', (req, res) => {
+        res.json({
+            status: true,
+            ...set
+        });
+    });
+    
+    app.use((req, res, next) => {
+        logger.info(`404: ${req.method} ${req.path}`);
+        res.status(404).sendFile(process.cwd() + '/docs/err/404.html');
+    });
+    
+    app.use((err, req, res, next) => {
+        logger.error(`500: ${err.message}`);
+        res.status(500).sendFile(process.cwd() + '/docs/err/500.html');
+    });
+    
+    app.listen(PORT, () => {
+        console.log('');
+        logger.ready(`Server started successfully`);
+        logger.info(`Local:   ${chalk.cyan(`http://localhost:${PORT}`)}`);
+        
+        try {
+            const { networkInterfaces } = require('os');
+            const nets = networkInterfaces();
+            const results = {};
+            
+            for (const name of Object.keys(nets)) {
+                for (const net of nets[name]) {
+                    if (net.family === 'IPv4' && !net.internal) {
+                        if (!results[name]) {
+                            results[name] = [];
+                        }
+                        results[name].push(net.address);
+                    }
+                }
+            }
+            
+            for (const [, addresses] of Object.entries(results)) {
+                for (const addr of addresses) {
+                    logger.info(`Network: ${chalk.cyan(`http://${addr}:${PORT}`)}`);
+                }
+            }
+        } catch (error) {
+            logger.warn(`Cannot detect network interfaces: ${error.message}`);
+        }
+        
+        logger.info(`${chalk.dim('Ready for connections')}`);
+    });
+    
+    module.exports = app;
+})();
