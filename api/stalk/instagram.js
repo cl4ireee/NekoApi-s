@@ -13,7 +13,7 @@ module.exports = {
         }
 
         const endpoint = 'https://privatephotoviewer.com/wp-json/instagram-viewer/v1/fetch-profile';
-        const payload = { find: instagramUsername };
+        const payload = { find: Username };
         const headers = {
             'Content-Type': 'application/json',
             'Accept': '*/*',
@@ -23,22 +23,23 @@ module.exports = {
         };
 
         try {
-            // Mengirim permintaan POST untuk mengambil data profil Instagram
             const { data } = await axios.post(endpoint, payload, { headers });
+
+            if (!data || !data.html) {
+                return res.status(500).json({ status: false, error: 'Gagal mendapatkan data dari situs' });
+            }
+
             const html = data.html;
             const $ = cheerio.load(html);
 
-            // Mengambil gambar profil
             let profilePic = $('#profile-insta').find('.col-md-4 img').attr('src');
             if (profilePic && profilePic.startsWith('//')) {
                 profilePic = 'https:' + profilePic;
             }
 
-            // Mengambil nama dan username
             const name = $('#profile-insta').find('.col-md-8 h4.text-muted').text().trim();
             const username = $('#profile-insta').find('.col-md-8 h5.text-muted').text().trim();
 
-            // Mengambil statistik profil (post, followers, following)
             const stats = {};
             $('#profile-insta')
                 .find('.col-md-8 .d-flex.justify-content-between.my-3 > div')
@@ -54,10 +55,8 @@ module.exports = {
                     }
                 });
 
-            // Mengambil bio
             const bio = $('#profile-insta').find('.col-md-8 p').text().trim();
 
-            // Mengembalikan data profil Instagram
             return res.json({
                 status: true,
                 result: {
@@ -72,7 +71,6 @@ module.exports = {
             });
 
         } catch (error) {
-            // Menangani kesalahan
             console.error('Error fetching Instagram profile:', error.message);
             return res.status(500).json({ status: false, error: error.message });
         }
