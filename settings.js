@@ -1,11 +1,11 @@
 module.exports = {
     name: {
         main: 'NekoAPI',
-        copyright: 'NekoApi Base'
+        copyright: 'NekoApi'
     },
     description: 'Integrated API solution for your modern application development needs. Fast, secure, and reliable access.',
     icon: '/image/icon.png',
-    author: 'Naoki',
+    author: '1.0.0',
     info_url: 'https://whatsapp.com/channel/0029Vb9MIdiDDmFXasVPVG1t',
     links: [
         {
