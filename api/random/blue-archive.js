@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 module.exports = {
-    name: 'BlueArchive Random Image',
+    name: 'BlueArchive',
     desc: 'Get a random image from Blue Archive',
     category: 'random',
     params: [],
