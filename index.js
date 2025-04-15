@@ -35,7 +35,7 @@ app.use((req, res, next) => {
     next();
 });
 
-// Api Route
+// API Route
 let totalRoutes = 0;
 const apiFolder = path.join(__dirname, './src/api');
 fs.readdirSync(apiFolder).forEach((subfolder) => {
@@ -54,10 +54,41 @@ fs.readdirSync(apiFolder).forEach((subfolder) => {
 console.log(chalk.bgHex('#90EE90').hex('#333').bold(' Load Complete! ✓ '));
 console.log(chalk.bgHex('#90EE90').hex('#333').bold(` Total Routes Loaded: ${totalRoutes} `));
 
+// Monitoring Route
+app.get('/monitoring', (req, res) => {
+    const routes = [];
+
+    // Looping untuk mendapatkan daftar API Routes yang ada
+    fs.readdirSync(apiFolder).forEach((subfolder) => {
+        const subfolderPath = path.join(apiFolder, subfolder);
+        if (fs.statSync(subfolderPath).isDirectory()) {
+            fs.readdirSync(subfolderPath).forEach((file) => {
+                const filePath = path.join(subfolderPath, file);
+                if (path.extname(file) === '.js') {
+                    routes.push({
+                        path: `/src/api/${subfolder}/${file}`,
+                        status: 'Active' // Status bisa ditentukan berdasarkan hasil cek tertentu
+                    });
+                }
+            });
+        }
+    });
+
+    const status = {
+        serverStatus: 'Online', // Kamu bisa menyesuaikan ini dengan pengecekan server atau kondisi lainnya
+        time: new Date().toLocaleString(),
+        apiRoutes: routes
+    };
+
+    res.json(status);
+});
+
+// Halaman Utama
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'api-page', 'index.html'));
 });
 
+// Menangani 404 dan error
 app.use((req, res, next) => {
     res.status(404).sendFile(process.cwd() + "/api-page/404.html");
 });
