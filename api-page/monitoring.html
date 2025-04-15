@@ -3,155 +3,821 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Real-Time Monitoring</title>
+    <title>API Monitoring Dashboard</title>
     <script src="/socket.io/socket.io.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f7f9fc;
+        :root {
+            --primary: #6366F1;
+            --primary-dark: #4F46E5;
+            --secondary: #10B981;
+            --danger: #EF4444;
+            --warning: #F59E0B;
+            --gray-100: #F3F4F6;
+            --gray-200: #E5E7EB;
+            --gray-300: #D1D5DB;
+            --gray-700: #374151;
+            --gray-800: #1F2937;
+            --gray-900: #111827;
+            --radius: 0.5rem;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        * {
             margin: 0;
             padding: 0;
-            color: #444;
-        }
-        header {
-            background-color: #4CAF50;
-            padding: 15px;
-            text-align: center;
-            color: white;
-            font-size: 24px;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 20px;
-        }
-        .status-box {
-            background-color: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        .status-box h2 {
-            margin-top: 0;
-            color: #333;
-        }
-        .status-box p {
-            font-size: 18px;
-            margin: 10px 0;
-        }
-        .status-box span {
-            font-weight: bold;
-            color: #333;
-        }
-        .route-box {
-            background-color: #007BFF;
-            color: white;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            display: inline-block;
-            width: 100%;
             box-sizing: border-box;
         }
-        .route-box p {
-            margin: 0;
-            font-size: 16px;
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--gray-100);
+            color: var(--gray-800);
+            line-height: 1.5;
         }
-        .error-box {
-            background-color: #FF5733;
+
+        header {
+            background-color: var(--gray-900);
             color: white;
-            padding: 10px;
-            margin-bottom: 20px;
-            border-radius: 5px;
-            display: none; /* Hidden by default */
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        /* Styling untuk tombol "Retry" */
+
+        header h1 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            background-color: var(--primary);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 0.25rem 0.625rem;
+            border-radius: 9999px;
+        }
+
+        .status-badge.online {
+            background-color: var(--secondary);
+        }
+
+        .status-badge.offline {
+            background-color: var(--danger);
+        }
+
+        main {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--gray-900);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-icon {
+            color: var(--primary);
+            font-size: 1.25rem;
+        }
+
+        .card-body {
+            padding: 1rem;
+        }
+
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .status-item:last-child {
+            border-bottom: none;
+        }
+
+        .status-label {
+            font-weight: 500;
+            color: var(--gray-700);
+        }
+
+        .status-value {
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .metric-box {
+            padding: 1rem;
+            background-color: var(--gray-100);
+            border-radius: var(--radius);
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .metric-label {
+            font-size: 0.875rem;
+            color: var(--gray-700);
+        }
+
+        .routes-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        .route-card {
+            background-color: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .route-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .route-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .route-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .route-details h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .route-details p {
+            font-size: 0.875rem;
+            color: var(--gray-700);
+        }
+
+        .route-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-circle {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .status-circle.up {
+            background-color: var(--secondary);
+        }
+
+        .status-circle.down {
+            background-color: var(--danger);
+        }
+
+        .status-circle.warning {
+            background-color: var(--warning);
+        }
+
+        .route-status span {
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .route-status.up span {
+            color: var(--secondary);
+        }
+
+        .route-status.down span {
+            color: var(--danger);
+        }
+
+        .route-status.warning span {
+            color: var(--warning);
+        }
+
+        /* Error notification */
+        .error-notification {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            background-color: white;
+            border-left: 4px solid var(--danger);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            padding: 1rem;
+            width: 350px;
+            max-width: calc(100% - 2rem);
+            transform: translateX(calc(100% + 2rem));
+            transition: transform 0.3s ease-in-out;
+            z-index: 100;
+        }
+
+        .error-notification.show {
+            transform: translateX(0);
+        }
+
+        .error-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .error-title {
+            font-weight: 600;
+            color: var(--danger);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .error-close {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--gray-700);
+            font-size: 1.25rem;
+        }
+
+        .error-message {
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+        }
+
         .retry-btn {
-            background-color: #FF5733;
+            background-color: var(--danger);
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
+            border-radius: var(--radius);
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
             cursor: pointer;
-            font-size: 16px;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
         }
+
         .retry-btn:hover {
-            background-color: #FF3311;
+            background-color: #DC2626;
         }
-        /* Animasi untuk loading */
+
+        /* Loading animation */
         .loading {
-            animation: loading-animation 1s infinite;
+            position: relative;
         }
-        @keyframes loading-animation {
-            0% { opacity: 0.6; }
-            50% { opacity: 1; }
-            100% { opacity: 0.6; }
+
+        .loading::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+            animation: loading-shimmer 1.5s infinite;
+        }
+
+        @keyframes loading-shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Dark mode toggle switch */
+        .theme-switch {
+            position: relative;
+            width: 60px;
+            height: 30px;
+        }
+
+        .theme-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .theme-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--gray-700);
+            transition: .4s;
+            border-radius: 30px;
+        }
+
+        .theme-slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .theme-slider {
+            background-color: var(--primary);
+        }
+
+        input:checked + .theme-slider:before {
+            transform: translateX(30px);
+        }
+
+        /* Dark mode styles */
+        body.dark-mode {
+            background-color: var(--gray-900);
+            color: var(--gray-200);
+        }
+
+        body.dark-mode header {
+            background-color: var(--gray-800);
+        }
+
+        body.dark-mode .card,
+        body.dark-mode .route-card {
+            background-color: var(--gray-800);
+            border: 1px solid var(--gray-700);
+        }
+
+        body.dark-mode .card-header {
+            border-bottom-color: var(--gray-700);
+        }
+
+        body.dark-mode .card-title {
+            color: var(--gray-200);
+        }
+
+        body.dark-mode .status-item {
+            border-bottom-color: var(--gray-700);
+        }
+
+        body.dark-mode .status-label {
+            color: var(--gray-300);
+        }
+
+        body.dark-mode .metric-box {
+            background-color: var(--gray-800);
+        }
+
+        body.dark-mode .metric-label {
+            color: var(--gray-300);
+        }
+
+        body.dark-mode .route-details p {
+            color: var(--gray-300);
+        }
+
+        body.dark-mode .error-notification {
+            background-color: var(--gray-800);
+            color: var(--gray-200);
         }
     </style>
 </head>
 <body>
     <header>
-        API Monitoring Dashboard
+        <h1>
+            <i class="fas fa-chart-line"></i>
+            API Monitoring Dashboard
+        </h1>
+        <div class="header-actions">
+            <span id="server-status-badge" class="status-badge loading">
+                <i class="fas fa-circle"></i>
+                <span>Connecting...</span>
+            </span>
+            <label class="theme-switch" title="Toggle dark mode">
+                <input type="checkbox" id="theme-toggle">
+                <span class="theme-slider"></span>
+            </label>
+        </div>
     </header>
 
-    <div class="container">
-        <div id="status" class="status-box">
-            <h2>Server Status</h2>
-            <p>Status: <span id="server-status" class="loading">Loading...</span></p>
-            <p>Time: <span id="server-time" class="loading">Loading...</span></p>
-            <p>Uptime: <span id="uptime" class="loading">Loading...</span></p>
-            <p>CPU Load: <span id="cpu-load" class="loading">Loading...</span></p>
-            <p>Request Count: <span id="request-count" class="loading">Loading...</span></p>
+    <main>
+        <div class="dashboard-grid">
+            <!-- Server Overview Card -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fas fa-server card-icon"></i>
+                        Server Overview
+                    </div>
+                    <span id="last-updated">Updating...</span>
+                </div>
+                <div class="card-body">
+                    <div class="status-item">
+                        <span class="status-label">Status</span>
+                        <span id="server-status" class="status-value loading">Connecting...</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">Uptime</span>
+                        <span id="uptime" class="status-value loading">00:00:00</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">Server Time</span>
+                        <span id="server-time" class="status-value loading">--:--:--</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Performance Metrics Card -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fas fa-tachometer-alt card-icon"></i>
+                        Performance Metrics
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="metrics-grid">
+                        <div class="metric-box">
+                            <div id="cpu-load" class="metric-value loading">0%</div>
+                            <div class="metric-label">CPU Load</div>
+                        </div>
+                        <div class="metric-box">
+                            <div id="memory-usage" class="metric-value loading">0%</div>
+                            <div class="metric-label">Memory</div>
+                        </div>
+                        <div class="metric-box">
+                            <div id="request-count" class="metric-value loading">0</div>
+                            <div class="metric-label">Requests</div>
+                        </div>
+                        <div class="metric-box">
+                            <div id="avg-response" class="metric-value loading">0ms</div>
+                            <div class="metric-label">Avg Response</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div id="route-box-container"></div>
-
-        <!-- Error Box (Hidden by default) -->
-        <div id="error-box" class="error-box">
-            <p>There was an error loading the data. Please check your connection or try again.</p>
-            <button id="retry-btn" class="retry-btn">Retry</button>
+        <!-- API Routes Section -->
+        <h2 style="margin-bottom: 1rem; font-size: 1.25rem; font-weight: 600;">
+            <i class="fas fa-network-wired" style="color: var(--primary); margin-right: 0.5rem;"></i>
+            API Endpoints Status
+        </h2>
+        <div id="route-box-container" class="routes-container">
+            <!-- Routes will be dynamically inserted here -->
+            <div class="route-card loading">
+                <div class="route-info">
+                    <div class="route-icon">
+                        <i class="fas fa-link"></i>
+                    </div>
+                    <div class="route-details">
+                        <h3>Loading endpoints...</h3>
+                        <p>Please wait while we fetch the data</p>
+                    </div>
+                </div>
+            </div>
         </div>
+    </main>
+
+    <!-- Error Notification -->
+    <div id="error-box" class="error-notification">
+        <div class="error-header">
+            <div class="error-title">
+                <i class="fas fa-exclamation-circle"></i>
+                Connection Error
+            </div>
+            <button id="error-close" class="error-close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="error-message">
+            There was an error connecting to the server. Please check your connection or try again.
+        </div>
+        <button id="retry-btn" class="retry-btn">
+            <i class="fas fa-sync-alt"></i>
+            Retry Connection
+        </button>
     </div>
 
     <script>
-        const socket = io(); // Connect to the server
-
-        // Menerima update monitoring dari server
-        socket.on('monitoringUpdate', (data) => {
-            document.getElementById('server-status').textContent = 'Online';
-            document.getElementById('server-time').textContent = new Date().toLocaleString();
-            document.getElementById('uptime').textContent = data.uptime;
-            document.getElementById('cpu-load').textContent = data.cpuLoad + '%';
-            document.getElementById('request-count').textContent = data.requestCount;
-
-            // Update the routes dynamically
-            updateRoutes(data.routes);
+        // Theme Toggling
+        const themeToggle = document.getElementById('theme-toggle');
+        
+        // Check for saved theme preference or respect OS preference
+        if (localStorage.getItem('darkMode') === 'true' || 
+            (window.matchMedia('(prefers-color-scheme: dark)').matches && 
+             !localStorage.getItem('darkMode'))) {
+            document.body.classList.add('dark-mode');
+            themeToggle.checked = true;
+        }
+        
+        themeToggle.addEventListener('change', function() {
+            if (this.checked) {
+                document.body.classList.add('dark-mode');
+                localStorage.setItem('darkMode', 'true');
+            } else {
+                document.body.classList.remove('dark-mode');
+                localStorage.setItem('darkMode', 'false');
+            }
         });
 
-        // Update route list
+        // Socket connection
+        let socket;
+        try {
+            socket = io(); // Connect to the server
+            
+            // Handle connection events
+            socket.on('connect', () => {
+                console.log('Connected to server');
+                updateConnectionStatus(true);
+                document.getElementById('error-box').classList.remove('show');
+            });
+            
+            socket.on('disconnect', () => {
+                console.log('Disconnected from server');
+                updateConnectionStatus(false);
+                document.getElementById('error-box').classList.add('show');
+            });
+            
+            socket.on('connect_error', () => {
+                console.log('Connection error');
+                updateConnectionStatus(false);
+                document.getElementById('error-box').classList.add('show');
+            });
+
+            // Receive monitoring data
+            socket.on('monitoringUpdate', (data) => {
+                // Remove loading classes
+                document.querySelectorAll('.loading').forEach(el => {
+                    el.classList.remove('loading');
+                });
+                
+                // Update server status
+                document.getElementById('server-status-badge').innerHTML = `
+                    <i class="fas fa-circle"></i>
+                    <span>Online</span>
+                `;
+                document.getElementById('server-status-badge').classList.add('online');
+                
+                // Update server metrics
+                document.getElementById('server-status').textContent = 'Online';
+                document.getElementById('server-time').textContent = new Date().toLocaleString();
+                document.getElementById('uptime').textContent = data.uptime;
+                document.getElementById('cpu-load').textContent = data.cpuLoad + '%';
+                document.getElementById('memory-usage').textContent = data.memoryUsage || '32%'; // Fallback if not provided
+                document.getElementById('request-count').textContent = data.requestCount;
+                document.getElementById('avg-response').textContent = data.avgResponseTime || '120ms'; // Fallback if not provided
+                document.getElementById('last-updated').textContent = 'Updated: ' + new Date().toLocaleTimeString();
+                
+                // Update the routes display
+                updateRoutes(data.routes);
+            });
+        } catch (err) {
+            console.error('Error initializing socket:', err);
+            document.getElementById('error-box').classList.add('show');
+        }
+
+        // Update connection status UI
+        function updateConnectionStatus(isConnected) {
+            const statusBadge = document.getElementById('server-status-badge');
+            const serverStatus = document.getElementById('server-status');
+            
+            if (isConnected) {
+                statusBadge.innerHTML = `<i class="fas fa-circle"></i><span>Online</span>`;
+                statusBadge.classList.remove('offline');
+                statusBadge.classList.add('online');
+                serverStatus.textContent = 'Online';
+            } else {
+                statusBadge.innerHTML = `<i class="fas fa-circle"></i><span>Offline</span>`;
+                statusBadge.classList.remove('online');
+                statusBadge.classList.add('offline');
+                serverStatus.textContent = 'Offline';
+                document.getElementById('last-updated').textContent = 'Connection lost';
+            }
+        }
+
+        // Update route list with modern styling
         function updateRoutes(routes) {
             const container = document.getElementById('route-box-container');
             container.innerHTML = ''; // Clear previous routes
+            
+            if (!routes || routes.length === 0) {
+                container.innerHTML = `
+                    <div class="route-card">
+                        <div class="route-info">
+                            <div class="route-icon" style="background-color: var(--gray-700);">
+                                <i class="fas fa-info"></i>
+                            </div>
+                            <div class="route-details">
+                                <h3>No Routes Available</h3>
+                                <p>No API endpoints are currently being monitored</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
 
             routes.forEach(route => {
+                const statusClass = getStatusClass(route.status);
+                const statusIcon = getStatusIcon(route.status);
+                
                 const routeBox = document.createElement('div');
-                routeBox.classList.add('route-box');
-                routeBox.innerHTML = `<p>Route: ${route.path}</p><p>Status: ${route.status}</p>`;
+                routeBox.classList.add('route-card');
+                
+                routeBox.innerHTML = `
+                    <div class="route-info">
+                        <div class="route-icon">
+                            <i class="fas fa-link"></i>
+                        </div>
+                        <div class="route-details">
+                            <h3>${route.path}</h3>
+                            <p>Method: ${route.method || 'GET'} | Latency: ${route.latency || '35ms'}</p>
+                        </div>
+                    </div>
+                    <div class="route-status ${statusClass}">
+                        <div class="status-circle ${statusClass}"></div>
+                        <span>${route.status}</span>
+                    </div>
+                `;
+                
                 container.appendChild(routeBox);
             });
         }
 
-        // Handle Retry button click (simulate data fetch)
-        document.getElementById('retry-btn')?.addEventListener('click', () => {
-            document.getElementById('error-box').style.display = 'none'; // Hide error
-            socket.emit('retryData'); // Emit retry event to fetch data again
+        // Helper function to determine status class
+        function getStatusClass(status) {
+            status = status.toLowerCase();
+            if (status === 'up' || status === 'online' || status === 'ok') return 'up';
+            if (status === 'down' || status === 'offline' || status === 'error') return 'down';
+            return 'warning';
+        }
+
+        // Helper function to get status icon
+        function getStatusIcon(status) {
+            status = status.toLowerCase();
+            if (status === 'up' || status === 'online' || status === 'ok') return 'fas fa-check-circle';
+            if (status === 'down' || status === 'offline' || status === 'error') return 'fas fa-times-circle';
+            return 'fas fa-exclamation-circle';
+        }
+
+        // Handle error box close button
+        document.getElementById('error-close').addEventListener('click', () => {
+            document.getElementById('error-box').classList.remove('show');
         });
 
-        // Simulate error handling (for testing)
+        // Handle retry button
+        document.getElementById('retry-btn').addEventListener('click', () => {
+            document.getElementById('error-box').classList.remove('show');
+            
+            // Try to reconnect if socket exists
+            if (socket) {
+                socket.connect();
+            }
+            
+            // Also emit retry event if socket is connected
+            if (socket && socket.connected) {
+                socket.emit('retryData');
+            }
+        });
+
+        // Simulate data for testing
         setTimeout(() => {
-            document.getElementById('error-box').style.display = 'block'; // Show error box after 5 seconds
-        }, 5000);
+            // Only trigger this if we don't have a real connection
+            if (!socket || !socket.connected) {
+                const mockData = {
+                    uptime: '3d 12h 45m',
+                    cpuLoad: '42',
+                    memoryUsage: '38%',
+                    requestCount: '1,248',
+                    avgResponseTime: '124ms',
+                    routes: [
+                        { path: '/api/users', status: 'UP', method: 'GET', latency: '45ms' },
+                        { path: '/api/products', status: 'UP', method: 'GET', latency: '32ms' },
+                        { path: '/api/orders', status: 'WARNING', method: 'POST', latency: '187ms' },
+                        { path: '/api/payments', status: 'DOWN', method: 'POST', latency: '340ms' }
+                    ]
+                };
+                
+                // Remove loading classes
+                document.querySelectorAll('.loading').forEach(el => {
+                    el.classList.remove('loading');
+                });
+                
+                // Update server status
+                document.getElementById('server-status-badge').innerHTML = `
+                    <i class="fas fa-circle"></i>
+                    <span>Online</span>
+                `;
+                document.getElementById('server-status-badge').classList.add('online');
+                
+                // Update metrics with mock data
+                document.getElementById('server-status').textContent = 'Online';
+                document.getElementById('server-time').textContent = new Date().toLocaleString();
+                document.getElementById('uptime').textContent = mockData.uptime;
+                document.getElementById('cpu-load').textContent = mockData.cpuLoad + '%';
+                document.getElementById('memory-usage').textContent = mockData.memoryUsage;
+                document.getElementById('request-count').textContent = mockData.requestCount;
+                document.getElementById('avg-response').textContent = mockData.avgResponseTime;
+                document.getElementById('last-updated').textContent = 'Updated: ' + new Date().toLocaleTimeString();
+                
+                // Update routes with mock data
+                updateRoutes(mockData.routes);
+            }
+        }, 2000);
+
+        // For demo purposes - show error notification after a delay
+        setTimeout(() => {
+            if (Math.random() > 0.7) {  // Randomly show error sometimes
+                document.getElementById('error-box').classList.add('show');
+            }
+        }, 10000);
     </script>
 </body>
 </html>
