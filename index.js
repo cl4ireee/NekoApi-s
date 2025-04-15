@@ -105,7 +105,7 @@ app.use((err, req, res, next) => {
     res.status(500).sendFile(process.cwd() + "/api-page/500.html");
 });
 
-// WebSocket untuk real-time monitoring
+// WebSocket untuk real-time monitoring dengan optimasi
 setInterval(() => {
     const uptime = Math.floor(process.uptime()); // Menghitung uptime dalam detik
     const cpuLoad = os.loadavg()[0]; // CPU load 1 menit terakhir (0, 1, 5 menit avg)
@@ -117,7 +117,7 @@ setInterval(() => {
         requestCount: requestCount
     });
 
-}, 5000); // Update setiap 5 detik
+}, 10000); // Update setiap 10 detik, untuk mengurangi beban
 
 // Fungsi untuk format uptime dalam format yang lebih mudah dibaca
 function formatUptime(seconds) {
