@@ -1,9 +1,9 @@
 const axios = require('axios');
 
 module.exports = {
-    name: 'Text2Img',
+    name: 'Generate AI Image (Nekorinn)',
     desc: 'Menghasilkan gambar dari teks menggunakan API Nekorinn (langsung kirim gambar)',
-    category: 'AI',
+    category: 'AI-Image',
     params: ['text'],
     async run(req, res) {
         const { text } = req.query;
