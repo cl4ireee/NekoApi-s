@@ -44,6 +44,10 @@
       background-color: #f8d7da;
       color: #721c24;
     }
+    .error-log {
+      background-color: #fff3cd;
+      color: #856404;
+    }
   </style>
 </head>
 <body>
@@ -55,6 +59,7 @@
       <p>Status: <strong id="server-status">Loading...</strong></p>
       <p>Time: <strong id="server-time">Loading...</strong></p>
       <p>Uptime: <strong id="server-uptime">Loading...</strong></p> <!-- Uptime ditambahkan di sini -->
+      <p>Total API Routes: <strong id="total-api-routes">Loading...</strong></p> <!-- Total API Routes ditambahkan -->
     </div>
 
     <div class="route-box">
@@ -67,6 +72,13 @@
     <div class="chart-box">
       <h2>Active Routes (Real-time)</h2>
       <canvas id="statusChart" height="100"></canvas>
+    </div>
+
+    <div class="status-box">
+      <h2>Recent Error Logs</h2>
+      <ul id="error-logs" class="route-list">
+        <li>Loading...</li>
+      </ul>
     </div>
   </div>
 
@@ -108,6 +120,7 @@
           document.getElementById('server-status').textContent = data.serverStatus;
           document.getElementById('server-time').textContent = data.time;
           document.getElementById('server-uptime').textContent = data.uptime; // Menambahkan tampilan uptime
+          document.getElementById('total-api-routes').textContent = data.apiRoutes.length; // Menambahkan total API routes
 
           const routeList = document.getElementById('route-list');
           routeList.innerHTML = '';
@@ -131,12 +144,31 @@
           chartData.labels.push(now);
           chartData.datasets[0].data.push(activeCount);
           statusChart.update();
+
+          // Tampilkan error logs
+          const errorLogsContainer = document.getElementById('error-logs');
+          errorLogsContainer.innerHTML = '';
+
+          if (data.errorLogs && data.errorLogs.length > 0) {
+            data.errorLogs.slice(-5).reverse().forEach(log => {
+              const li = document.createElement('li');
+              li.classList.add('error-log');
+              li.textContent = `${log.time}: ${log.message}`;
+              errorLogsContainer.appendChild(li);
+            });
+          } else {
+            const li = document.createElement('li');
+            li.textContent = 'No recent errors.';
+            errorLogsContainer.appendChild(li);
+          }
         })
         .catch(err => {
           document.getElementById('server-status').textContent = 'Error';
           document.getElementById('server-time').textContent = 'N/A';
           document.getElementById('server-uptime').textContent = 'N/A'; // Error handling untuk uptime
           document.getElementById('route-list').innerHTML = '<li class="inactive-route">Gagal mengambil data</li>';
+          document.getElementById('total-api-routes').textContent = 'N/A'; // Error handling untuk total API routes
+          document.getElementById('error-logs').innerHTML = '<li class="error-log">Gagal mengambil error logs</li>';
         });
     }
 
