@@ -4,7 +4,7 @@ module.exports = {
         copyright: 'NekoApi'
     },
     description: 'Integrated API solution for your modern application development needs. Fast, secure, and reliable access.',
-    icon: '/image/icon.png',
+    icon: '/image/icon.jpg',
     author: 'Naoki',
     info_url: 'https://whatsapp.com/channel/0029Vb9MIdiDDmFXasVPVG1t',
     links: [
