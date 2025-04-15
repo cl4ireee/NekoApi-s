@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Monitoring</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        .status-box {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .route-box {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        .error-box {
+            background-color: #FF5733;
+            color: white;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .route-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .route-list li {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>API Monitoring Dashboard</h1>
+
+    <div id="status" class="status-box">
+        <h2>Server Status</h2>
+        <p>Status: <span id="server-status">Loading...</span></p>
+        <p>Time: <span id="server-time">Loading...</span></p>
+    </div>
+
+    <div id="routes" class="route-box">
+        <h2>API Routes</h2>
+        <ul id="route-list" class="route-list">
+            <li>Loading routes...</li>
+        </ul>
+    </div>
+
+    <script>
+        // Fetching server status
+        fetch('/api/status')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('server-status').textContent = data.status;
+                document.getElementById('server-time').textContent = data.time;
+            })
+            .catch(error => {
+                document.getElementById('status').classList.add('error-box');
+                document.getElementById('server-status').textContent = 'Error fetching status';
+            });
+
+        // Fetching API routes
+        fetch('/api/routes')
+            .then(response => response.json())
+            .then(data => {
+                const routeList = document.getElementById('route-list');
+                routeList.innerHTML = '';
+                data.routes.forEach(route => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `${route.name}: ${route.status}`;
+                    routeList.appendChild(listItem);
+                });
+            })
+            .catch(error => {
+                const routeList = document.getElementById('route-list');
+                routeList.innerHTML = '<li>Error fetching routes</li>';
+                document.getElementById('routes').classList.add('error-box');
+            });
+    </script>
+</body>
+</html>
