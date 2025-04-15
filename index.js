@@ -7,7 +7,6 @@ const http = require('http');
 const os = require('os'); // Untuk CPU Load
 
 let requestCount = 0; // Untuk menghitung request
-let errorLogs = []; // Array untuk mencatat log error
 
 const app = express();
 const server = http.createServer(app); // Membuat server HTTP
@@ -88,8 +87,7 @@ app.get('/monitoring', (req, res) => {
         apiRoutes: routes,
         uptime: formatUptime(Math.floor(process.uptime())),
         cpuLoad: os.loadavg()[0].toFixed(2),
-        requestCount: requestCount,
-        errorLogs: errorLogs // Menambahkan error logs ke dalam status
+        requestCount: requestCount
     };
 
     res.json(status);
@@ -100,14 +98,14 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'api-page', 'index.html'));
 });
 
-// Menangani 404 dan error
+// Menangani 404
 app.use((req, res, next) => {
     res.status(404).sendFile(process.cwd() + "/api-page/404.html");
 });
 
+// Menangani error
 app.use((err, req, res, next) => {
     console.error(err.stack);
-    errorLogs.push({ message: err.message, time: new Date().toLocaleString() }); // Menyimpan error ke log
     res.status(500).sendFile(process.cwd() + "/api-page/500.html");
 });
 
