@@ -1,53 +1,49 @@
 const axios = require('axios');
+const cheerio = require('cheerio');
+const FormData = require('form-data');
 
 module.exports = {
-    name: 'AI Image Generator',
-    desc: 'Generate AI Image based on text and ratio.',
-    category: 'AIIAMGE',
-    params: ['text', 'ratio'],
+    name: 'Clipart',
+    desc: 'Mencari gambar dengan gaya lukisan berdasarkan prompt',
+    category: 'Ai Image',
+    params: ['prompt'],
     async run(req, res) {
+        const { prompt } = req.query;
+        if (!prompt) {
+            return res.status(400).json({ status: false, error: 'Prompt is required' });
+        }
+
         try {
-            const { text, ratio } = req.query;
+            const formData = new FormData();
+            formData.append("qq", prompt);
+            const headers = {
+                headers: {
+                    ...formData.getHeaders()
+                }
+            };
 
-            // Daftar rasio yang tersedia
-            const availableRatios = [
-                "1:1", "16:9", "2:3", "3:2", "4:5", "5:4", "9:16", "21:9", "9:21"
-            ];
+            const { data: responseData } = await axios.post("https://1010clipart.com/", formData, headers);
+            const $ = cheerio.load(responseData);
 
-            // Validasi input parameter
-            if (!text || !ratio) {
-                return res.status(400).json({ status: false, error: 'Text and Ratio are required' });
-            }
-
-            // Cek apakah ratio yang diberikan valid
-            if (!availableRatios.includes(ratio)) {
-                return res.status(400).json({ status: false, error: 'Invalid ratio. Supported ratios are: ' + availableRatios.join(', ') });
-            }
-
-            // Membuat URL untuk permintaan API
-            const apiUrl = `https://api.nekorinn.my.id/ai-img/ai4chat?text=${encodeURIComponent(text)}&ratio=${encodeURIComponent(ratio)}`;
-
-            // Mengirim permintaan GET ke API AI
-            const response = await axios.get(apiUrl);
-
-            // Cek jika API memberikan URL gambar
-            if (!response.data || !response.data.url) {
-                return res.status(500).json({ status: false, error: 'Failed to get image URL' });
-            }
-
-            // Ambil gambar dari URL yang diberikan oleh API
-            const imageResponse = await axios.get(response.data.url, { responseType: 'arraybuffer' });
-
-            // Mengirimkan gambar langsung ke pengguna
-            res.writeHead(200, {
-                'Content-Type': 'image/png',  // Tipe konten gambar PNG
-                'Content-Length': imageResponse.data.length,  // Ukuran gambar
+            let images = [];
+            $('#image-container img').each((i, el) => {
+                let src = $(el).attr('src');
+                if (src) {
+                    images.push({ img: src });
+                }
             });
-            res.end(imageResponse.data);
 
-        } catch (error) {
-            // Menangani error dan mengirimkan respons error
-            res.status(500).json({ status: false, error: error.message });
+            if (images.length === 0) {
+                return res.status(404).json({ status: false, error: 'No images found for the given prompt' });
+            }
+
+            return res.json({
+                status: true,
+                result: images
+            });
+
+        } catch (err) {
+            return res.status(500).json({ status: false, error: err.message });
         }
     }
 };
