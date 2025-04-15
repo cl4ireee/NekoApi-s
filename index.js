@@ -5,7 +5,9 @@ const cors = require('cors');
 const path = require('path');
 const http = require('http');
 const os = require('os'); // Untuk CPU Load
+
 let requestCount = 0; // Untuk menghitung request
+let errorLogs = []; // Array untuk mencatat log error
 
 const app = express();
 const server = http.createServer(app); // Membuat server HTTP
@@ -24,6 +26,7 @@ app.use('/src', express.static(path.join(__dirname, 'src')));
 const settingsPath = path.join(__dirname, './src/settings.json');
 const settings = JSON.parse(fs.readFileSync(settingsPath, 'utf-8'));
 
+// Middleware untuk menambahkan informasi pada setiap response
 app.use((req, res, next) => {
     const originalJson = res.json;
     res.json = function (data) {
@@ -40,7 +43,7 @@ app.use((req, res, next) => {
     next();
 });
 
-// API Route
+// API Route - Memuat rute dari file API yang ada
 let totalRoutes = 0;
 const apiFolder = path.join(__dirname, './src/api');
 fs.readdirSync(apiFolder).forEach((subfolder) => {
@@ -59,7 +62,7 @@ fs.readdirSync(apiFolder).forEach((subfolder) => {
 console.log(chalk.bgHex('#90EE90').hex('#333').bold(' Load Complete! ✓ '));
 console.log(chalk.bgHex('#90EE90').hex('#333').bold(` Total Routes Loaded: ${totalRoutes} `));
 
-// Monitoring Route
+// Monitoring Route - Mengembalikan informasi tentang server dan API Routes
 app.get('/monitoring', (req, res) => {
     const routes = [];
 
@@ -80,18 +83,19 @@ app.get('/monitoring', (req, res) => {
     });
 
     const status = {
-        serverStatus: 'Online', // Kamu bisa menyesuaikan ini dengan pengecekan server atau kondisi lainnya
+        serverStatus: 'Online', // Status server
         time: new Date().toLocaleString(),
         apiRoutes: routes,
         uptime: formatUptime(Math.floor(process.uptime())),
         cpuLoad: os.loadavg()[0].toFixed(2),
-        requestCount: requestCount
+        requestCount: requestCount,
+        errorLogs: errorLogs // Menambahkan error logs ke dalam status
     };
 
     res.json(status);
 });
 
-// Halaman Utama
+// Halaman Utama - Mengirim halaman index.html
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'api-page', 'index.html'));
 });
@@ -103,6 +107,7 @@ app.use((req, res, next) => {
 
 app.use((err, req, res, next) => {
     console.error(err.stack);
+    errorLogs.push({ message: err.message, time: new Date().toLocaleString() }); // Menyimpan error ke log
     res.status(500).sendFile(process.cwd() + "/api-page/500.html");
 });
 
