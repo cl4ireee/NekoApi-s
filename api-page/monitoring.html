@@ -377,9 +377,20 @@
       }
     });
 
-    // Format time
+    // Format time - more robust version
     function formatTime(seconds) {
-      if (!seconds) return '-';
+      // Handle undefined, null, or non-numeric values
+      if (seconds === undefined || seconds === null || isNaN(seconds)) {
+        return 'N/A';
+      }
+      
+      // Convert to number in case it's a string
+      seconds = Number(seconds);
+      
+      // Handle negative values
+      if (seconds < 0) {
+        return 'Invalid';
+      }
       
       const days = Math.floor(seconds / (3600 * 24));
       const hours = Math.floor((seconds % (3600 * 24)) / 3600);
@@ -392,23 +403,26 @@
       if (mins > 0 || hours > 0 || days > 0) result += `${mins}m `;
       result += `${secs}s`;
       
-      return result;
+      return result.trim();
     }
 
-    // Update dashboard
+    // Update dashboard with error handling
     function updateDashboard() {
       const updateTimeElement = document.getElementById('update-time');
       updateTimeElement.textContent = new Date().toLocaleTimeString();
       
       fetch('/monitoring')
         .then(res => {
-          if (!res.ok) throw new Error('Network response was not ok');
+          if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
           return res.json();
         })
         .then(data => {
+          // Debug log to check the received data
+          console.log('Received data:', data);
+          
           // Update server status card
           const statusElement = document.getElementById('server-status');
-          statusElement.textContent = data.serverStatus;
+          statusElement.textContent = data.serverStatus || 'Unknown';
           statusElement.className = 'stat';
           
           if (data.serverStatus === 'Online') {
@@ -419,40 +433,55 @@
             statusElement.classList.add('badge-warning');
           }
           
-          // Update uptime
-          document.getElementById('server-uptime').textContent = formatTime(data.uptime);
+          // Update uptime with validation
+          const uptimeElement = document.getElementById('server-uptime');
+          if (data.uptime !== undefined && data.uptime !== null && !isNaN(data.uptime)) {
+            uptimeElement.textContent = formatTime(data.uptime);
+          } else {
+            uptimeElement.textContent = 'N/A';
+            console.warn('Invalid uptime value received:', data.uptime);
+          }
           
-          // Update routes count
-          document.getElementById('total-api-routes').textContent = data.apiRoutes?.length || 0;
+          // Update routes count with validation
+          const totalRoutesElement = document.getElementById('total-api-routes');
+          if (Array.isArray(data.apiRoutes)) {
+            totalRoutesElement.textContent = data.apiRoutes.length;
+          } else {
+            totalRoutesElement.textContent = '0';
+            console.warn('Invalid apiRoutes value received:', data.apiRoutes);
+          }
           
-          // Update route list
+          // Update route list with validation
           const routeList = document.getElementById('route-list');
           routeList.innerHTML = '';
           
           let activeCount = 0;
           
-          if (data.apiRoutes && data.apiRoutes.length > 0) {
+          if (Array.isArray(data.apiRoutes) && data.apiRoutes.length > 0) {
             data.apiRoutes.forEach(route => {
+              if (!route) return; // Skip null/undefined routes
+              
               const li = document.createElement('li');
               li.className = 'route-item';
               
               const pathSpan = document.createElement('span');
               pathSpan.className = 'route-path';
-              pathSpan.textContent = route.path;
+              pathSpan.textContent = route.path || 'Unknown path';
               
               const statusSpan = document.createElement('span');
               statusSpan.className = 'badge';
               
-              if (route.status === 'Active') {
+              const status = route.status || 'Unknown';
+              if (status === 'Active') {
                 statusSpan.classList.add('badge-success');
                 activeCount++;
-              } else if (route.status === 'Inactive') {
+              } else if (status === 'Inactive') {
                 statusSpan.classList.add('badge-danger');
               } else {
                 statusSpan.classList.add('badge-warning');
               }
               
-              statusSpan.textContent = route.status;
+              statusSpan.textContent = status;
               
               li.appendChild(pathSpan);
               li.appendChild(statusSpan);
@@ -487,9 +516,9 @@
           document.getElementById('server-status').textContent = 'Error';
           document.getElementById('server-status').className = 'stat badge-danger pulse';
           
-          document.getElementById('server-uptime').textContent = '-';
-          document.getElementById('total-api-routes').textContent = '-';
-          document.getElementById('active-routes-count').textContent = '-';
+          document.getElementById('server-uptime').textContent = 'N/A';
+          document.getElementById('total-api-routes').textContent = 'N/A';
+          document.getElementById('active-routes-count').textContent = 'N/A';
           
           const routeList = document.getElementById('route-list');
           routeList.innerHTML = '';
