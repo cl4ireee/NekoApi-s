@@ -42,6 +42,16 @@
         .route-list li {
             margin: 5px 0;
         }
+        .active-route {
+            background-color: #28a745;
+            padding: 8px;
+            border-radius: 5px;
+        }
+        .inactive-route {
+            background-color: #dc3545;
+            padding: 8px;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
@@ -73,6 +83,12 @@
                 data.apiRoutes.forEach(route => {
                     const listItem = document.createElement('li');
                     listItem.textContent = `${route.path}: ${route.status}`;
+                    // Adding class based on status
+                    if (route.status === 'Active') {
+                        listItem.classList.add('active-route');
+                    } else {
+                        listItem.classList.add('inactive-route');
+                    }
                     routeList.appendChild(listItem);
                 });
             })
