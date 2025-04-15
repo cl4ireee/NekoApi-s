@@ -3,8 +3,15 @@ const chalk = require('chalk');
 const fs = require('fs');
 const cors = require('cors');
 const path = require('path');
+const http = require('http');
+const socketIo = require('socket.io');
+const os = require('os'); // Untuk CPU Load
+let requestCount = 0; // Untuk menghitung request
 
 const app = express();
+const server = http.createServer(app); // Membuat server HTTP
+const io = socketIo(server); // Menghubungkan socket.io ke server HTTP
+
 const PORT = process.env.PORT || 4000;
 
 app.enable("trust proxy");
@@ -98,7 +105,36 @@ app.use((err, req, res, next) => {
     res.status(500).sendFile(process.cwd() + "/api-page/500.html");
 });
 
-app.listen(PORT, () => {
+// WebSocket untuk real-time monitoring
+setInterval(() => {
+    const uptime = Math.floor(process.uptime()); // Menghitung uptime dalam detik
+    const cpuLoad = os.loadavg()[0]; // CPU load 1 menit terakhir (0, 1, 5 menit avg)
+
+    // Mengirim data monitoring melalui Socket.io
+    io.emit('monitoringUpdate', {
+        uptime: formatUptime(uptime),
+        cpuLoad: cpuLoad.toFixed(2),
+        requestCount: requestCount
+    });
+
+}, 5000); // Update setiap 5 detik
+
+// Fungsi untuk format uptime dalam format yang lebih mudah dibaca
+function formatUptime(seconds) {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secondsRemaining = seconds % 60;
+    return `${hours}h ${minutes}m ${secondsRemaining}s`;
+}
+
+// Menghitung request count
+app.use((req, res, next) => {
+    requestCount++;
+    next();
+});
+
+// Menjalankan server dengan socket.io
+server.listen(PORT, () => {
     console.log(chalk.bgHex('#90EE90').hex('#333').bold(` Server is running on port ${PORT} `));
 });
 
