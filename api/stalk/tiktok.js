@@ -3,7 +3,7 @@ const axios = require('axios');
 module.exports = {
     name: 'TikTok Stalk',
     desc: 'Ambil data profil TikTok berdasarkan username',
-    category: 'STALK',
+    category: 'Stalk',
     params: ['username'],
     async run(req, res) {
         try {
