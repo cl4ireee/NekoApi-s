@@ -54,6 +54,7 @@
       <h2>Server Status</h2>
       <p>Status: <strong id="server-status">Loading...</strong></p>
       <p>Time: <strong id="server-time">Loading...</strong></p>
+      <p>Uptime: <strong id="server-uptime">Loading...</strong></p> <!-- Uptime ditambahkan di sini -->
     </div>
 
     <div class="route-box">
@@ -106,6 +107,7 @@
         .then(data => {
           document.getElementById('server-status').textContent = data.serverStatus;
           document.getElementById('server-time').textContent = data.time;
+          document.getElementById('server-uptime').textContent = data.uptime; // Menambahkan tampilan uptime
 
           const routeList = document.getElementById('route-list');
           routeList.innerHTML = '';
@@ -133,6 +135,7 @@
         .catch(err => {
           document.getElementById('server-status').textContent = 'Error';
           document.getElementById('server-time').textContent = 'N/A';
+          document.getElementById('server-uptime').textContent = 'N/A'; // Error handling untuk uptime
           document.getElementById('route-list').innerHTML = '<li class="inactive-route">Gagal mengambil data</li>';
         });
     }
