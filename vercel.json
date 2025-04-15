@@ -8,10 +8,6 @@
   ],
   "routes": [
     {
-      "src": "/monitor",
-      "dest": "/api-page/monitoring.html"
-    },
-    {
       "src": "/(.*)",
       "dest": "/index.js"
     }
