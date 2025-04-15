@@ -3,11 +3,10 @@ const axios = require('axios');
 module.exports = {
     name: 'AI Image Generator',
     desc: 'Generate AI Image based on text and ratio.',
-    category: 'aiiamge',
+    category: 'AIIAMGE',
     params: ['text', 'ratio'],
     async run(req, res) {
         try {
-            // Mengambil parameter text dan ratio dari query
             const { text, ratio } = req.query;
 
             // Daftar rasio yang tersedia
@@ -31,11 +30,20 @@ module.exports = {
             // Mengirim permintaan GET ke API AI
             const response = await axios.get(apiUrl);
 
-            // Menyusun hasil dan mengirimkan respons
-            res.status(200).json({
-                status: true,
-                imageUrl: response.data.url // Asumsikan API mengembalikan URL gambar
+            // Cek jika API memberikan URL gambar
+            if (!response.data || !response.data.url) {
+                return res.status(500).json({ status: false, error: 'Failed to get image URL' });
+            }
+
+            // Ambil gambar dari URL yang diberikan oleh API
+            const imageResponse = await axios.get(response.data.url, { responseType: 'arraybuffer' });
+
+            // Mengirimkan gambar langsung ke pengguna
+            res.writeHead(200, {
+                'Content-Type': 'image/png',  // Tipe konten gambar PNG
+                'Content-Length': imageResponse.data.length,  // Ukuran gambar
             });
+            res.end(imageResponse.data);
 
         } catch (error) {
             // Menangani error dan mengirimkan respons error
