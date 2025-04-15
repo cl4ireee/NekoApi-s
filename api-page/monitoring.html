@@ -7,17 +7,42 @@
     <script src="/socket.io/socket.io.js"></script>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            color: #333;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f7f9fc;
+            margin: 0;
+            padding: 0;
+            color: #444;
+        }
+        header {
+            background-color: #4CAF50;
+            padding: 15px;
+            text-align: center;
+            color: white;
+            font-size: 24px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
             padding: 20px;
         }
         .status-box {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
             margin-bottom: 20px;
-            border-radius: 5px;
+        }
+        .status-box h2 {
+            margin-top: 0;
+            color: #333;
+        }
+        .status-box p {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+        .status-box span {
+            font-weight: bold;
+            color: #333;
         }
         .route-box {
             background-color: #007BFF;
@@ -25,6 +50,13 @@
             padding: 10px;
             margin-bottom: 10px;
             border-radius: 5px;
+            display: inline-block;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .route-box p {
+            margin: 0;
+            font-size: 16px;
         }
         .error-box {
             background-color: #FF5733;
@@ -32,31 +64,94 @@
             padding: 10px;
             margin-bottom: 20px;
             border-radius: 5px;
+            display: none; /* Hidden by default */
+        }
+        /* Styling untuk tombol "Retry" */
+        .retry-btn {
+            background-color: #FF5733;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .retry-btn:hover {
+            background-color: #FF3311;
+        }
+        /* Animasi untuk loading */
+        .loading {
+            animation: loading-animation 1s infinite;
+        }
+        @keyframes loading-animation {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
         }
     </style>
 </head>
 <body>
-    <h1>API Monitoring Dashboard</h1>
+    <header>
+        API Monitoring Dashboard
+    </header>
 
-    <div id="status" class="status-box">
-        <h2>Server Status</h2>
-        <p>Status: <span id="server-status">Loading...</span></p>
-        <p>Time: <span id="server-time">Loading...</span></p>
-        <p>Uptime: <span id="uptime">Loading...</span></p>
-        <p>CPU Load: <span id="cpu-load">Loading...</span></p>
-        <p>Request Count: <span id="request-count">Loading...</span></p>
+    <div class="container">
+        <div id="status" class="status-box">
+            <h2>Server Status</h2>
+            <p>Status: <span id="server-status" class="loading">Loading...</span></p>
+            <p>Time: <span id="server-time" class="loading">Loading...</span></p>
+            <p>Uptime: <span id="uptime" class="loading">Loading...</span></p>
+            <p>CPU Load: <span id="cpu-load" class="loading">Loading...</span></p>
+            <p>Request Count: <span id="request-count" class="loading">Loading...</span></p>
+        </div>
+
+        <div id="route-box-container"></div>
+
+        <!-- Error Box (Hidden by default) -->
+        <div id="error-box" class="error-box">
+            <p>There was an error loading the data. Please check your connection or try again.</p>
+            <button id="retry-btn" class="retry-btn">Retry</button>
+        </div>
     </div>
 
     <script>
-        // Menghubungkan ke Socket.io server
-        const socket = io();
+        const socket = io(); // Connect to the server
 
         // Menerima update monitoring dari server
         socket.on('monitoringUpdate', (data) => {
+            document.getElementById('server-status').textContent = 'Online';
+            document.getElementById('server-time').textContent = new Date().toLocaleString();
             document.getElementById('uptime').textContent = data.uptime;
             document.getElementById('cpu-load').textContent = data.cpuLoad + '%';
             document.getElementById('request-count').textContent = data.requestCount;
+
+            // Update the routes dynamically
+            updateRoutes(data.routes);
         });
+
+        // Update route list
+        function updateRoutes(routes) {
+            const container = document.getElementById('route-box-container');
+            container.innerHTML = ''; // Clear previous routes
+
+            routes.forEach(route => {
+                const routeBox = document.createElement('div');
+                routeBox.classList.add('route-box');
+                routeBox.innerHTML = `<p>Route: ${route.path}</p><p>Status: ${route.status}</p>`;
+                container.appendChild(routeBox);
+            });
+        }
+
+        // Handle Retry button click (simulate data fetch)
+        document.getElementById('retry-btn')?.addEventListener('click', () => {
+            document.getElementById('error-box').style.display = 'none'; // Hide error
+            socket.emit('retryData'); // Emit retry event to fetch data again
+        });
+
+        // Simulate error handling (for testing)
+        setTimeout(() => {
+            document.getElementById('error-box').style.display = 'block'; // Show error box after 5 seconds
+        }, 5000);
     </script>
 </body>
 </html>
