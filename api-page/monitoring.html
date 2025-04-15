@@ -62,33 +62,25 @@
 
     <script>
         // Fetching server status
-        fetch('/api/status')
+        fetch('/monitoring')
             .then(response => response.json())
             .then(data => {
-                document.getElementById('server-status').textContent = data.status;
+                document.getElementById('server-status').textContent = data.serverStatus;
                 document.getElementById('server-time').textContent = data.time;
-            })
-            .catch(error => {
-                document.getElementById('status').classList.add('error-box');
-                document.getElementById('server-status').textContent = 'Error fetching status';
-            });
-
-        // Fetching API routes
-        fetch('/api/routes')
-            .then(response => response.json())
-            .then(data => {
+                
                 const routeList = document.getElementById('route-list');
-                routeList.innerHTML = '';
-                data.routes.forEach(route => {
+                routeList.innerHTML = ''; // Clear the existing list
+                data.apiRoutes.forEach(route => {
                     const listItem = document.createElement('li');
-                    listItem.textContent = `${route.name}: ${route.status}`;
+                    listItem.textContent = `${route.path}: ${route.status}`;
                     routeList.appendChild(listItem);
                 });
             })
             .catch(error => {
-                const routeList = document.getElementById('route-list');
-                routeList.innerHTML = '<li>Error fetching routes</li>';
+                document.getElementById('status').classList.add('error-box');
+                document.getElementById('server-status').textContent = 'Error fetching status';
                 document.getElementById('routes').classList.add('error-box');
+                document.getElementById('route-list').innerHTML = '<li>Error fetching routes</li>';
             });
     </script>
 </body>
